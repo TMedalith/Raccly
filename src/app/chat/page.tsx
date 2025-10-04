@@ -1,69 +1,76 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Search, Mic, TrendingUp, BarChart3, Building2, Clock } from 'lucide-react';
+import { Search, TrendingUp, BarChart3, Building2, Clock } from 'lucide-react';
 import { ChatInterface } from '@/features/chat/components/ChatInterface';
+import { ConversationList } from '@/features/conversations/components/ConversationList';
+import { useConversations } from '@/features/conversations/hooks/useConversations';
 
 const suggestions = [
   {
     icon: TrendingUp,
     text: 'Avances en Alzheimer 2024',
-    color: 'from-[#FFF0ED] to-white',
+    color: 'from-[var(--secondary)] to-white',
   },
   {
     icon: BarChart3,
     text: 'Compara estudios sobre CRISPR',
-    color: 'from-[#FFF0ED] to-white',
+    color: 'from-[var(--secondary)] to-white',
   },
   {
     icon: Building2,
     text: '¿Qué instituciones lideran en IA?',
-    color: 'from-[#FFF0ED] to-white',
+    color: 'from-[var(--secondary)] to-white',
   },
   {
     icon: Clock,
     text: 'Timeline de inmunoterapia',
-    color: 'from-[#FFF0ED] to-white',
+    color: 'from-[var(--secondary)] to-white',
   },
 ];
 
-export default function ChatPage() {
+function ChatPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState('');
+  const { createConversation } = useConversations();
 
   const searchQuery = searchParams.get('q');
+  const sessionId = searchParams.get('session');
 
   const handleSearch = () => {
     if (query.trim()) {
-      router.push(`/chat?q=${encodeURIComponent(query.trim())}`);
+      const newConversation = createConversation(query.trim());
+      router.push(`/chat?session=${newConversation.id}&q=${encodeURIComponent(query.trim())}`);
     }
   };
 
   const handleSuggestionClick = (text: string) => {
-    router.push(`/chat?q=${encodeURIComponent(text)}`);
+    const newConversation = createConversation(text);
+    router.push(`/chat?session=${newConversation.id}&q=${encodeURIComponent(text)}`);
   };
 
-    if (searchQuery) {
-    return <ChatInterface initialQuery={searchQuery} showRelatedPapers={true} />;
+  // Show chat interface if there's a search query or a session ID
+  if (searchQuery || sessionId) {
+    return <ChatInterface conversationId={sessionId || undefined} initialQuery={searchQuery || undefined} showRelatedPapers={true} />;
   }
 
   return (
-    <div className="h-full flex items-center justify-center p-8">
-      <div className="w-full max-w-[700px] space-y-10">
+    <div className="h-full overflow-hidden flex items-center justify-center p-8">
+      <div className="w-full max-w-[800px] space-y-8">
         {}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-center space-y-3"
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="text-center space-y-2"
         >
-          <h1 className="text-4xl font-bold text-[#4A4A4A]">
+          <h1 className="text-3xl font-bold text-[var(--foreground)]">
             ¿Qué quieres investigar hoy?
           </h1>
-          <p className="text-lg text-[#9E9E9E]">
+          <p className="text-base text-[var(--muted-foreground)]">
             Pregúntame sobre papers, tendencias o comparaciones
           </p>
         </motion.div>
@@ -72,10 +79,10 @@ export default function ChatPage() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="space-y-3"
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="space-y-2"
         >
-          <div className="relative">
+          <div className="relative flex gap-2">
             <input
               type="text"
               value={query}
@@ -84,61 +91,47 @@ export default function ChatPage() {
                 if (e.key === 'Enter') handleSearch();
               }}
               placeholder="Escribe tu pregunta aquí..."
-              className="w-full px-6 py-4 pr-14 text-lg border-2 border-[#FFD9D0] rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#FFB5A7]/20 focus:border-[#FFB5A7] transition-all bg-white/80 backdrop-blur-sm"
+              className="flex-1 px-5 py-3 text-base border-2 border-[var(--border)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)] transition-all bg-white"
             />
             <button
-              type="button"
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-2 hover:bg-[#FFF0ED] rounded-lg transition-colors"
+              onClick={handleSearch}
+              disabled={!query.trim()}
+              className="px-6 py-3 bg-[var(--primary)] text-white font-medium rounded-xl hover:bg-[var(--navy)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
-              <Mic className="w-5 h-5 text-[#9E9E9E]" />
-            </button>
-          </div>
-
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={handleSearch}
-            disabled={!query.trim()}
-            className="w-full py-3 bg-[#FFB5A7] text-[#4A4A4A] font-semibold rounded-xl shadow-md hover:bg-[#FF8B7A] hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[#E0E0E0]"
-          >
-            <div className="flex items-center justify-center gap-2">
               <Search className="w-5 h-5" />
               Buscar
-            </div>
-          </motion.button>
+            </button>
+          </div>
         </motion.div>
 
         {}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="space-y-4"
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="space-y-3"
         >
-          <div className="flex items-center gap-2 text-[#9E9E9E]">
-            <span className="text-xl">💡</span>
-            <h2 className="text-sm font-semibold">Prueba preguntar:</h2>
-          </div>
+          <h2 className="text-sm font-semibold text-[var(--muted-foreground)]">
+            Prueba preguntar:
+          </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {suggestions.map((suggestion, index) => {
               const Icon = suggestion.icon;
               return (
                 <motion.button
                   key={index}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 + index * 0.1 }}
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
+                  transition={{ delay: 0.3 + index * 0.05 }}
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
                   onClick={() => handleSuggestionClick(suggestion.text)}
-                  className={`p-4 bg-gradient-to-br ${suggestion.color} border border-[#FFD9D0]/50 rounded-xl text-left transition-all hover:shadow-md group`}
+                  className="p-3 bg-white border border-[var(--border)] rounded-lg text-left transition-all hover:border-[var(--primary)] hover:shadow-sm group"
                 >
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-white/70 rounded-lg group-hover:bg-white transition-colors">
-                      <Icon className="w-5 h-5 text-[#4A4A4A]" />
-                    </div>
-                    <p className="text-sm font-medium text-[#4A4A4A] leading-relaxed flex-1">
+                  <div className="flex items-center gap-3">
+                    <Icon className="w-4 h-4 text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
+                    <p className="text-sm text-[var(--foreground)] flex-1">
                       {suggestion.text}
                     </p>
                   </div>
@@ -147,7 +140,35 @@ export default function ChatPage() {
             })}
           </div>
         </motion.div>
+
+        {/* Historial de conversaciones */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="space-y-3"
+        >
+          <h2 className="text-sm font-semibold text-[var(--muted-foreground)]">
+            Conversaciones recientes:
+          </h2>
+
+          <div className="border border-[var(--border)] rounded-lg p-2 bg-white max-h-[200px] overflow-y-auto">
+            <ConversationList />
+          </div>
+        </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function ChatPage() {
+  return (
+    <Suspense fallback={
+      <div className="h-full flex items-center justify-center">
+        <div className="animate-pulse text-[var(--muted-foreground)]">Cargando...</div>
+      </div>
+    }>
+      <ChatPageContent />
+    </Suspense>
   );
 }

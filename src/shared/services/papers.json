@@ -1,0 +1,1292 @@
+[
+  {
+    "paper_id": "NASA-2023-MUSCLE-ML-001",
+    "doi": "10.1038/s41526-023-00337-5",
+    "title": "Explainable machine learning identifies multi-omics signatures of muscle response to spaceflight in mice",
+    "authors": [
+      {
+        "name": "Kevin Li",
+        "affiliation": "KBR, Moffett Field, CA, USA",
+        "location": {
+          "institution": "KBR",
+          "city": "Moffett Field",
+          "country": "USA",
+          "latitude": 37.4101,
+          "longitude": -122.0493
+        }
+      },
+      {
+        "name": "Riya Desai",
+        "affiliation": "University of California at Davis, Davis, CA, USA",
+        "location": {
+          "institution": "University of California at Davis",
+          "city": "Davis",
+          "country": "USA",
+          "latitude": 38.5382,
+          "longitude": -121.7617
+        }
+      },
+      {
+        "name": "Sylvain V. Costes",
+        "affiliation": "Space Biosciences Division, NASA Ames Research Center, Moffett Field, CA, USA",
+        "location": {
+          "institution": "NASA Ames Research Center",
+          "city": "Moffett Field",
+          "country": "USA",
+          "latitude": 37.4090,
+          "longitude": -122.0645
+        }
+      }
+    ],
+    "publication_year": 2023,
+    "publication_date": "2023-12-13",
+    "journal": "npj Microgravity",
+    "abstract": "The adverse effects of microgravity exposure on mammalian physiology during spaceflight necessitate a deep understanding of the underlying mechanisms to develop effective countermeasures. One such concern is muscle atrophy, which is partly attributed to the dysregulation of calcium levels due to abnormalities in SERCA pump functioning. To identify potential biomarkers for this condition, multi-omics data and physiological data available on the NASA Open Science Data Repository (osdr.nasa.gov) were used, and machine learning methods were employed. Specifically, we used multi-omics (transcriptomic, proteomic, and DNA methylation) data and calcium reuptake data collected from C57BL/6J mouse soleus and tibialis anterior tissues during several 30+ day-long missions on the international space station. The QLattice symbolic regression algorithm was introduced to generate highly explainable models that predict either experimental conditions or calcium reuptake levels based on multi-omics features. The list of candidate models established by QLattice was used to identify key features contributing to the predictive capability of these models, with Acyp1 and Rps7 proteins found to be the most predictive biomarkers related to the resilience of the tibialis anterior muscle in space. These findings could serve as targets for future interventions aiming to reduce the extent of muscle atrophy during space travel.",
+    "keywords": ["Muscle Atrophy", "Spaceflight", "Machine Learning", "Multi-omics", "Calcium Reuptake", "Biomarkers", "Mice"],
+    "structured_data": {
+      "research_question": "Can explainable machine learning identify key multi-omics biomarkers that predict muscle response and calcium reuptake aberrations in mice during spaceflight?",
+      "main_conclusion": "The proteins Acyp1 and Rps7 were identified as the most predictive biomarkers for the resilience of the tibialis anterior muscle in space, suggesting they could be targets for future countermeasures against muscle atrophy.",
+      "methodology": {
+        "study_design": "Machine Learning Analysis on existing multi-omics data",
+        "sample_size": "Data from 6 space-flown (FLT) and 6 ground control (GC) mice for omics (RR-1), and up to 10 FLT/10 GC for calcium data (RR-9).",
+        "instruments_used": ["QLattice symbolic regression", "RNA-seq", "Mass Spectrometry Proteomics", "Bisulfite Sequencing"]
+      },
+      "quantitative_results": [
+        {
+          "variable_name": "TA Muscle Resilience Biomarker",
+          "effect_description": "Acyp1 protein expression is negatively correlated with calcium reuptake in TA muscles, indicating high Acyp1 is associated with low calcium reuptake efficiency.",
+          "direction": "Negative"
+        },
+        {
+          "variable_name": "SOL Muscle Weight Change (RR-1)",
+          "effect_size": -24.8,
+          "units": "percent change (FLT vs GC)",
+          "direction": "Negative"
+        }
+      ]
+    },
+    "semantic_data": {
+      "research_category": "Space Biology & Bioinformatics",
+      "application_domain": "Astronaut Health & Countermeasure Development",
+      "technologies_applied": ["Machine Learning", "Symbolic Regression", "Multi-omics Analysis"],
+      "key_concepts": ["Muscle Atrophy", "SERCA pump", "Calcium Signaling", "Tibialis Anterior (TA)", "Soleus (SOL)", "Acyp1", "Rps7"],
+      "mentioned_entities": {
+        "missions": ["RR-1", "RR-9", "International Space Station"],
+        "rovers": [],
+        "planets": [],
+        "agencies": ["NASA"]
+      }
+    },
+    "full_text_for_embedding": "Explainable machine learning identifies multi-omics signatures of muscle response to spaceflight in mice. The adverse effects of microgravity exposure on mammalian physiology during spaceflight necessitate a deep understanding of the underlying mechanisms to develop effective countermeasures..."
+  },
+  {
+    "paper_id": "NASA-2016-BONE-DP-001",
+    "doi": "10.1038/srep21343",
+    "title": "Dried plum diet protects from bone loss caused by ionizing radiation",
+    "authors": [
+      {
+        "name": "A.-S. Schreurs",
+        "affiliation": "NASA Ames Research Center",
+        "location": {
+          "institution": "NASA Ames Research Center",
+          "city": "Moffett Field",
+          "country": "USA",
+          "latitude": 37.4090,
+          "longitude": -122.0645
+        }
+      },
+      {
+        "name": "C. L. Limoli",
+        "affiliation": "University of California Irvine",
+        "location": {
+          "institution": "University of California Irvine",
+          "city": "Irvine",
+          "country": "USA",
+          "latitude": 33.6405,
+          "longitude": -117.8443
+        }
+      },
+      {
+        "name": "R. K. Globus",
+        "affiliation": "NASA Ames Research Center",
+        "location": {
+          "institution": "NASA Ames Research Center",
+          "city": "Moffett Field",
+          "country": "USA",
+          "latitude": 37.4090,
+          "longitude": -122.0645
+        }
+      }
+    ],
+    "publication_year": 2016,
+    "publication_date": "2016-02-11",
+    "journal": "Scientific Reports",
+    "abstract": "Bone loss caused by ionizing radiation is a potential health concern for radiotherapy patients, radiation workers and astronauts. In animal studies, exposure to ionizing radiation increases oxidative damage in skeletal tissues, and results in an imbalance in bone remodeling initiated by increased bone-resorbing osteoclasts. Therefore, we evaluated various candidate interventions with antioxidant or anti-inflammatory activities (antioxidant cocktail, dihydrolipoic acid, ibuprofen, dried plum) both for their ability to blunt the expression of resorption-related genes in marrow cells after irradiation with either gamma rays or simulated space radiation and to prevent bone loss. Dried plum was most effective in reducing the expression of genes related to bone resorption and also preventing later cancellous bone decrements caused by irradiation with either photons or heavy ions. Thus, dietary supplementation with DP may prevent the skeletal effects of radiation exposures either in space or on Earth.",
+    "keywords": ["Bone Loss", "Ionizing Radiation", "Dried Plum", "Countermeasure", "Spaceflight", "Antioxidant", "Osteoclasts"],
+    "structured_data": {
+      "research_question": "Can dietary interventions, particularly dried plum, protect against cancellous bone loss caused by ionizing radiation relevant to spaceflight?",
+      "main_conclusion": "Dietary supplementation with dried plum completely prevented cancellous bone loss in mice caused by both gamma radiation and simulated space radiation (protons and heavy ions).",
+      "methodology": {
+        "study_design": "Interventional Animal Study (Diet)",
+        "sample_size": "5-10 male C57BL/6J mice per group",
+        "instruments_used": ["Gamma irradiator (137Cs)", "Proton and Heavy Ion accelerator (NSRL)", "microCT scanner", "qPCR"]
+      },
+      "quantitative_results": [
+        {
+          "variable_name": "Cancellous Bone Volume (BV/TV) vs Control",
+          "effect_description": "2 Gy gamma radiation caused a 32% decrease in cancellous bone volume in control diet mice, an effect that was completely prevented in the dried plum diet group.",
+          "effect_size": 32,
+          "units": "percent loss averted",
+          "direction": "Positive"
+        },
+        {
+          "variable_name": "Rankl gene expression vs Control",
+          "effect_description": "Dried plum diet prevented the 1.5-fold increase in the pro-resorptive gene Rankl seen in control animals 24 hours after irradiation.",
+          "direction": "Positive"
+        }
+      ]
+    },
+    "semantic_data": {
+      "research_category": "Radiobiology & Space Countermeasures",
+      "application_domain": "Astronaut Health",
+      "technologies_applied": ["Dietary Intervention", "Microcomputed Tomography"],
+      "key_concepts": ["Cancellous Bone", "Bone Remodeling", "Oxidative Stress", "Pro-osteoclastogenic cytokines", "Rankl", "Nfe212"],
+      "mentioned_entities": {
+        "missions": ["International Space Station (context)"],
+        "rovers": [],
+        "planets": [],
+        "agencies": ["NASA", "DOE"]
+      }
+    },
+    "full_text_for_embedding": "Dried plum diet protects from bone loss caused by ionizing radiation. Bone loss caused by ionizing radiation is a potential health concern for radiotherapy patients, radiation workers and astronauts..."
+  },
+  {
+    "paper_id": "NASA-2014-MUSCLE-SG-001",
+    "doi": "10.1186/2044-5040-4-13",
+    "title": "Absence of y-sarcoglycan alters the response of p70S6 kinase to mechanical perturbation in murine skeletal muscle",
+    "authors": [
+      {
+        "name": "Catherine Moorwood",
+        "affiliation": "University of Pennsylvania",
+        "location": {
+          "institution": "University of Pennsylvania",
+          "city": "Philadelphia",
+          "country": "USA",
+          "latitude": 39.9522,
+          "longitude": -75.1932
+        }
+      },
+      {
+        "name": "Elisabeth R. Barton",
+        "affiliation": "University of Pennsylvania",
+        "location": {
+          "institution": "University of Pennsylvania",
+          "city": "Philadelphia",
+          "country": "USA",
+          "latitude": 39.9522,
+          "longitude": -75.1932
+        }
+      }
+    ],
+    "publication_year": 2014,
+    "publication_date": "2014-07-01",
+    "journal": "Skeletal Muscle",
+    "abstract": "The dystrophin glycoprotein complex (DGC) is located at the sarcolemma of muscle fibers, providing structural integrity. When only the sarcoglycan subcomplex is absent, muscles display severe myofiber degeneration, but little susceptibility to contractile damage, suggesting that disease occurs not by structural deficits but through aberrant signaling, namely, loss of normal mechanotransduction signaling. We examined mechanotransduction in the presence and absence of y-sarcoglycan. Basal p70S6K activation was elevated in muscles of y-SG-/- mice, in a calcium-independent manner. p70S6K activation increased with stretch in both C57 and y-SG-/- isolated muscles, and was sustained in y-SG-/- muscles, unlike the transient response in C57 muscles. Our results suggest that loss of y-sarcoglycan uncouples the response of p70S6K to stretch and implies that y-sarcoglycan is important for inactivation of this pathway. Overall, we assert that altered load-sensing mechanisms exist in muscular dystrophies where the sarcoglycans are absent.",
+    "keywords": ["Sarcoglycan", "Muscular Dystrophy", "Mechanotransduction", "p70S6K", "Skeletal Muscle", "Load-sensing"],
+    "structured_data": {
+      "research_question": "How does the absence of the y-sarcoglycan protein alter the p70S6 kinase signaling pathway in response to mechanical stretch in skeletal muscle?",
+      "main_conclusion": "Loss of y-sarcoglycan causes elevated basal p70S6K activation and, critically, a sustained/prolonged activation after mechanical stretch, suggesting y-sarcoglycan is required for the proper inactivation of this mechanosensitive pathway.",
+      "methodology": {
+        "study_design": "Ex-vivo Molecular Biology Study",
+        "sample_size": "3-6 mice per genotype/condition (C57 and y-SG-/-)",
+        "instruments_used": ["In-vitro muscle test system (for passive stretch)", "Immunoblotting", "Cell Culture"]
+      },
+      "quantitative_results": [
+        {
+          "variable_name": "Basal p70S6K Activation",
+          "effect_description": "Resting muscles from y-SG-/- mice show an approximately 1.7-fold elevation in p70S6K phosphorylation compared to control (C57) mice, and this effect is independent of calcium.",
+          "effect_size": 1.7,
+          "units": "fold increase",
+          "direction": "Positive"
+        },
+        {
+          "variable_name": "p70S6K Response to Stretch (90 min)",
+          "effect_description": "After 90 minutes of passive stretch, p70S6K activation returns to near-baseline in control muscle but remains significantly elevated in y-SG-/- muscle.",
+          "direction": "Positive"
+        }
+      ]
+    },
+    "semantic_data": {
+      "research_category": "Muscle Physiology & Molecular Biology",
+      "application_domain": "Muscular Dystrophy Research & Mechanobiology",
+      "technologies_applied": ["Passive Muscle Stretch", "Immunoblotting"],
+      "key_concepts": ["Dystrophin glycoprotein complex (DGC)", "y-sarcoglycan", "Mechanotransduction", "p70S6 Kinase", "mTOR"],
+      "mentioned_entities": {
+        "missions": [],
+        "rovers": [],
+        "planets": [],
+        "agencies": ["NASA (funding source)"]
+      }
+    },
+    "full_text_for_embedding": "Absence of y-sarcoglycan alters the response of p70S6 kinase to mechanical perturbation in murine skeletal muscle. The dystrophin glycoprotein complex (DGC) is located at the sarcolemma of muscle fibers, providing structural integrity..."
+  },
+  {
+    "paper_id": "NASA-2024-BONE-IMMUNE-001",
+    "doi": "10.1038/s41598-024-79315-0",
+    "title": "Impact of microgravity and lunar gravity on murine skeletal and immune systems during space travel",
+    "authors": [
+      {
+        "name": "Yui Okamura",
+        "affiliation": "University of Tsukuba, Ibaraki, Japan",
+        "location": {
+          "institution": "University of Tsukuba",
+          "city": "Tsukuba",
+          "country": "Japan",
+          "latitude": 36.109,
+          "longitude": 140.104
+        }
+      },
+      {
+        "name": "Kei Gochi",
+        "affiliation": "Institute of Science Tokyo, Tokyo, Japan",
+        "location": {
+          "institution": "Institute of Science Tokyo",
+          "city": "Tokyo",
+          "country": "Japan",
+          "latitude": 35.6895,
+          "longitude": 139.6917
+        }
+      },
+      {
+        "name": "Satoru Takahashi",
+        "affiliation": "University of Tsukuba, Ibaraki, Japan",
+        "location": {
+          "institution": "University of Tsukuba",
+          "city": "Tsukuba",
+          "country": "Japan",
+          "latitude": 36.109,
+          "longitude": 140.104
+        }
+      }
+    ],
+    "publication_year": 2024,
+    "publication_date": "2024-11-20",
+    "journal": "Scientific Reports",
+    "abstract": "Long-duration spaceflight creates a variety of stresses due to the unique environment, which can lead to compromised functioning of the skeletal and immune systems. However, the mechanisms by which organisms respond to this stress remain unclear. The present study aimed to investigate the impact of three different gravitational loadings (microgravity, 1/6 g [lunar gravity], and 1 g) on the behavior, bone, thymus, and spleen of mice housed for 25-35 days in the International Space Station. The bone density reduction under microgravity was mostly recovered by 1 g but only partially recovered by 1/6 g. Both 1 g and 1/6 g suppressed microgravity-induced changes in some osteoblast and osteoclast marker gene expression. Thymus atrophy induced by microgravity was half recovered by both 1 g and 1/6 g, but gene expression changes were not fully recovered by 1/6 g. While no histological changes were observed due to low gravity, alterations in gene expression were noted in the spleen. We found that in bone and thymus, lunar gravity reduced microgravity-induced histological alterations and partially reversed gene expression changes. This study highlighted organ-specific variations in responsiveness to gravity, serving as an animal test for establishing a molecular-level gravity threshold for maintaining a healthy state during future spaceflight.",
+    "keywords": ["Spaceflight", "Microgravity", "Thymus", "Spleen", "Bone", "Gene expression"],
+    "structured_data": {
+      "research_question": "What is the impact of different gravitational loads (microgravity, 1/6g lunar, and 1g artificial) on the skeletal and immune systems of mice during spaceflight?",
+      "main_conclusion": "Lunar gravity (1/6 g) partially recovers microgravity-induced bone mass loss and thymus atrophy, with organ-specific variations in responsiveness to different gravity levels.",
+      "methodology": {
+        "study_design": "In-vivo Spaceflight Animal Study",
+        "sample_size": "6 mice per group for each of the three missions (MHU-1, -4, -5).",
+        "instruments_used": ["Micro-computed tomography (µCT)", "RNA-sequencing", "Multiple Artificial-gravity Research System (MARS)", "Rotarod test", "Righting reflex test"]
+      },
+      "quantitative_results": [
+        {
+          "variable_name": "Trabecular Bone Volume (BV/TV) change",
+          "effect_description": "Microgravity (MG) caused a 70% decrease in BV/TV, whereas partial gravity (PG) at 1/6g resulted in only a ~30% decrease, showing partial recovery.",
+          "effect_size": -70,
+          "units": "percent change vs 1g (for MG)",
+          "direction": "Negative"
+        },
+        {
+          "variable_name": "Plasma TRAP levels",
+          "effect_description": "The bone resorption marker TRAP significantly increased in both microgravity (MG) and partial gravity (PG) mice compared to ground controls.",
+          "direction": "Positive"
+        }
+      ]
+    },
+    "semantic_data": {
+      "research_category": "Gravitational Biology & Space Medicine",
+      "application_domain": "Astronaut Health",
+      "technologies_applied": ["Artificial Gravity", "Centrifuge System", "Genomic Analysis"],
+      "key_concepts": ["Bone Density", "Thymus Atrophy", "Spleen", "Osteoclasts", "Osteoblasts", "Lunar Gravity"],
+      "mentioned_entities": {
+        "missions": ["MHU-1", "MHU-4", "MHU-5", "International Space Station (ISS)"],
+        "rovers": [],
+        "planets": ["Moon (context)"],
+        "agencies": ["JAXA", "NASA"]
+      }
+    },
+    "full_text_for_embedding": "Impact of microgravity and lunar gravity on murine skeletal and immune systems during space travel. Long-duration spaceflight creates a variety of stresses due to the unique environment..."
+  },
+  {
+    "paper_id": "NASA-2025-VASCULAR-HU-001",
+    "doi": "10.1007/s00018-024-05572-x",
+    "title": "Single-cell RNA sequencing of the carotid artery and femoral artery of rats exposed to hindlimb unloading",
+    "authors": [
+      {
+        "name": "Chengfei Li",
+        "affiliation": "Fourth Military Medical University, Xi'an, China",
+        "location": {
+          "institution": "Fourth Military Medical University",
+          "city": "Xi'an",
+          "country": "China",
+          "latitude": 34.2667,
+          "longitude": 108.9500
+        }
+      },
+      {
+        "name": "Xiqing Sun",
+        "affiliation": "Fourth Military Medical University, Xi'an, China",
+        "location": {
+          "institution": "Fourth Military Medical University",
+          "city": "Xi'an",
+          "country": "China",
+          "latitude": 34.2667,
+          "longitude": 108.9500
+        }
+      }
+    ],
+    "publication_year": 2025,
+    "publication_date": "2025-01-21",
+    "journal": "Cellular and Molecular Life Sciences",
+    "abstract": "Prolonged spaceflight is known to cause vascular deconditioning and remodeling. Tail suspension, a widely used spaceflight analog, is reported to result in vascular remodeling of rats. However, little is known about the cellular atlas of the heterogeneous cells of Carotid Artery (CA) and Femoral Artery (FA) from hindlimb-unloaded rats. This study presents the first cellular atlas of the conductive arteries in hindlimb-unloaded rats, revealing a spectrum of dysregulated gene profiles. Clustering analysis identified Endothelial Cells (ECs), Smooth Muscle Cells (SMCs), fibroblasts, and a spectrum of immune cells. Notably, an increased percentage of ECs in the CA and a diminished proportion of SMCs in both CA and FA were observed following tail suspension. Subclustering revealed specialized subsets engaged in processes such as Endothelial-to-mesenchymal transition (EndoMT). Enhanced intercellular interactions among major cell types, especially between SMC and fibroblast, underscored the importance of cell communication in vascular remodeling.",
+    "keywords": ["Single-cell RNA sequencing", "Weightlessness", "Carotid artery", "Femoral artery", "Cellular communication", "Transcription factor"],
+    "structured_data": {
+      "research_question": "What is the single-cell transcriptomic atlas of carotid and femoral arteries in rats subjected to 3 months of hindlimb unloading, a simulated microgravity analog?",
+      "main_conclusion": "Hindlimb unloading induces artery- and cell-type-specific transcriptomic changes, including a decreased proportion of smooth muscle cells, evidence of Endothelial-to-mesenchymal transition (EndoMT), and altered intercellular communication, highlighting fibroblast plasticity.",
+      "methodology": {
+        "study_design": "Single-cell RNA sequencing on Animal Analog Model",
+        "sample_size": "12 male Sprague-Dawley rats (6 hindlimb unloading, 6 control).",
+        "instruments_used": ["Single-cell RNA sequencing (scRNA-seq)", "Hindlimb Unloading (Tail Suspension)", "Immunofluorescent staining", "CellChat analysis"]
+      },
+      "quantitative_results": [
+        {
+          "variable_name": "SMC Proportion Change",
+          "effect_description": "A reduction in the fraction of Smooth Muscle Cells (SMCs) was observed in both the carotid artery (CA) and femoral artery (FA) of the hindlimb unloading group compared to controls.",
+          "direction": "Negative"
+        },
+        {
+          "variable_name": "Intima-media thickness (Carotid Artery)",
+          "effect_description": "The study confirmed an increase in the intima-media thickness in the carotid artery of hindlimb unloaded rats.",
+          "direction": "Positive"
+        }
+      ]
+    },
+    "semantic_data": {
+      "research_category": "Cardiovascular Physiology & Space Analog Research",
+      "application_domain": "Vascular Deconditioning",
+      "technologies_applied": ["Single-cell RNA sequencing", "Hindlimb Unloading", "Bioinformatics", "Pseudotime trajectory analysis"],
+      "key_concepts": ["Vascular Remodeling", "Endothelial Cells (ECs)", "Smooth Muscle Cells (SMCs)", "Fibroblasts", "Endothelial-to-mesenchymal transition (EndoMT)"],
+      "mentioned_entities": {
+        "missions": [],
+        "rovers": [],
+        "planets": [],
+        "agencies": []
+      }
+    },
+    "full_text_for_embedding": "Single-cell RNA sequencing of the carotid artery and femoral artery of rats exposed to hindlimb unloading. Prolonged spaceflight is known to cause vascular deconditioning and remodeling. Tail suspension, a widely used spaceflight analog, is reported to result in vascular remodeling of rats..."
+  },
+  {
+    "paper_id": "NASA-2013-PELVIC-BONE-001",
+    "doi": "10.1371/journal.pone.0061372",
+    "title": "Microgravity Induces Pelvic Bone Loss through Osteoclastic Activity, Osteocytic Osteolysis, and Osteoblastic Cell Cycle Inhibition by CDKN1a/p21",
+    "authors": [
+      {
+        "name": "Elizabeth A. Blaber",
+        "affiliation": "NASA Ames Research Center, Moffett Field, California",
+        "location": {
+          "institution": "NASA Ames Research Center",
+          "city": "Moffett Field",
+          "country": "USA",
+          "latitude": 37.4090,
+          "longitude": -122.0645
+        }
+      },
+      {
+        "name": "Eduardo A. C. Almeida",
+        "affiliation": "NASA Ames Research Center, Moffett Field, California",
+        "location": {
+          "institution": "NASA Ames Research Center",
+          "city": "Moffett Field",
+          "country": "USA",
+          "latitude": 37.4090,
+          "longitude": -122.0645
+        }
+      }
+    ],
+    "publication_year": 2013,
+    "publication_date": "2013-04-18",
+    "journal": "PLOS ONE",
+    "abstract": "Bone homeostasis occurs through a balance in the activities of osteoclasts, osteoblasts, and osteocytes. Microgravity is known to cause osteoclast-mediated bone resorption; however, we hypothesize that osteocytic osteolysis, and cell cycle arrest during osteogenesis may also contribute to bone loss in space. We exposed 16-week-old female C57BL/6J mice to microgravity for 15-days on the STS-131 space shuttle mission. Analysis of the pelvis by µCT shows decreases in bone volume fraction (BV/TV) of 6.29%. TRAP-positive osteoclast-covered trabecular bone surfaces also increased by 170%, indicating osteoclastic bone degeneration. High-resolution X-ray nanoCT studies revealed signs of lacunar osteolysis, including increases in cross-sectional area (+17%). Furthermore, expression of CDKN1a/p21 in bone increased 3.31 fold, and was localized to osteoblasts, possibly inhibiting the cell cycle during tissue regeneration. In conclusion, our findings indicate that bone loss is not limited to osteoclastic degradation and offer new evidence for microgravity-induced osteocytic osteolysis and CDKN1a/p21-mediated osteogenic cell cycle arrest.",
+    "keywords": ["Microgravity", "Bone Loss", "Osteoclast", "Osteocytic Osteolysis", "CDKN1a/p21", "Cell Cycle Arrest", "Pelvis"],
+    "structured_data": {
+      "research_question": "Does microgravity-induced bone loss involve mechanisms beyond osteoclastic activity, such as osteocytic osteolysis and osteoblastic cell cycle inhibition?",
+      "main_conclusion": "Rapid bone loss in the mouse pelvis after 15 days of spaceflight is mediated by a combination of increased osteoclastic activity, osteocytic osteolysis (lacunar enlargement), and CDKN1a/p21-mediated cell cycle arrest in osteoblasts.",
+      "methodology": {
+        "study_design": "In-vivo Spaceflight Animal Study",
+        "sample_size": "8 female C57BL/6J mice.",
+        "instruments_used": ["Micro-computed tomography (µCT)", "Nano-computed tomography (nanoCT)", "RT-qPCR", "TRAP staining", "Immunohistochemistry"]
+      },
+      "quantitative_results": [
+        {
+          "variable_name": "Pelvic Bone Volume Fraction (BV/TV)",
+          "effect_description": "Spaceflight resulted in a 6.29% decrease in bone volume fraction in the ischial region of the pelvis.",
+          "effect_size": -6.29,
+          "units": "percent change",
+          "direction": "Negative"
+        },
+        {
+          "variable_name": "Osteoclast-covered Surface",
+          "effect_description": "The bone surface covered by TRAP-positive osteoclasts increased by 170% in the trabecular region of the femur.",
+          "effect_size": 170,
+          "units": "percent increase",
+          "direction": "Positive"
+        },
+        {
+          "variable_name": "CDKN1a/p21 Gene Expression",
+          "effect_description": "Expression of the cell cycle inhibitor CDKN1a/p21 in bone tissue increased 3.31-fold in spaceflight mice.",
+          "effect_size": 3.31,
+          "units": "fold increase",
+          "direction": "Positive"
+        }
+      ]
+    },
+    "semantic_data": {
+      "research_category": "Bone Physiology & Space Biology",
+      "application_domain": "Astronaut Health & Bone Degeneration",
+      "technologies_applied": ["Nano-Computed Tomography", "Gene Expression Analysis", "Histology"],
+      "key_concepts": ["Osteocytic Osteolysis", "Lacunar Enlargement", "CDKN1a/p21", "Cell Cycle Arrest", "Osteoblast", "Pelvic Bone"],
+      "mentioned_entities": {
+        "missions": ["STS-131"],
+        "rovers": [],
+        "planets": [],
+        "agencies": ["NASA"]
+      }
+    },
+    "full_text_for_embedding": "Microgravity Induces Pelvic Bone Loss through Osteoclastic Activity, Osteocytic Osteolysis, and Osteoblastic Cell Cycle Inhibition by CDKN1a/p21. Bone is a dynamically remodeled tissue that requires gravity-mediated mechanical stimulation for maintenance of mineral content and structure..."
+  },
+  {
+    "paper_id": "NASA-2013-PARTIAL-LOAD-001",
+    "doi": "10.1002/jbmr.1814",
+    "title": "Partial Reductions in Mechanical Loading Yield Proportional Changes in Bone Density, Bone Architecture, and Muscle Mass",
+    "authors": [
+      {
+        "name": "Rachel Ellman",
+        "affiliation": "Harvard-Massachusetts Institute of Technology Division of Health Sciences and Technology, Cambridge, MA, USA",
+        "location": {
+          "institution": "Harvard-MIT",
+          "city": "Cambridge",
+          "country": "USA",
+          "latitude": 42.3601,
+          "longitude": -71.0942
+        }
+      },
+      {
+        "name": "Mary L Bouxsein",
+        "affiliation": "Center for Advanced Orthopaedic Studies, Beth Israel Deaconess Medical Center and Harvard Medical School, Boston, MA, USA",
+        "location": {
+          "institution": "Beth Israel Deaconess Medical Center",
+          "city": "Boston",
+          "country": "USA",
+          "latitude": 42.3392,
+          "longitude": -71.1092
+        }
+      }
+    ],
+    "publication_year": 2013,
+    "publication_date": "2013-04-01",
+    "journal": "Journal of Bone and Mineral Research",
+    "abstract": "Although the musculoskeletal system is known to be sensitive to changes in its mechanical environment, the relationship between functional adaptation and below-normal mechanical stimuli is not well defined. We investigated bone and muscle adaptation to a range of reduced loading using the partial weight suspension (PWS) system, in which a two-point harness is used to offload a tunable amount of body weight while maintaining quadrupedal locomotion. Skeletally mature female C57Bl/6 mice were exposed to partial weight bearing at 20%, 40%, 70%, or 100% of body weight for 21 days. A hindlimb unloaded (HLU) group was included for comparison in addition to age-matched controls. With PWS, bone and muscle changes were generally proportional to the degree of unloading. Specifically, total body and hindlimb bone mineral density, calf muscle mass, trabecular bone volume of the distal femur, and cortical area of the femur midshaft were all linearly related to the degree of unloading. Even a load reduction to 70% of normal weight bearing was associated with significant bone deterioration and muscle atrophy. These data confirm that the PWS model is highly effective in applying controllable, reduced, long-term loading that produces predictable, discrete adaptive changes in muscle and bone of the hindlimb.",
+    "keywords": [
+      "Mechanical Loading",
+      "Disuse",
+      "Mechanostat",
+      "Functional Adaptation",
+      "Partial Weight Bearing",
+      "Hindlimb Unloading"
+    ],
+    "structured_data": {
+      "research_question": "Do partial reductions in mechanical loading lead to proportional changes in bone density, bone architecture, and muscle mass?",
+      "main_conclusion": "Musculoskeletal adaptation is proportional to the degree of unloading; even a minor reduction to 70% of normal weight bearing led to significant bone deterioration and muscle atrophy.",
+      "methodology": {
+        "study_design": "In-vivo Animal Study (Partial Unloading Model)",
+        "sample_size": "131 skeletally mature female C57B1/6J mice across 6 groups.",
+        "instruments_used": [
+          "Partial Weight Suspension (PWS) system",
+          "Hindlimb Unloading (HLU)",
+          "Dual-energy X-ray absorptiometry (DXA)",
+          "Micro-computed tomography (µCT)",
+          "Three-point bending"
+        ]
+      },
+      "quantitative_results": [
+        {
+          "variable_name": "Hindlimb Bone Mineral Density (BMD)",
+          "effect_description": "There was a 1.2% decrease in hindlimb BMD for every 10% decrease in weight bearing (R² = 0.42).",
+          "direction": "Negative"
+        },
+        {
+          "variable_name": "Calf Muscle Mass",
+          "effect_description": "Final soleus and gastrocnemius masses were linearly associated with the level of weight bearing (R² = 0.38 and 0.41, respectively).",
+          "direction": "Negative"
+        },
+        {
+          "variable_name": "Femoral Bone Strength",
+          "effect_description": "Maximum force to failure was 19% to 21% lower in all partially and fully unloaded groups compared to normally housed controls.",
+          "direction": "Negative"
+        }
+      ]
+    },
+    "semantic_data": {
+      "research_category": "Gravitational Biology Analog",
+      "application_domain": "Partial Gravity Environments (Moon/Mars)",
+      "technologies_applied": [
+        "Partial Weight Suspension",
+        "Gait Analysis",
+        "Fecal Corticosterone Metabolites Assay"
+      ],
+      "key_concepts": [
+        "Mechanostat Theory",
+        "Partial Weight Bearing (PWB)",
+        "Dose-Response",
+        "Bone Microarchitecture"
+      ],
+      "mentioned_entities": {
+        "missions": [],
+        "rovers": [],
+        "planets": [],
+        "agencies": [
+          "NASA",
+          "NIH",
+          "National Space Biomedical Research Institute"
+        ]
+      }
+    },
+    "full_text_for_embedding": "Partial Reductions in Mechanical Loading Yield Proportional Changes in Bone Density, Bone Architecture, and Muscle Mass. Although the musculoskeletal system is known to be sensitive to changes in its mechanical environment, the relationship between functional adaptation and below-normal mechanical stimuli is not well defined..."
+  },
+  {
+    "paper_id": "NASA-2016-APOPTOSIS-HLU-001",
+    "doi": "10.1002/jbmr.2807",
+    "title": "Osteocyte Apoptosis Caused by Hindlimb Unloading is Required to Trigger Osteocyte RANKL Production and Subsequent Resorption of Cortical and Trabecular Bone in Mice Femurs",
+    "authors": [
+      {
+        "name": "Pamela Cabahug-Zuckerman",
+        "affiliation": "Department of Biomedical Engineering, City College of New York, New York, NY, USA",
+        "location": {
+          "institution": "City College of New York",
+          "city": "New York",
+          "country": "USA",
+          "latitude": 40.8201,
+          "longitude": -73.9493
+        }
+      },
+      {
+        "name": "Stefan Judex",
+        "affiliation": "Department of Biomedical Engineering, Stony Brook University, Stony Brook, NY, USA",
+        "location": {
+          "institution": "Stony Brook University",
+          "city": "Stony Brook",
+          "country": "USA",
+          "latitude": 40.9143,
+          "longitude": -73.1235
+        }
+      },
+      {
+        "name": "Mitchell B Schaffler",
+        "affiliation": "Department of Biomedical Engineering, City College of New York, New York, NY, USA",
+        "location": {
+          "institution": "City College of New York",
+          "city": "New York",
+          "country": "USA",
+          "latitude": 40.8201,
+          "longitude": -73.9493
+        }
+      }
+    ],
+    "publication_year": 2016,
+    "publication_date": "2016-07-01",
+    "journal": "Journal of Bone and Mineral Research",
+    "abstract": "Osteocyte apoptosis is essential to activate bone remodeling in response to fatigue microdamage and estrogen withdrawal. Osteocyte apoptosis has also been spatially linked to bone resorption owing to disuse, but whether apoptosis plays a similar controlling role is unclear. We evaluated the effects of disuse from hindlimb unloading (HLU) on osteocyte apoptosis, RANKL expression, and bone resorption, and tested whether apoptosis was required to activate osteoclastic activity by treating animals with a pan-caspase apoptosis inhibitor (QVD). In both cortical and trabecular bone, 5 days of HLU significantly increased osteocyte apoptosis. Increases in osteocyte apoptosis and RANKL production preceded increases in bone resorption. QVD completely inhibited not only the HLU-triggered increases in osteocyte apoptosis but also RANKL production and activation of bone resorption. Finally, apoptosis inhibition completely prevented the trabecular bone loss caused by HLU. Together these data indicate that osteocyte apoptosis plays a central and controlling role in triggering osteocyte RANKL production and the activation of new resorption leading to bone loss in disuse.",
+    "keywords": [
+      "Osteocyte Apoptosis",
+      "Hindlimb Unloading",
+      "RANKL",
+      "Bone Resorption",
+      "Disuse Osteoporosis",
+      "Caspase Inhibitor"
+    ],
+    "structured_data": {
+      "research_question": "Is osteocyte apoptosis required to trigger osteocyte RANKL production and subsequent bone resorption in the hindlimb unloading (disuse) model?",
+      "main_conclusion": "Osteocyte apoptosis is a central, controlling trigger for disuse-induced bone loss; its pharmacological inhibition prevented increases in RANKL production, bone resorption, and trabecular bone loss.",
+      "methodology": {
+        "study_design": "In-vivo Animal Study with Pharmacological Inhibition",
+        "sample_size": "Male C57BL/6J mice, n=6 per group.",
+        "instruments_used": [
+          "Hindlimb Unloading (HLU)",
+          "Pan-caspase inhibitor (QVD)",
+          "Immunohistochemistry",
+          "Micro-computed tomography (µCT)"
+        ]
+      },
+      "quantitative_results": [
+        {
+          "variable_name": "Osteocyte Apoptosis (Cortical Bone, 5 days HLU)",
+          "effect_description": "5 days of hindlimb unloading caused a 3-fold increase in apoptotic osteocytes in the femoral mid-diaphysis compared to cage controls.",
+          "effect_size": 3,
+          "units": "fold increase",
+          "direction": "Positive"
+        },
+        {
+          "variable_name": "Endocortical Resorption (14 days HLU)",
+          "effect_description": "Endocortical resorption was not increased at day 5, but increased almost 5-fold over baseline after 14 days of HLU.",
+          "effect_size": 5,
+          "units": "fold increase",
+          "direction": "Positive"
+        },
+        {
+          "variable_name": "Effect of Apoptosis Inhibition",
+          "effect_description": "Treatment with the caspase inhibitor QVD completely prevented the HLU-induced increases in osteocyte apoptosis, osteocyte RANKL expression, and bone resorption.",
+          "direction": "Positive"
+        }
+      ]
+    },
+    "semantic_data": {
+      "research_category": "Bone Physiology & Space Analog Research",
+      "application_domain": "Countermeasure Development for Disuse Osteoporosis",
+      "technologies_applied": [
+        "Apoptosis Inhibition",
+        "Histomorphometry",
+        "Immunohistochemistry"
+      ],
+      "key_concepts": [
+        "Osteocyte",
+        "Apoptosis",
+        "RANKL Signaling",
+        "Bone Remodeling",
+        "Caspase-3"
+      ],
+      "mentioned_entities": {
+        "missions": [],
+        "rovers": [],
+        "planets": [],
+        "agencies": [
+          "NASA",
+          "NIH"
+        ]
+      }
+    },
+    "full_text_for_embedding": "Osteocyte Apoptosis Caused by Hindlimb Unloading is Required to Trigger Osteocyte RANKL Production and Subsequent Resorption of Cortical and Trabecular Bone in Mice Femurs. Osteocyte apoptosis is essential to activate bone remodeling in response to fatigue microdamage and estrogen withdrawal..."
+  },
+  {
+    "paper_id": "NASA-2022-LIVER-MUSCLE-001",
+    "doi": "10.1016/j.isci.2022.105213",
+    "title": "Muscle atrophy phenotype gene expression during spaceflight is linked to a metabolic crosstalk in both the liver and the muscle in mice",
+    "authors": [
+      {
+        "name": "Geraldine Vitry",
+        "affiliation": "International Space University, Illkirch-Graffenstaden, France",
+        "location": {
+          "institution": "International Space University",
+          "city": "Illkirch-Graffenstaden",
+          "country": "France",
+          "latitude": 48.5298,
+          "longitude": 7.7289
+        }
+      },
+      {
+        "name": "Virginia Wotring",
+        "affiliation": "Center for Space Medicine, Baylor College of Medicine, Houston, TX, USA",
+        "location": {
+          "institution": "Baylor College of Medicine",
+          "city": "Houston",
+          "country": "USA",
+          "latitude": 29.7099,
+          "longitude": -95.3986
+        }
+      },
+      {
+        "name": "Willian Abraham da Silveira",
+        "affiliation": "Staffordshire University, Department of Biological Sciences, Stoke-on-Trent, UK",
+        "location": {
+          "institution": "Staffordshire University",
+          "city": "Stoke-on-Trent",
+          "country": "UK",
+          "latitude": 53.0097,
+          "longitude": -2.1793
+        }
+      }
+    ],
+    "publication_year": 2022,
+    "publication_date": "2022-10-21",
+    "journal": "iScience",
+    "abstract": "The muscle and the liver are among the most affected tissues during spaceflight and their relationships in response to space exposure have never been studied. We compared the transcriptome response of liver and quadriceps from mice on NASA RR1 mission, after 37 days of exposure to spaceflight. We found that lipid metabolism is the most affected biological process between the two organs. A specific gene cluster expression pattern in the liver strongly correlated with glucose sparing and an energy-saving response affecting high energy demand process gene expression such as DNA repair, autophagy, and translation in the muscle. Our results show that impaired lipid metabolism gene expression in the liver and muscle atrophy gene expression are two paired events during spaceflight, for which dietary changes represent a possible countermeasure.",
+    "keywords": [
+      "Muscle Atrophy",
+      "Liver",
+      "Metabolic Crosstalk",
+      "Spaceflight",
+      "Lipid Metabolism",
+      "Hepatokines",
+      "Transcriptomics"
+    ],
+    "structured_data": {
+      "research_question": "Is there a transcriptomic link between liver and muscle that correlates with the muscle atrophy phenotype during spaceflight?",
+      "main_conclusion": "Impaired lipid metabolism gene expression in the liver strongly correlates with an energy-saving transcriptional state in the muscle (reduced DNA repair, autophagy, translation) and the muscle atrophy phenotype, suggesting a metabolic crosstalk between the two organs.",
+      "methodology": {
+        "study_design": "Transcriptomic Analysis (Bioinformatics)",
+        "sample_size": "Data from liver and quadriceps of 6 space-flown and 6 ground-control mice from the NASA RR1 mission.",
+        "instruments_used": [
+          "RNA-sequencing",
+          "Gene Set Enrichment Analysis (GSEA)",
+          "sparse Partial Least Square-Differential Analysis (sPLS-DA)"
+        ]
+      },
+      "quantitative_results": [
+        {
+          "variable_name": "Common Biological Processes",
+          "effect_description": "Lipid metabolism-related processes ('beta oxidation lipid', 'plasma lipoprotein particle') were the most commonly affected biological processes between the liver and quadriceps.",
+          "direction": "Neutral"
+        },
+        {
+          "variable_name": "Muscle Transcriptome Response",
+          "effect_description": "Quadriceps showed downregulation of hypoglycemic signaling pathways (HIF-1, Insulin, AMPK, etc.) and processes with high energy demand, such as DNA repair, autophagy, and translation.",
+          "direction": "Negative"
+        }
+      ]
+    },
+    "semantic_data": {
+      "research_category": "Systems Biology & Space Omics",
+      "application_domain": "Astronaut Health & Dietary Countermeasures",
+      "technologies_applied": [
+        "Transcriptomics",
+        "Multi-block Analysis",
+        "Bioinformatics"
+      ],
+      "key_concepts": [
+        "Organ Crosstalk",
+        "Hepatokines",
+        "Glucose Sparing",
+        "Insulin Resistance",
+        "Short Chain Fatty Acids (SCFAs)"
+      ],
+      "mentioned_entities": {
+        "missions": [
+          "Rodent Research 1 (RR1)"
+        ],
+        "rovers": [],
+        "planets": [],
+        "agencies": [
+          "NASA",
+          "ESA"
+        ]
+      }
+    },
+    "full_text_for_embedding": "Muscle atrophy phenotype gene expression during spaceflight is linked to a metabolic crosstalk in both the liver and the muscle in mice. The muscle and the liver are among the most affected tissues during spaceflight and their relationships in response to space exposure have never been studied..."
+  },
+  {
+    "paper_id": "NASA-2022-MUSCLE-PIEZO1-001",
+    "doi": "10.1126/sciadv.abn0485",
+    "title": "Piezo1 regulates the regenerative capacity of skeletal muscles via orchestration of stem cell morphological states",
+    "authors": [
+      {
+        "name": "Nuoying Ma",
+        "affiliation": "Department of Orthopaedic Surgery, Perelman School of Medicine, University of Pennsylvania, Philadelphia, PA 19104, USA",
+        "location": {
+          "institution": "University of Pennsylvania",
+          "city": "Philadelphia",
+          "country": "USA",
+          "latitude": 39.9522,
+          "longitude": -75.1932
+        }
+      },
+      {
+        "name": "Foteini Mourkioti",
+        "affiliation": "Department of Orthopaedic Surgery, Perelman School of Medicine, University of Pennsylvania, Philadelphia, PA 19104, USA",
+        "location": {
+          "institution": "University of Pennsylvania",
+          "city": "Philadelphia",
+          "country": "USA",
+          "latitude": 39.9522,
+          "longitude": -75.1932
+        }
+      }
+    ],
+    "publication_year": 2022,
+    "publication_date": "2022-03-18",
+    "journal": "Science Advances",
+    "abstract": "Muscle stem cells (MuSCs) are essential for tissue homeostasis and regeneration, but the potential contribution of MuSC morphology to in vivo function remains unknown. Here, we demonstrate that quiescent MuSCs are morphologically heterogeneous and exhibit different patterns of cellular protrusions. We classified quiescent MuSCs into three functionally distinct stem cell states: responsive, intermediate, and sensory. We demonstrate that the shift between different stem cell states promotes regeneration and is regulated by the sensing protein Piezo1. Pharmacological activation of Piezo1 is sufficient to prime MuSCs toward more responsive cells. Piezo1 deletion in MuSCs shifts the distribution toward less responsive cells, mimicking the disease phenotype we find in dystrophic muscles. We further demonstrate that Piezo1 reactivation ameliorates the MuSC morphological and regenerative defects of dystrophic muscles. These findings advance our fundamental understanding of how stem cells respond to injury and identify Piezo1 as a key regulator for adjusting stem cell states essential for regeneration.",
+    "keywords": ["Muscle stem cells (MuSCs)", "Piezo1", "Regeneration", "Muscular Dystrophy", "Mechanosensing", "Stem Cell Morphology"],
+    "structured_data": {
+      "research_question": "How does muscle stem cell (MuSC) morphology contribute to muscle regeneration, and what is the role of the mechanosensing protein Piezo1 in this process?",
+      "main_conclusion": "MuSCs exist in distinct morphological states (responsive, intermediate, sensory). The mechanosensing protein Piezo1 regulates the shift between these states, and its reactivation can ameliorate regenerative defects in dystrophic muscles.",
+      "methodology": {
+        "study_design": "In-vivo Imaging and Genetic Study",
+        "sample_size": "3-6 mice per group for various experiments",
+        "instruments_used": ["Two-photon microscopy", "Genetically modified mouse models (Pax7EGFP)", "Pharmacological activator (Yoda1)", "Conditional knockout mice"]
+      },
+      "quantitative_results": [
+        {
+          "variable_name": "Piezo1 expression in dystrophic MuSCs",
+          "effect_description": "Dystrophic MuSCs exhibit markedly reduced Piezo1 gene expression levels compared to control MuSCs, indicating a severe defect in Piezo1 signaling in the diseased state.",
+          "direction": "Negative"
+        },
+        {
+          "variable_name": "Effect of Yoda1 on MuSC types",
+          "effect_description": "Pharmacological activation of Piezo1 with Yoda1 caused a significant shift in the MuSC population, increasing the proportion of 'responsive' cells (those with 0 or 1 protrusion) and decreasing 'intermediate' cells.",
+          "direction": "Positive"
+        }
+      ]
+    },
+    "semantic_data": {
+      "research_category": "Cell Biology & Regenerative Medicine",
+      "application_domain": "Muscular Dystrophy Treatment",
+      "technologies_applied": ["In-vivo live imaging", "Two-photon microscopy", "Mouse genetics", "Pharmacology"],
+      "key_concepts": ["Muscle Stem Cells (MuSCs)", "Cellular Protrusions", "Piezo1", "Yoda1", "Duchenne Muscular Dystrophy (DMD)", "Quiescence"],
+      "mentioned_entities": {
+        "missions": [],
+        "rovers": [],
+        "planets": [],
+        "agencies": ["NASA", "NIH"]
+      }
+    },
+    "full_text_for_embedding": "Piezo1 regulates the regenerative capacity of skeletal muscles via orchestration of stem cell morphological states. Muscle stem cells (MuSCs) are essential for tissue homeostasis and regeneration, but the potential contribution of MuSC morphology to in vivo function remains unknown..."
+  },
+  {
+    "paper_id": "NASA-2013-MUSCLE-EIM-001",
+    "doi": "10.1007/BF03342080",
+    "title": "Spaceflight and hind limb unloading induce similar changes in electrical impedance characteristics of mouse gastrocnemius muscle",
+    "authors": [
+      {
+        "name": "M. Sung",
+        "affiliation": "Department of Neurology, Beth Israel Deaconess Medical Center, Harvard Medical School, Boston, MA",
+        "location": {
+          "institution": "Beth Israel Deaconess Medical Center",
+          "city": "Boston",
+          "country": "USA",
+          "latitude": 42.3392,
+          "longitude": -71.1092
+        }
+      },
+      {
+        "name": "S.B. Rutkove",
+        "affiliation": "Department of Neurology, Beth Israel Deaconess Medical Center, Harvard Medical School, Boston, MA",
+        "location": {
+          "institution": "Beth Israel Deaconess Medical Center",
+          "city": "Boston",
+          "country": "USA",
+          "latitude": 42.3392,
+          "longitude": -71.1092
+        }
+      }
+    ],
+    "publication_year": 2013,
+    "publication_date": "2013-12-01",
+    "journal": "Journal of Musculoskeletal & Neuronal Interactions",
+    "abstract": "Objective - To assess the potential of electrical impedance myography (EIM) to serve as a marker of muscle fiber atrophy and secondarily as an indicator of bone deterioration by assessing the effects of spaceflight or hind limb unloading. Methods - In the first experiment, 6 mice were flown aboard the space shuttle (STS-135) for 13 days and 8 earthbound mice served as controls. In the second experiment, 14 mice underwent hind limb unloading (HLU) for 13 days; 13 additional mice served as controls. EIM measurements were made on ex vivo gastrocnemius muscle. Quantitative microscopy and areal bone mineral density (aBMD) measurements of the hindlimb were also performed. Results - Reductions in the multifrequency phase-slope parameter were observed for both the space flight and HLU cohorts compared to their respective controls. For ground control and spaceflight groups, the values were 24.7 ± 1.3 °/MHz and 14.1 ± 1.6 °/MHz, respectively (p = 0.0013); for control and HLU groups, the values were 23.9 ± 1.6 °/MHz and 19.0 ± 1.0 °/MHz, respectively (p = 0.014). This parameter also correlated with muscle fiber size (ρ = 0.65, p = 0.011) for spaceflight and hind limb aBMD (ρ = 0.65, p = 0.0063) for both groups. Conclusions - These data support the concept that EIM may serve as a useful tool for assessment of muscle disuse secondary to immobilization or microgravity.",
+    "keywords": ["Muscle", "Spaceflight", "Hind Limb Unloading", "Disuse", "Electrical Impedance"],
+    "structured_data": {
+      "research_question": "Can electrical impedance myography (EIM) serve as a reliable marker for muscle fiber atrophy and bone deterioration caused by spaceflight or its ground-based analog, hindlimb unloading?",
+      "main_conclusion": "Both spaceflight and hindlimb unloading induce similar reductions in the EIM phase-slope parameter, which correlates with muscle fiber size and hindlimb bone mineral density, supporting EIM as a useful tool for assessing muscle disuse.",
+      "methodology": {
+        "study_design": "Ex-vivo analysis on spaceflight and ground analog cohorts",
+        "sample_size": "Spaceflight: 6 flown, 8 controls. HLU: 14 HLU, 13 controls.",
+        "instruments_used": ["Electrical Impedance Myography (EIM)", "Hindlimb Unloading (HLU)", "Dual-energy X-ray absorptiometry (DXA)", "Histology"]
+      },
+      "quantitative_results": [
+        {
+          "variable_name": "EIM Phase-Slope (Spaceflight vs. Ground)",
+          "effect_description": "The EIM phase-slope parameter was significantly lower in spaceflight mice compared to ground controls.",
+          "effect_size": -10.6,
+          "units": "°/MHz",
+          "direction": "Negative"
+        },
+        {
+          "variable_name": "EIM Phase-Slope (HLU vs. Control)",
+          "effect_description": "The EIM phase-slope parameter was significantly lower in hindlimb unloaded mice compared to ambulatory controls.",
+          "effect_size": -4.9,
+          "units": "°/MHz",
+          "direction": "Negative"
+        },
+        {
+          "variable_name": "Correlation of EIM with aBMD (Spaceflight)",
+          "effect_description": "The EIM phase-slope parameter showed a significant positive correlation with hindlimb areal bone mineral density.",
+          "effect_size": 0.65,
+          "units": "Spearman's rho (ρ)",
+          "direction": "Positive"
+        }
+      ]
+    },
+    "semantic_data": {
+      "research_category": "Space Physiology & Biomedical Engineering",
+      "application_domain": "Astronaut Health Monitoring",
+      "technologies_applied": ["Electrical Impedance Myography (EIM)", "Hindlimb Unloading", "Spaceflight"],
+      "key_concepts": ["Electrical Impedance", "Muscle Atrophy", "Bone Mineral Density (aBMD)", "Phase-slope", "Gastrocnemius"],
+      "mentioned_entities": {
+        "missions": ["STS-135"],
+        "rovers": [],
+        "planets": [],
+        "agencies": ["NASA"]
+      }
+    },
+    "full_text_for_embedding": "Spaceflight and hind limb unloading induce similar changes in electrical impedance characteristics of mouse gastrocnemius muscle. Objective-To assess the potential of electrical impedance myography (EIM) to serve as a marker of muscle fiber atrophy and secondarily as an indicator of bone deterioration by assessing the effects of spaceflight or hind limb unloading..."
+  },
+  {
+    "paper_id": "NASA-2021-BONE-RNASEQ-001",
+    "doi": "10.1371/journal.pone.0250715",
+    "title": "RNAseq and RNA molecular barcoding reveal differential gene expression in cortical bone following hindlimb unloading in female mice",
+    "authors": [
+      {
+        "name": "Jordan M. Spatz",
+        "affiliation": "Center for Advanced Orthopedic Studies, Beth Israel Deaconess Medical Center, Boston, Massachusetts, United States of America",
+        "location": {
+          "institution": "Beth Israel Deaconess Medical Center",
+          "city": "Boston",
+          "country": "USA",
+          "latitude": 42.3392,
+          "longitude": -71.1092
+        }
+      },
+      {
+        "name": "Mary L. Bouxsein",
+        "affiliation": "Center for Advanced Orthopedic Studies, Beth Israel Deaconess Medical Center, Boston, Massachusetts, United States of America",
+        "location": {
+          "institution": "Beth Israel Deaconess Medical Center",
+          "city": "Boston",
+          "country": "USA",
+          "latitude": 42.3392,
+          "longitude": -71.1092
+        }
+      }
+    ],
+    "publication_year": 2021,
+    "publication_date": "2021-10-12",
+    "journal": "PLOS ONE",
+    "abstract": "Disuse-induced bone loss is seen following spinal cord injury, prolonged bed rest, and exposure to microgravity. We performed whole transcriptomic profiling of cortical bone using RNA sequencing (RNAseq) and RNA molecular barcoding (NanoString) on a hindlimb unloading (HLU) mouse model to identify genes whose mRNA transcript abundances change in response to disuse. Eleven-week old female C57BL/6 mice were exposed to ambulatory loading or HLU for 7 days (n = 8/group). Total RNA from marrow-flushed femoral cortical bone was analyzed on HiSeq and NanoString platforms. The expression of several previously reported genes associated with Wnt signaling and metabolism was altered by HLU. Furthermore, the increased abundance of transcripts, such as Pfkfb3 and Mss51, after HLU imply these genes also have roles in the cortical bone's response to altered mechanical loading. Our study demonstrates that an unbiased approach to assess the whole transcriptomic profile of cortical bone can reveal previously unidentified mechanosensitive genes and may eventually lead to novel targets to prevent disuse-induced osteoporosis.",
+    "keywords": ["RNAseq", "Hindlimb Unloading", "Cortical Bone", "Transcriptomics", "Mechanosensitive Genes", "Disuse Osteoporosis"],
+    "structured_data": {
+      "research_question": "What are the differential gene expression changes in cortical bone following 7 days of hindlimb unloading in mice, as identified by whole transcriptomic profiling?",
+      "main_conclusion": "Hindlimb unloading alters genes related to Wnt signaling and metabolism. The study identified previously unidentified mechanosensitive genes, such as Pfkfb3 and Mss51, which may serve as novel targets for preventing disuse-induced osteoporosis.",
+      "methodology": {
+        "study_design": "Transcriptomic Analysis on an Animal Analog Model",
+        "sample_size": "16 female C57BL/6 mice (8 HLU, 8 control).",
+        "instruments_used": ["Hindlimb Unloading (HLU)", "RNA sequencing (RNAseq)", "NanoString nCounter"]
+      },
+      "quantitative_results": [
+        {
+          "variable_name": "Pfkfb3 gene expression",
+          "effect_description": "The expression of Pfkfb3, a gene involved in glycolysis and Wnt signaling, was significantly upregulated (1.8-fold) in the cortical bone of hindlimb unloaded mice.",
+          "effect_size": 1.8,
+          "units": "fold change",
+          "direction": "Positive"
+        },
+        {
+          "variable_name": "Scd1 gene expression",
+          "effect_description": "The expression of Scd1, a gene related to cell metabolism, was significantly upregulated (2.0-fold) in response to hindlimb unloading.",
+          "effect_size": 2.0,
+          "units": "fold change",
+          "direction": "Positive"
+        },
+        {
+          "variable_name": "Wnt signaling-related genes",
+          "effect_description": "Genes related to Wnt signaling, including Sfrp2 (1.7-fold), Sfrp4 (1.7-fold), and Fzd4 (1.6-fold) were all upregulated in response to disuse.",
+          "direction": "Positive"
+        }
+      ]
+    },
+    "semantic_data": {
+      "research_category": "Genomics & Bone Physiology",
+      "application_domain": "Disuse Osteoporosis Research",
+      "technologies_applied": ["RNA sequencing", "NanoString", "Bioinformatics", "Hindlimb Unloading"],
+      "key_concepts": ["Transcriptome", "Cortical Bone", "Mechanosensitive", "Wnt Signaling", "Pfkfb3", "Mss51"],
+      "mentioned_entities": {
+        "missions": [],
+        "rovers": [],
+        "planets": [],
+        "agencies": ["NASA", "NIH"]
+      }
+    },
+    "full_text_for_embedding": "RNAseq and RNA molecular barcoding reveal differential gene expression in cortical bone following hindlimb unloading in female mice. Disuse-induced bone loss is seen following spinal cord injury, prolonged bed rest, and exposure to microgravity. We performed whole transcriptomic profiling of cortical bone using RNA sequencing..."
+  },
+  {
+    "paper_id": "NASA-2013-MUSCLE-EIM-001",
+    "doi": "10.1007/BF03342080",
+    "title": "Spaceflight and hind limb unloading induce similar changes in electrical impedance characteristics of mouse gastrocnemius muscle",
+    "authors": [
+      {
+        "name": "M. Sung",
+        "affiliation": "Beth Israel Deaconess Medical Center, Harvard Medical School, Boston, MA",
+        "location": {
+          "institution": "Beth Israel Deaconess Medical Center",
+          "city": "Boston",
+          "country": "USA",
+          "latitude": 42.3392,
+          "longitude": -71.1092
+        }
+      },
+      {
+        "name": "S.B. Rutkove",
+        "affiliation": "Beth Israel Deaconess Medical Center, Harvard Medical School, Boston, MA",
+        "location": {
+          "institution": "Beth Israel Deaconess Medical Center",
+          "city": "Boston",
+          "country": "USA",
+          "latitude": 42.3392,
+          "longitude": -71.1092
+        }
+      }
+    ],
+    "publication_year": 2013,
+    "publication_date": "2013-12-01",
+    "journal": "Journal of Musculoskeletal & Neuronal Interactions",
+    "abstract": "To assess the potential of electrical impedance myography (EIM) to serve as a marker of muscle fiber atrophy and secondarily as an indicator of bone deterioration by assessing the effects of spaceflight or hind limb unloading. In the first experiment, 6 mice were flown aboard the space shuttle (STS-135) for 13 days and 8 earthbound mice served as controls. In the second experiment, 14 mice underwent hind limb unloading (HLU) for 13 days; 13 additional mice served as controls. EIM measurements were made on ex vivo gastrocnemius muscle. Reductions in the multifrequency phase-slope parameter were observed for both the space flight and HLU cohorts. For ground control and spaceflight groups, the values were 24.7±1.3 °/MHz and 14.1±1.6 °/MHz, respectively (p=0.0013); for control and HLU groups, the values were 23.9±1.6 °/MHz and 19.0±1.0 °/MHz, respectively (p=0.014). This parameter also correlated with muscle fiber size (ρ=0.65, p=0.011) and hind limb aBMD (ρ=0.65, p=0.0063). These data support the concept that EIM may serve as a useful tool for assessment of muscle disuse secondary to immobilization or microgravity.",
+    "keywords": [
+      "Muscle",
+      "Spaceflight",
+      "Hind Limb Unloading",
+      "Disuse",
+      "Electrical Impedance"
+    ],
+    "structured_data": {
+      "research_question": "Can Electrical Impedance Myography (EIM) serve as a reliable, non-invasive marker for muscle atrophy and bone deterioration induced by spaceflight and hindlimb unloading?",
+      "main_conclusion": "Both spaceflight and hindlimb unloading cause similar reductions in the EIM phase-slope parameter, which correlates with muscle fiber size and bone mineral density, supporting EIM as a useful tool for assessing muscle disuse.",
+      "methodology": {
+        "study_design": "Comparative analysis of spaceflight and ground-based analog (HLU)",
+        "sample_size": "Spaceflight: 6 flown, 8 controls. HLU: 14 HLU, 13 controls.",
+        "instruments_used": [
+          "Electrical Impedance Myography (EIM)",
+          "Hindlimb Unloading (HLU)",
+          "Dual-energy X-ray absorptiometry (DXA)",
+          "Histology"
+        ]
+      },
+      "quantitative_results": [
+        {
+          "variable_name": "EIM Phase-Slope (Spaceflight vs. Ground)",
+          "effect_description": "The EIM phase-slope parameter was significantly lower in spaceflight mice compared to ground controls, dropping from 24.7 to 14.1 °/MHz.",
+          "effect_size": -10.6,
+          "units": "°/MHz",
+          "direction": "Negative"
+        },
+        {
+          "variable_name": "EIM Phase-Slope Correlation with aBMD",
+          "effect_description": "The EIM phase-slope parameter showed a significant positive correlation with hindlimb areal bone mineral density (Spearman's rho = 0.65).",
+          "effect_size": 0.65,
+          "units": "Spearman's rho (ρ)",
+          "direction": "Positive"
+        }
+      ]
+    },
+    "semantic_data": {
+      "research_category": "Space Physiology & Biomedical Diagnostics",
+      "application_domain": "Astronaut Health Monitoring",
+      "technologies_applied": [
+        "Electrical Impedance Myography",
+        "Spaceflight",
+        "Hindlimb Unloading"
+      ],
+      "key_concepts": [
+        "Electrical Impedance",
+        "Muscle Atrophy",
+        "Bone Mineral Density (aBMD)",
+        "Phase-slope",
+        "Gastrocnemius"
+      ],
+      "mentioned_entities": {
+        "missions": [
+          "STS-135"
+        ],
+        "rovers": [],
+        "planets": [],
+        "agencies": [
+          "NASA"
+        ]
+      }
+    },
+    "full_text_for_embedding": "Spaceflight and hind limb unloading induce similar changes in electrical impedance characteristics of mouse gastrocnemius muscle. To assess the potential of electrical impedance myography (EIM) to serve as a marker of muscle fiber atrophy and secondarily as an indicator of bone deterioration by assessing the effects of spaceflight or hind limb unloading..."
+  },
+  {
+    "paper_id": "NASA-2022-MUSCLE-PIEZO1-001",
+    "doi": "10.1126/sciadv.abn0485",
+    "title": "Piezo1 regulates the regenerative capacity of skeletal muscles via orchestration of stem cell morphological states",
+    "authors": [
+      {
+        "name": "Nuoying Ma",
+        "affiliation": "Department of Orthopaedic Surgery, Perelman School of Medicine, University of Pennsylvania, Philadelphia, PA 19104, USA",
+        "location": {
+          "institution": "University of Pennsylvania",
+          "city": "Philadelphia",
+          "country": "USA",
+          "latitude": 39.9522,
+          "longitude": -75.1932
+        }
+      },
+      {
+        "name": "Foteini Mourkioti",
+        "affiliation": "Penn Institute for Regenerative Medicine, Perelman School of Medicine, University of Pennsylvania, Philadelphia, PA 19104, USA",
+        "location": {
+          "institution": "University of Pennsylvania",
+          "city": "Philadelphia",
+          "country": "USA",
+          "latitude": 39.9522,
+          "longitude": -75.1932
+        }
+      }
+    ],
+    "publication_year": 2022,
+    "publication_date": "2022-03-18",
+    "journal": "Science Advances",
+    "abstract": "Muscle stem cells (MuSCs) are essential for tissue homeostasis and regeneration, but the potential contribution of MuSC morphology to in vivo function remains unknown. Here, we demonstrate that quiescent MuSCs are morphologically heterogeneous and exhibit different patterns of cellular protrusions. We classified quiescent MuSCs into three functionally distinct stem cell states: responsive, intermediate, and sensory. We demonstrate that the shift between different stem cell states promotes regeneration and is regulated by the sensing protein Piezo1. Pharmacological activation of Piezo1 is sufficient to prime MuSCs toward more responsive cells. Piezo1 deletion in MuSCs shifts the distribution toward less responsive cells, mimicking the disease phenotype we find in dystrophic muscles. We further demonstrate that Piezo1 reactivation ameliorates the MuSC morphological and regenerative defects of dystrophic muscles. These findings advance our fundamental understanding of how stem cells respond to injury and identify Piezo1 as a key regulator for adjusting stem cell states essential for regeneration.",
+    "keywords": [
+      "Muscle stem cells (MuSCs)",
+      "Piezo1",
+      "Regeneration",
+      "Muscular Dystrophy",
+      "Mechanosensing",
+      "Stem Cell Morphology"
+    ],
+    "structured_data": {
+      "research_question": "What is the role of the mechanosensing protein Piezo1 in regulating muscle stem cell (MuSC) morphology and its contribution to muscle regeneration?",
+      "main_conclusion": "The mechanosensing protein Piezo1 regulates the shift between distinct MuSC morphological states (responsive, intermediate, sensory). Reactivating Piezo1 can ameliorate regenerative defects in dystrophic muscles by restoring this balance.",
+      "methodology": {
+        "study_design": "In-vivo Imaging and Genetic Study",
+        "sample_size": "3-6 mice per group for various experiments",
+        "instruments_used": [
+          "Two-photon microscopy",
+          "Genetically modified mouse models (Pax7EGFP)",
+          "Pharmacological activator (Yoda1)",
+          "Conditional knockout mice"
+        ]
+      },
+      "quantitative_results": [
+        {
+          "variable_name": "Piezo1 expression in dystrophic MuSCs",
+          "effect_description": "Dystrophic MuSCs exhibit markedly reduced Piezo1 gene expression levels compared to control MuSCs, indicating a severe defect in Piezo1 signaling in the diseased state.",
+          "direction": "Negative"
+        },
+        {
+          "variable_name": "Effect of Yoda1 on MuSC types",
+          "effect_description": "Pharmacological activation of Piezo1 with Yoda1 caused a significant shift in the MuSC population, increasing the proportion of 'responsive' cells and decreasing 'intermediate' cells.",
+          "direction": "Positive"
+        }
+      ]
+    },
+    "semantic_data": {
+      "research_category": "Cell Biology & Regenerative Medicine",
+      "application_domain": "Muscular Dystrophy Treatment",
+      "technologies_applied": [
+        "In-vivo live imaging",
+        "Two-photon microscopy",
+        "Mouse genetics",
+        "Pharmacology"
+      ],
+      "key_concepts": [
+        "Muscle Stem Cells (MuSCs)",
+        "Cellular Protrusions",
+        "Piezo1",
+        "Yoda1",
+        "Duchenne Muscular Dystrophy (DMD)"
+      ],
+      "mentioned_entities": {
+        "missions": [],
+        "rovers": [],
+        "planets": [],
+        "agencies": [
+          "NASA",
+          "NIH"
+        ]
+      }
+    },
+    "full_text_for_embedding": "Piezo1 regulates the regenerative capacity of skeletal muscles via orchestration of stem cell morphological states. Muscle stem cells (MuSCs) are essential for tissue homeostasis and regeneration, but the potential contribution of MuSC morphology to in vivo function remains unknown..."
+  },
+  {
+    "paper_id": "NASA-2021-BONE-RNASEQ-001",
+    "doi": "10.1371/journal.pone.0250715",
+    "title": "RNAseq and RNA molecular barcoding reveal differential gene expression in cortical bone following hindlimb unloading in female mice",
+    "authors": [
+      {
+        "name": "Jordan M. Spatz",
+        "affiliation": "Center for Advanced Orthopedic Studies, Beth Israel Deaconess Medical Center, Boston, Massachusetts, United States of America",
+        "location": {
+          "institution": "Beth Israel Deaconess Medical Center",
+          "city": "Boston",
+          "country": "USA",
+          "latitude": 42.3392,
+          "longitude": -71.1092
+        }
+      },
+      {
+        "name": "Mary L. Bouxsein",
+        "affiliation": "Harvard Medical School, Boston, Massachusetts, United States of America",
+        "location": {
+          "institution": "Harvard Medical School",
+          "city": "Boston",
+          "country": "USA",
+          "latitude": 42.3370,
+          "longitude": -71.1083
+        }
+      }
+    ],
+    "publication_year": 2021,
+    "publication_date": "2021-10-12",
+    "journal": "PLOS ONE",
+    "abstract": "Disuse-induced bone loss is seen following spinal cord injury, prolonged bed rest, and exposure to microgravity. We performed whole transcriptomic profiling of cortical bone using RNA sequencing (RNAseq) and RNA molecular barcoding (NanoString) on a hindlimb unloading (HLU) mouse model to identify genes whose mRNA transcript abundances change in response to disuse. Eleven-week old female C57BL/6 mice were exposed to ambulatory loading or HLU for 7 days (n=8/group). Total RNA from marrow-flushed femoral cortical bone was analyzed. The expression of several previously reported genes associated with Wnt signaling and metabolism was altered by HLU. Furthermore, the increased abundance of transcripts, such as Pfkfb3 and Mss51, after HLU imply these genes also have roles in the cortical bone's response to altered mechanical loading. Our study demonstrates that an unbiased approach can reveal previously unidentified mechanosensitive genes and may eventually lead to novel targets to prevent disuse-induced osteoporosis.",
+    "keywords": [
+      "RNAseq",
+      "Hindlimb Unloading",
+      "Cortical Bone",
+      "Transcriptomics",
+      "Mechanosensitive Genes",
+      "Disuse Osteoporosis"
+    ],
+    "structured_data": {
+      "research_question": "What are the whole transcriptomic changes in cortical bone in response to 7 days of mechanical unloading via hindlimb suspension?",
+      "main_conclusion": "Hindlimb unloading alters the expression of genes related to Wnt signaling and metabolism, and identifies novel mechanosensitive genes like Pfkfb3 and Mss51, suggesting new potential targets for preventing disuse-induced bone loss.",
+      "methodology": {
+        "study_design": "Transcriptomic Analysis (Animal Analog Model)",
+        "sample_size": "16 female C57BL/6 mice (8 HLU, 8 control).",
+        "instruments_used": [
+          "Hindlimb Unloading (HLU)",
+          "RNA sequencing (RNAseq)",
+          "NanoString nCounter"
+        ]
+      },
+      "quantitative_results": [
+        {
+          "variable_name": "Pfkfb3 gene expression",
+          "effect_description": "The expression of Pfkfb3, a gene involved in glycolysis and Wnt signaling, was significantly upregulated (1.8-fold) in the cortical bone of hindlimb unloaded mice.",
+          "effect_size": 1.8,
+          "units": "fold change",
+          "direction": "Positive"
+        },
+        {
+          "variable_name": "Scd1 gene expression",
+          "effect_description": "The expression of Scd1, a gene related to cell metabolism, was significantly upregulated (2.0-fold) in response to hindlimb unloading.",
+          "effect_size": 2.0,
+          "units": "fold change",
+          "direction": "Positive"
+        }
+      ]
+    },
+    "semantic_data": {
+      "research_category": "Genomics & Bone Physiology",
+      "application_domain": "Disuse Osteoporosis Research",
+      "technologies_applied": [
+        "RNA sequencing",
+        "NanoString",
+        "Bioinformatics",
+        "Hindlimb Unloading"
+      ],
+      "key_concepts": [
+        "Transcriptome",
+        "Cortical Bone",
+        "Wnt Signaling",
+        "Pfkfb3",
+        "Mss51",
+        "Mechanosensitive"
+      ],
+      "mentioned_entities": {
+        "missions": [],
+        "rovers": [],
+        "planets": [],
+        "agencies": [
+          "NASA",
+          "NIH"
+        ]
+      }
+    },
+    "full_text_for_embedding": "RNAseq and RNA molecular barcoding reveal differential gene expression in cortical bone following hindlimb unloading in female mice. Disuse-induced bone loss is seen following spinal cord injury, prolonged bed rest, and exposure to microgravity. We performed whole transcriptomic profiling of cortical bone using RNA sequencing (RNAseq) and RNA molecular barcoding (NanoString) on a hindlimb unloading (HLU) mouse model..."
+  }
+]

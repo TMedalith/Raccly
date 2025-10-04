@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { Sidebar } from "@/shared/components/Sidebar";
+import { TopNav } from "@/shared/components/TopNav";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -23,9 +23,9 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${nunito.variable} antialiased`}>
-        <div className="flex h-screen overflow-hidden">
-          <Sidebar />
-          <main className="flex-1 overflow-y-auto bg-[#FFFBF7]">
+        <div className="flex flex-col h-screen overflow-hidden">
+          <TopNav />
+          <main className="flex-1 overflow-y-auto bg-[var(--background)]">
             {children}
           </main>
         </div>
