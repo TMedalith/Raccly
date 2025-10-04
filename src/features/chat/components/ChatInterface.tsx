@@ -15,15 +15,15 @@ interface ChatInterfaceProps {
 export function ChatInterface({ conversationId, showRelatedPapers = true, initialQuery }: ChatInterfaceProps) {
   const [input, setInput] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const { messages, isLoading, currentPapers, sendMessage, setActiveMessage, activeMessageId } = useChat();
+  const { messages, isLoading, currentPapers, sendMessage, setActiveMessage, activeMessageId, sessionId } = useChat({ conversationId });
   const hasProcessedInitialQuery = useRef(false);
 
     useEffect(() => {
-    if (initialQuery && !hasProcessedInitialQuery.current) {
+    if (initialQuery && !hasProcessedInitialQuery.current && sessionId) {
       hasProcessedInitialQuery.current = true;
       sendMessage(initialQuery);
     }
-  }, [initialQuery, sendMessage]);
+  }, [initialQuery, sendMessage, sessionId]);
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -53,7 +53,7 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
         </div>
 
         {}
-        <div className="border-t border-[--border] bg-white/80 backdrop-blur-sm px-6 py-4">
+        <div className="border-t border-[var(--border)] bg-white/80 backdrop-blur-sm px-6 py-4">
           <div className="max-w-4xl mx-auto">
             <div className="relative flex items-end gap-3">
               <textarea
@@ -63,13 +63,13 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
                 onKeyDown={handleKeyPress}
                 placeholder="Escribe tu pregunta sobre papers científicos..."
                 rows={1}
-                className="flex-1 resize-none rounded-xl border border-[--border] bg-white px-4 py-3 text-[--foreground] placeholder:text-[--muted-foreground] focus:outline-none focus:ring-2 focus:ring-[--coral] focus:border-transparent transition-all"
+                className="flex-1 resize-none rounded-xl border border-[var(--border)] bg-white px-4 py-3 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent transition-all"
                 style={{ maxHeight: '200px', minHeight: '48px' }}
               />
               <button
                 onClick={handleSend}
                 disabled={!input.trim() || isLoading}
-                className="flex-shrink-0 rounded-xl bg-[--coral] p-3 text-white hover:bg-[--coral-dark] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                className="flex-shrink-0 rounded-xl bg-[var(--primary)] p-3 text-white hover:bg-[var(--navy)] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
                 <Send className="w-5 h-5" />
               </button>
@@ -80,7 +80,7 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
 
       {}
       {showRelatedPapers && (
-        <div className="w-80 flex-shrink-0 border-l border-[--border] bg-white/50 backdrop-blur-sm overflow-y-auto custom-scrollbar">
+        <div className="w-80 flex-shrink-0 border-l border-[var(--border)] bg-white/50 backdrop-blur-sm overflow-y-auto custom-scrollbar">
           <RelatedPapersList papers={currentPapers} isLoading={isLoading} />
         </div>
       )}

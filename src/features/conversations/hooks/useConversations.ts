@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { conversationsService } from '../services/conversations.service';
+import { getAllConversations, clearSessionMessages } from '@/shared/utils/storage';
+import { generateSessionId } from '@/shared/utils/session';
 import type { Conversation } from '../types';
 
 export function useConversations() {
@@ -9,17 +10,21 @@ export function useConversations() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchConversations = useCallback(async () => {
+  const fetchConversations = useCallback(() => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await conversationsService.getRecent();
 
-      if (response.success) {
-        setConversations(response.data);
-      } else {
-        setError(response.error || 'Error al cargar conversaciones');
-      }
+      const storedConversations = getAllConversations();
+      const formatted: Conversation[] = storedConversations.map((conv) => ({
+        id: conv.sessionId,
+        title: conv.title,
+        createdAt: conv.lastMessage,
+        updatedAt: conv.lastMessage,
+        userId: 'local-user',
+      }));
+
+      setConversations(formatted);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
     } finally {
@@ -28,31 +33,29 @@ export function useConversations() {
   }, []);
 
   const createConversation = useCallback(
-    async (title: string): Promise<Conversation | null> => {
-      try {
-        const response = await conversationsService.create(title);
-        if (response.success) {
-          await fetchConversations();
-          return response.data;
-        }
-        return null;
-      } catch (err) {
-        console.error('Error creating conversation:', err);
-        return null;
-      }
+    (title: string): Conversation => {
+      const sessionId = generateSessionId();
+      const now = new Date();
+      const newConv: Conversation = {
+        id: sessionId,
+        title,
+        createdAt: now,
+        updatedAt: now,
+        userId: 'local-user',
+      };
+
+      fetchConversations();
+      return newConv;
     },
     [fetchConversations]
   );
 
   const deleteConversation = useCallback(
-    async (id: string): Promise<boolean> => {
+    (id: string): boolean => {
       try {
-        const response = await conversationsService.deleteConversation(id);
-        if (response.success) {
-          await fetchConversations();
-          return true;
-        }
-        return false;
+        clearSessionMessages(id);
+        fetchConversations();
+        return true;
       } catch (err) {
         console.error('Error deleting conversation:', err);
         return false;
@@ -67,6 +70,27 @@ export function useConversations() {
 
   useEffect(() => {
     fetchConversations();
+
+    // Listen for storage changes to refresh conversations
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'memoralab_messages') {
+        fetchConversations();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    // Also listen for custom event for same-window updates
+    const handleLocalUpdate = () => {
+      fetchConversations();
+    };
+
+    window.addEventListener('conversationsUpdated', handleLocalUpdate);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('conversationsUpdated', handleLocalUpdate);
+    };
   }, [fetchConversations]);
 
   return {

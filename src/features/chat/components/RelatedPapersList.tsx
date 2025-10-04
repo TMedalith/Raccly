@@ -13,14 +13,14 @@ export function RelatedPapersList({ papers, isLoading = false }: RelatedPapersLi
   if (papers.length === 0 && !isLoading) {
     return (
       <div className="p-6">
-        <h3 className="text-lg font-semibold text-[--foreground] mb-4">
+        <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">
           Papers Relacionados
         </h3>
         <div className="flex flex-col items-center justify-center text-center py-12">
-          <div className="w-12 h-12 rounded-full bg-[--coral]/10 flex items-center justify-center mb-3">
-            <FileText className="w-6 h-6 text-[--coral]" />
+          <div className="w-12 h-12 rounded-full bg-[var(--primary)]/10 flex items-center justify-center mb-3">
+            <FileText className="w-6 h-6 text-[var(--primary)]" />
           </div>
-          <p className="text-sm text-[--muted-foreground]">
+          <p className="text-sm text-[var(--muted-foreground)]">
             Los papers relacionados aparecerán aquí cuando hagas una pregunta
           </p>
         </div>
@@ -30,15 +30,15 @@ export function RelatedPapersList({ papers, isLoading = false }: RelatedPapersLi
 
   return (
     <div className="p-6">
-      <h3 className="text-lg font-semibold text-[--foreground] mb-4 flex items-center gap-2">
-        <TrendingUp className="w-5 h-5 text-[--coral]" />
+      <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4 flex items-center gap-2">
+        <TrendingUp className="w-5 h-5 text-[var(--primary)]" />
         Papers Relacionados
       </h3>
 
       {isLoading && papers.length === 0 ? (
         <div className="flex flex-col items-center justify-center text-center py-12">
-          <Loader2 className="w-8 h-8 text-[--coral] animate-spin mb-3" />
-          <p className="text-sm text-[--muted-foreground]">
+          <Loader2 className="w-8 h-8 text-[var(--primary)] animate-spin mb-3" />
+          <p className="text-sm text-[var(--muted-foreground)]">
             Buscando papers relacionados...
           </p>
         </div>
@@ -59,28 +59,28 @@ export function RelatedPapersList({ papers, isLoading = false }: RelatedPapersLi
                   rel="noopener noreferrer"
                   className="block group"
                 >
-                  <div className="bg-white rounded-xl p-4 border border-[--border] hover:border-[--coral] hover:shadow-md transition-all">
+                  <div className="bg-white rounded-xl p-4 border border-[var(--border)] hover:border-[var(--primary)] hover:shadow-md transition-all">
                     {}
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-medium px-2 py-1 rounded-full bg-[--coral]/10 text-[--coral]">
+                      <span className="text-xs font-medium px-2 py-1 rounded-full bg-[var(--primary)]/10 text-[var(--primary)]">
                         {Math.round(paper.relevance * 100)}% relevante
                       </span>
-                      <ExternalLink className="w-4 h-4 text-[--muted-foreground] group-hover:text-[--coral] transition-colors" />
+                      <ExternalLink className="w-4 h-4 text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
                     </div>
 
                     {}
-                    <h4 className="text-sm font-semibold text-[--foreground] mb-2 line-clamp-2 group-hover:text-[--coral] transition-colors">
+                    <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2 line-clamp-2 group-hover:text-[var(--primary)] transition-colors">
                       {paper.title}
                     </h4>
 
                     {}
-                    <p className="text-xs text-[--muted-foreground] mb-2">
+                    <p className="text-xs text-[var(--muted-foreground)] mb-2">
                       {paper.authors.slice(0, 2).join(', ')}
                       {paper.authors.length > 2 && ` et al.`} · {paper.year}
                     </p>
 
                     {}
-                    <p className="text-xs text-[--muted-foreground] line-clamp-3">
+                    <p className="text-xs text-[var(--muted-foreground)] line-clamp-3">
                       {paper.abstract}
                     </p>
                   </div>

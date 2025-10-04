@@ -5,14 +5,27 @@ export interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-  relatedPapers?: Paper[]; }
+  relatedPapers?: Paper[];
+  sessionId?: string;
+  agentAliasId?: string;
+}
 
 export interface ChatResponse {
   message: string;
   papers: Paper[];
+  sessionId?: string;
+  agentAliasId?: string;
 }
 
 export interface ChatState {
   messages: Message[];
   isLoading: boolean;
+  sessionId: string | null;
+  error: string | null;
+}
+
+export interface ApiChatResponse {
+  response: string;
+  sessionId: string;
+  agent_alias_id: string;
 }
