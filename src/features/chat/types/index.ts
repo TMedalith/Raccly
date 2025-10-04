@@ -8,6 +8,7 @@ export interface Message {
   relatedPapers?: Paper[];
   sessionId?: string;
   agentAliasId?: string;
+  references?: string[];
 }
 
 export interface ChatResponse {
@@ -15,6 +16,7 @@ export interface ChatResponse {
   papers: Paper[];
   sessionId?: string;
   agentAliasId?: string;
+  references?: string[];
 }
 
 export interface ChatState {
@@ -28,4 +30,5 @@ export interface ApiChatResponse {
   response: string;
   sessionId: string;
   agent_alias_id: string;
+  references?: string[];
 }

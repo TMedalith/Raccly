@@ -11,22 +11,22 @@ import { useConversations } from '@/features/conversations/hooks/useConversation
 const suggestions = [
   {
     icon: TrendingUp,
-    text: 'Avances en Alzheimer 2024',
+    text: 'Mars rover discoveries 2024',
     color: 'from-[var(--secondary)] to-white',
   },
   {
     icon: BarChart3,
-    text: 'Compara estudios sobre CRISPR',
+    text: 'Compare SpaceX and NASA missions',
     color: 'from-[var(--secondary)] to-white',
   },
   {
     icon: Building2,
-    text: '¿Qué instituciones lideran en IA?',
+    text: 'Latest James Webb telescope findings',
     color: 'from-[var(--secondary)] to-white',
   },
   {
     icon: Clock,
-    text: 'Timeline de inmunoterapia',
+    text: 'Artemis program timeline',
     color: 'from-[var(--secondary)] to-white',
   },
 ];

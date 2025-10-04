@@ -90,6 +90,7 @@ export function useChat(options?: UseChatOptions) {
         relatedPapers: response.papers,
         sessionId: response.sessionId,
         agentAliasId: response.agentAliasId,
+        references: response.references,
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
@@ -124,12 +125,12 @@ export function useChat(options?: UseChatOptions) {
   /**
    * Carga el historial de una conversación
    */
-  const loadConversation = useCallback(async (conversationId: string) => {
+  const loadConversation = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const history = await chatService.getConversationHistory(conversationId);
+      const history = await chatService.getConversationHistory();
       setMessages(history);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar conversación');
