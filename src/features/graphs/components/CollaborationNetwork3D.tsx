@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic';
 import { Users, FileText, Filter, Search, ZoomIn, ZoomOut, Maximize, X, Info } from 'lucide-react';
 import type { NodeObject } from 'react-force-graph-3d';
 
-// Dynamic import to avoid SSR issues with WebGL
 const ForceGraph3D = dynamic(() => import('react-force-graph-3d'), { ssr: false });
 
 interface GraphNode {
@@ -40,8 +39,8 @@ interface CollaborationNetwork3DProps {
 }
 
 export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProps) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const fgRef = useRef<any>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fgRef = useRef<any>(null);
   const [highlightNodes, setHighlightNodes] = useState<Set<string>>(new Set());
   const [highlightLinks, setHighlightLinks] = useState<Set<GraphLink>>(new Set());
   const [hoverNode, setHoverNode] = useState<GraphNode | null>(null);
@@ -56,8 +55,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
     selectedCommunities: new Set<number>(),
   });
 
-  // Get unique communities for filters
-  const availableCommunities = useMemo(() => {
+    const availableCommunities = useMemo(() => {
     const communities = new Set<number>();
     graphData.nodes.forEach(n => {
       if (n.community !== undefined) communities.add(n.community);
@@ -65,11 +63,9 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
     return Array.from(communities).sort((a, b) => a - b);
   }, [graphData.nodes]);
 
-  // Filter nodes and links based on active filters
-  const filteredGraphData = useMemo(() => {
+    const filteredGraphData = useMemo(() => {
     const filteredNodes = graphData.nodes.filter((node) => {
-      // Community filter
-      if (filters.selectedCommunities.size > 0 && node.community !== undefined) {
+            if (filters.selectedCommunities.size > 0 && node.community !== undefined) {
         if (!filters.selectedCommunities.has(node.community)) return false;
       }
 
@@ -96,8 +92,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
     };
   }, [graphData, filters]);
 
-  // Search functionality
-  useEffect(() => {
+    useEffect(() => {
     if (searchTerm.trim().length < 2) {
       setSearchResults([]);
       return;
@@ -110,21 +105,18 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
         node.id.toLowerCase().includes(term) ||
         node.topic?.toLowerCase().includes(term) ||
         node.community_label?.toLowerCase().includes(term)
-    ).slice(0, 10); // Limit to 10 results
-
+    ).slice(0, 10); 
     setSearchResults(results);
   }, [searchTerm, filteredGraphData.nodes]);
 
-  // Handle node hover
-  const handleNodeHover = useCallback(
+    const handleNodeHover = useCallback(
     (node: NodeObject | null) => {
       setHoverNode(node as GraphNode | null);
     },
     []
   );
 
-  // Handle node click
-  const handleNodeClick = useCallback(
+    const handleNodeClick = useCallback(
     (node: NodeObject) => {
       const graphNode = node as GraphNode;
       if (selectedNode?.id === graphNode.id) {
@@ -154,8 +146,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
       setHighlightNodes(highlightNodes);
       setHighlightLinks(highlightLinks);
 
-      // Center camera on selected node
-      if (fgRef.current) {
+            if (fgRef.current) {
         const distance = 200;
         fgRef.current.cameraPosition(
           { x: (graphNode as unknown as { x: number }).x, y: (graphNode as unknown as { y: number }).y, z: (graphNode as unknown as { z: number }).z + distance },
@@ -167,20 +158,17 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
     [filteredGraphData.links, selectedNode]
   );
 
-  // Focus on search result
-  const focusOnNode = useCallback((node: GraphNode) => {
+    const focusOnNode = useCallback((node: GraphNode) => {
     setSearchTerm('');
     setSearchResults([]);
     handleNodeClick(node as unknown as NodeObject);
   }, [handleNodeClick]);
 
-  // Camera controls
-  const handleZoomIn = useCallback(() => {
+    const handleZoomIn = useCallback(() => {
     if (fgRef.current) {
       const currentPos = fgRef.current.cameraPosition();
       const distance = Math.sqrt(currentPos.x ** 2 + currentPos.y ** 2 + currentPos.z ** 2);
-      const newDistance = distance * 0.7; // Acercar (reduce distancia)
-      const ratio = newDistance / distance;
+      const newDistance = distance * 0.7;       const ratio = newDistance / distance;
       fgRef.current.cameraPosition(
         { x: currentPos.x * ratio, y: currentPos.y * ratio, z: currentPos.z * ratio },
         { x: 0, y: 0, z: 0 },
@@ -193,8 +181,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
     if (fgRef.current) {
       const currentPos = fgRef.current.cameraPosition();
       const distance = Math.sqrt(currentPos.x ** 2 + currentPos.y ** 2 + currentPos.z ** 2);
-      const newDistance = distance * 1.5; // Alejar (aumenta distancia)
-      const ratio = newDistance / distance;
+      const newDistance = distance * 1.5;       const ratio = newDistance / distance;
       fgRef.current.cameraPosition(
         { x: currentPos.x * ratio, y: currentPos.y * ratio, z: currentPos.z * ratio },
         { x: 0, y: 0, z: 0 },
@@ -216,8 +203,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
     }
   }, []);
 
-  // Toggle community filter
-  const toggleCommunity = useCallback((community: number) => {
+    const toggleCommunity = useCallback((community: number) => {
     setFilters(prev => {
       const newCommunities = new Set(prev.selectedCommunities);
       if (newCommunities.has(community)) {
@@ -229,8 +215,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
     });
   }, []);
 
-  // Check if filters are active
-  const hasActiveFilters = useMemo(() => {
+    const hasActiveFilters = useMemo(() => {
     return (
       !filters.showAuthored ||
       !filters.showCoauthor ||
@@ -241,8 +226,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
 
   return (
     <div className="relative w-full h-full bg-gradient-to-br from-[#0f1115] via-[#141825] to-[#0f1115]">
-      {/* Search Bar - Top Center */}
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 w-full max-w-xl px-4">
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 w-full max-w-xl px-4">
         <div className="relative group">
           <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
             <Search className="w-5 h-5 text-[#6b7280] group-focus-within:text-[var(--primary)] transition-colors" />
@@ -267,8 +251,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
           )}
         </div>
 
-        {/* Search Results Dropdown */}
-        {searchResults.length > 0 && (
+                {searchResults.length > 0 && (
           <div className="absolute top-full mt-2 w-full bg-[#171a21]/98 backdrop-blur-sm border border-[#232734] rounded-xl overflow-hidden shadow-2xl">
               <div className="max-h-80 overflow-y-auto">
                 {searchResults.map((node) => (
@@ -299,8 +282,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
         )}
       </div>
 
-      {/* Camera Controls - Top Right */}
-      <div className="absolute top-4 right-4 z-10 flex gap-2">
+            <div className="absolute top-4 right-4 z-10 flex gap-2">
         <button
           onClick={() => setShowHelp(!showHelp)}
           className="p-2.5 bg-[#171a21]/90 backdrop-blur-sm border border-[#232734] rounded-lg hover:border-[var(--primary)] transition-colors group"
@@ -331,8 +313,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
         </button>
       </div>
 
-      {/* Help Panel */}
-      {showHelp && (
+            {showHelp && (
         <div className="absolute top-20 right-4 z-20 w-80 bg-[#171a21]/98 backdrop-blur-sm border border-[#232734] rounded-xl p-5 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold text-[#e7e7e7]">Cómo usar la red 3D</h3>
@@ -365,10 +346,8 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
         </div>
       )}
 
-      {/* Filters Panel - Left Side */}
-      <div className="absolute top-4 left-4 z-10 bg-[#171a21]/95 backdrop-blur-md border border-[#2b3147] rounded-2xl shadow-2xl w-72 max-h-[calc(100vh-2rem)] flex flex-col">
-        {/* Header with Stats */}
-        <div className="p-4 border-b border-[#232734]">
+            <div className="absolute top-4 left-4 z-10 bg-[#171a21]/95 backdrop-blur-md border border-[#2b3147] rounded-2xl shadow-2xl w-72 max-h-[calc(100vh-2rem)] flex flex-col">
+                <div className="p-4 border-b border-[#232734]">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-[var(--primary)]" />
@@ -391,8 +370,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
             )}
           </div>
 
-          {/* Compact Stats - Only show when filtering */}
-          {(filteredGraphData.nodes.length < graphData.nodes.length || filteredGraphData.links.length < graphData.links.length) && (
+                    {(filteredGraphData.nodes.length < graphData.nodes.length || filteredGraphData.links.length < graphData.links.length) && (
             <div className="flex items-center gap-3 text-xs">
               <div className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-full bg-[var(--primary)]" />
@@ -410,11 +388,9 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
           )}
         </div>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 custom-scrollbar">
+                <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 custom-scrollbar">
 
-        {/* Edge Type Filters - Compact */}
-        <div className="space-y-2">
+                <div className="space-y-2">
           <h4 className="text-xs font-semibold text-[#e7e7e7] mb-2">Tipos de Conexión</h4>
           <div className="space-y-1.5">
             <label className="flex items-center gap-2 px-2 py-1.5 hover:bg-[#232734]/30 rounded-lg cursor-pointer transition-colors">
@@ -453,8 +429,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
         </div>
 
 
-        {/* Community Filters - Simplified */}
-        {availableCommunities.length > 0 && (
+                {availableCommunities.length > 0 && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-semibold text-[#e7e7e7]">Comunidades</h4>
@@ -504,8 +479,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
       </div>
       </div>
 
-      {/* Node Info Panel - Bottom Center */}
-      {(hoverNode || selectedNode) && (
+            {(hoverNode || selectedNode) && (
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 bg-[#171a21]/98 backdrop-blur-sm border border-[#232734] rounded-xl p-5 max-w-2xl w-full mx-4 shadow-2xl">
             <div className="space-y-3">
               <div className="flex items-start justify-between gap-4">
@@ -592,8 +566,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
         </div>
       )}
 
-      {/* 3D Graph */}
-      <div style={{ touchAction: 'none', width: '100%', height: '100%' }}>
+            <div style={{ touchAction: 'none', width: '100%', height: '100%' }}>
         <ForceGraph3D
           ref={fgRef}
           graphData={filteredGraphData}
@@ -605,8 +578,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
 
             if (isSelected) return '#ffffff';
 
-            // Si hay un nodo seleccionado y este no está destacado, usar color apagado
-            if (selectedNode && !isHighlighted) {
+                        if (selectedNode && !isHighlighted) {
               return graphNode.node_type === 'paper'
                 ? 'rgba(255, 123, 123, 0.15)'
                 : 'rgba(107, 156, 255, 0.15)';
@@ -638,8 +610,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
             const graphLink = link as GraphLink;
             const isHighlighted = highlightLinks.has(graphLink);
 
-            // Si hay un nodo seleccionado y este link no está destacado, usar color apagado
-            if (selectedNode && !isHighlighted) {
+                        if (selectedNode && !isHighlighted) {
               switch (graphLink.edge_type) {
                 case 'authored':
                   return 'rgba(183, 191, 204, 0.02)';

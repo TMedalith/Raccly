@@ -11,22 +11,32 @@ import { useConversations } from '@/features/conversations/hooks/useConversation
 const suggestions = [
   {
     icon: TrendingUp,
-    text: 'Mars rover discoveries 2024',
+    text: 'What are the effects of microgravity on plant growth?',
     color: 'from-[var(--secondary)] to-white',
   },
   {
     icon: BarChart3,
-    text: 'Compare SpaceX and NASA missions',
+    text: 'How does spaceflight affect bone density in mice?',
     color: 'from-[var(--secondary)] to-white',
   },
   {
     icon: Building2,
-    text: 'Latest James Webb telescope findings',
+    text: 'Latest findings in COVID-19 molecular mechanisms',
     color: 'from-[var(--secondary)] to-white',
   },
   {
     icon: Clock,
-    text: 'Artemis program timeline',
+    text: 'Arabidopsis gravitropism mechanisms',
+    color: 'from-[var(--secondary)] to-white',
+  },
+  {
+    icon: Search,
+    text: 'Skeletal muscle atrophy in space missions',
+    color: 'from-[var(--secondary)] to-white',
+  },
+  {
+    icon: TrendingUp,
+    text: 'Radiation effects on biological systems',
     color: 'from-[var(--secondary)] to-white',
   },
 ];
@@ -52,8 +62,7 @@ function ChatPageContent() {
     router.push(`/chat?session=${newConversation.id}&q=${encodeURIComponent(text)}`);
   };
 
-  // Show chat interface if there's a search query or a session ID
-  if (searchQuery || sessionId) {
+    if (searchQuery || sessionId) {
     return <ChatInterface conversationId={sessionId || undefined} initialQuery={searchQuery || undefined} showRelatedPapers={true} />;
   }
 
@@ -68,10 +77,10 @@ function ChatPageContent() {
           className="text-center space-y-2"
         >
           <h1 className="text-3xl font-bold text-[var(--foreground)]">
-            ¿Qué quieres investigar hoy?
+            What do you want to research today?
           </h1>
           <p className="text-base text-[var(--muted-foreground)]">
-            Pregúntame sobre papers, tendencias o comparaciones
+            Ask me about papers, trends, or comparisons
           </p>
         </motion.div>
 
@@ -90,7 +99,7 @@ function ChatPageContent() {
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleSearch();
               }}
-              placeholder="Escribe tu pregunta aquí..."
+              placeholder="Type your question here..."
               className="flex-1 px-5 py-3 text-base border-2 border-[var(--border)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)] transition-all bg-white"
             />
             <button
@@ -99,7 +108,7 @@ function ChatPageContent() {
               className="px-6 py-3 bg-[var(--primary)] text-white font-medium rounded-xl hover:bg-[var(--navy)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               <Search className="w-5 h-5" />
-              Buscar
+              Search
             </button>
           </div>
         </motion.div>
@@ -112,7 +121,7 @@ function ChatPageContent() {
           className="space-y-3"
         >
           <h2 className="text-sm font-semibold text-[var(--muted-foreground)]">
-            Prueba preguntar:
+            Suggested Research Questions:
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -141,15 +150,14 @@ function ChatPageContent() {
           </div>
         </motion.div>
 
-        {/* Historial de conversaciones */}
-        <motion.div
+                <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
           className="space-y-3"
         >
           <h2 className="text-sm font-semibold text-[var(--muted-foreground)]">
-            Conversaciones recientes:
+            Recent Conversations:
           </h2>
 
           <div className="border border-[var(--border)] rounded-lg p-2 bg-white max-h-[200px] overflow-y-auto">

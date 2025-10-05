@@ -33,18 +33,26 @@ export function PaperCard({ paper, isExpanded = false, onToggleExpand }: PaperCa
               {paper.title}
             </h3>
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-[var(--muted-foreground)]">
-              <span className="flex items-center gap-1">
-                <Users className="w-3 h-3" />
-                {paper.authors[0].name}
-                {paper.authors.length > 1 && ' et al.'}
-              </span>
-              <span>•</span>
-              <span className="flex items-center gap-1">
-                <Calendar className="w-3 h-3" />
-                {paper.publication_year}
-              </span>
-              <span>•</span>
-              <span className="font-medium truncate max-w-[200px]">{paper.journal}</span>
+              {paper.authors && paper.authors.length > 0 && (
+                <>
+                  <span className="flex items-center gap-1">
+                    <Users className="w-3 h-3" />
+                    {paper.authors[0]?.name || 'Unknown'}
+                    {paper.authors.length > 1 && ' et al.'}
+                  </span>
+                  <span>•</span>
+                </>
+              )}
+              {paper.publication_year && (
+                <>
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    {paper.publication_year}
+                  </span>
+                  <span>•</span>
+                </>
+              )}
+              <span className="font-medium truncate max-w-[200px]">{paper.journal || 'Unknown'}</span>
             </div>
           </div>
           <a
@@ -58,78 +66,83 @@ export function PaperCard({ paper, isExpanded = false, onToggleExpand }: PaperCa
           </a>
         </div>
 
-        {/* Research Question - Compacto */}
-        <div className="mb-3 p-3 bg-[var(--secondary)]/50 rounded-lg">
-          <div className="flex items-start gap-2">
-            <FlaskConical className="w-4 h-4 text-[var(--primary)] flex-shrink-0 mt-0.5" />
-            <p className="text-xs text-[var(--foreground)] line-clamp-2">
-              {paper.structured_data.research_question}
-            </p>
+                {paper.structured_data?.research_question && (
+          <div className="mb-3 p-3 bg-[var(--secondary)]/50 rounded-lg">
+            <div className="flex items-start gap-2">
+              <FlaskConical className="w-4 h-4 text-[var(--primary)] flex-shrink-0 mt-0.5" />
+              <p className="text-xs text-[var(--foreground)] line-clamp-2">
+                {paper.structured_data.research_question}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Main Conclusion - Compacto */}
-        <div className="mb-3 p-3 bg-amber-50 rounded-lg">
-          <div className="flex items-start gap-2">
-            <Lightbulb className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-            <p className="text-xs text-[var(--foreground)] font-medium line-clamp-2">
-              {paper.structured_data.main_conclusion}
-            </p>
+                {paper.structured_data?.main_conclusion && (
+          <div className="mb-3 p-3 bg-amber-50 rounded-lg">
+            <div className="flex items-start gap-2">
+              <Lightbulb className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+              <p className="text-xs text-[var(--foreground)] font-medium line-clamp-2">
+                {paper.structured_data.main_conclusion}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Keywords - Compacto */}
-        <div className="flex flex-wrap gap-1.5">
-          {paper.keywords.slice(0, 5).map((keyword) => (
-            <span
-              key={keyword}
-              className="px-2 py-0.5 text-xs font-medium rounded bg-[var(--primary)]/10 text-[var(--primary)]"
-            >
-              {keyword}
-            </span>
-          ))}
-          {paper.keywords.length > 5 && (
-            <span className="px-2 py-0.5 text-xs font-medium text-[var(--muted-foreground)]">
-              +{paper.keywords.length - 5}
-            </span>
-          )}
-        </div>
+                {paper.keywords && paper.keywords.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {paper.keywords.slice(0, 5).map((keyword) => (
+              <span
+                key={keyword}
+                className="px-2 py-0.5 text-xs font-medium rounded bg-[var(--primary)]/10 text-[var(--primary)]"
+              >
+                {keyword}
+              </span>
+            ))}
+            {paper.keywords.length > 5 && (
+              <span className="px-2 py-0.5 text-xs font-medium text-[var(--muted-foreground)]">
+                +{paper.keywords.length - 5}
+              </span>
+            )}
+          </div>
+        )}
 
-        {/* Expanded Content */}
-        {isExpanded && (
+                {isExpanded && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             className="border-t border-[var(--border)] pt-4 mt-4 space-y-4"
           >
-            {/* Abstract */}
-            <div>
+                        <div>
               <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2">Abstract</h4>
               <p className="text-sm text-[var(--muted-foreground)] leading-relaxed">{paper.abstract}</p>
             </div>
 
-            {/* Methodology */}
-            <div>
-              <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2">Methodology</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="text-sm">
-                  <span className="font-medium text-[var(--foreground)]">Study Design:</span>{' '}
-                  <span className="text-[var(--muted-foreground)]">
-                    {paper.structured_data.methodology.study_design}
-                  </span>
-                </div>
-                <div className="text-sm">
-                  <span className="font-medium text-[var(--foreground)]">Sample Size:</span>{' '}
-                  <span className="text-[var(--muted-foreground)]">
-                    {paper.structured_data.methodology.sample_size}
-                  </span>
+                        {paper.structured_data?.methodology && (
+              <div>
+                <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2">Methodology</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {paper.structured_data.methodology.study_design && (
+                    <div className="text-sm">
+                      <span className="font-medium text-[var(--foreground)]">Study Design:</span>{' '}
+                      <span className="text-[var(--muted-foreground)]">
+                        {paper.structured_data.methodology.study_design}
+                      </span>
+                    </div>
+                  )}
+                  {paper.structured_data.methodology.sample_size && (
+                    <div className="text-sm">
+                      <span className="font-medium text-[var(--foreground)]">Sample Size:</span>{' '}
+                      <span className="text-[var(--muted-foreground)]">
+                        {paper.structured_data.methodology.sample_size}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
+            )}
 
-            {/* Quantitative Results */}
-            {paper.structured_data.quantitative_results.length > 0 && (
+                        {paper.structured_data?.quantitative_results && paper.structured_data.quantitative_results.length > 0 && (
               <div>
                 <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2">Key Findings</h4>
                 <div className="space-y-2">
@@ -159,18 +172,19 @@ export function PaperCard({ paper, isExpanded = false, onToggleExpand }: PaperCa
               </div>
             )}
 
-            {/* Authors */}
-            <div>
-              <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2">Authors & Affiliations</h4>
-              <div className="space-y-2">
-                {paper.authors.map((author, idx) => (
-                  <div key={idx} className="text-sm">
-                    <span className="font-medium text-[var(--foreground)]">{author.name}</span>
-                    <span className="text-[var(--muted-foreground)]"> - {author.location.institution}</span>
-                  </div>
-                ))}
+                        {paper.authors && paper.authors.length > 0 && (
+              <div>
+                <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2">Authors & Affiliations</h4>
+                <div className="space-y-2">
+                  {paper.authors.map((author, idx) => (
+                    <div key={idx} className="text-sm">
+                      <span className="font-medium text-[var(--foreground)]">{author?.name || 'Unknown'}</span>
+                      <span className="text-[var(--muted-foreground)]"> - {author?.location?.institution || 'Unknown'}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </motion.div>
         )}
       </div>

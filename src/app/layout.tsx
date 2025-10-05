@@ -3,6 +3,7 @@ import { Nunito } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { ConditionalLayout } from "@/shared/components/ConditionalLayout";
+import { ResearchProvider } from "@/shared/contexts/ResearchContext";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -23,8 +24,10 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${nunito.variable} antialiased`}>
-        <ConditionalLayout>{children}</ConditionalLayout>
-        <Toaster position="top-right" richColors />
+        <ResearchProvider>
+          <ConditionalLayout>{children}</ConditionalLayout>
+          <Toaster position="top-right" richColors />
+        </ResearchProvider>
       </body>
     </html>
   );

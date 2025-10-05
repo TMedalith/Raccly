@@ -3,6 +3,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Bot, Loader2 } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { resolvePaperReferences } from '@/shared/utils/paperReference';
+import { CitedPapersSection } from './CitedPapersSection';
 import type { Message } from '../types';
 
 interface MessageListProps {
@@ -10,9 +12,10 @@ interface MessageListProps {
   isLoading: boolean;
   onMessageVisible?: (messageId: string | null) => void;
   activeMessageId?: string | null;
+  onPaperClick?: (paperId: string) => void;
 }
 
-export function MessageList({ messages, isLoading, onMessageVisible, activeMessageId }: MessageListProps) {
+export function MessageList({ messages, isLoading, onMessageVisible, activeMessageId, onPaperClick }: MessageListProps) {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
@@ -84,7 +87,7 @@ export function MessageList({ messages, isLoading, onMessageVisible, activeMessa
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <AnimatePresence mode="popLayout">
+      <AnimatePresence>
         {messages.map((message) => (
           <motion.div
             key={message.id}
@@ -131,38 +134,12 @@ export function MessageList({ messages, isLoading, onMessageVisible, activeMessa
                 {message.content}
               </p>
 
-              {/* Referencias de Papers */}
-              {message.role === 'assistant' && message.relatedPapers && message.relatedPapers.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-[--border]">
-                  <p className="text-xs font-semibold text-[--muted-foreground] mb-2">Papers relacionados:</p>
-                  <div className="space-y-1">
-                    {message.relatedPapers.map((paper, index) => (
-                      <div key={paper.id} className="text-xs text-[var(--muted-foreground)]">
-                        <span className="font-semibold text-[var(--primary)]">[{index + 1}]</span>{' '}
-                        <span className="font-medium">{paper.title}</span>
-                        {' - '}
-                        {paper.authors.slice(0, 2).join(', ')}
-                        {paper.authors.length > 2 && ' et al.'} ({paper.year})
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Referencias de API */}
-              {message.role === 'assistant' && message.references && message.references.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-[--border]">
-                  <p className="text-xs font-semibold text-[--muted-foreground] mb-2">Fuentes:</p>
-                  <div className="space-y-1">
-                    {message.references.map((ref, index) => (
-                      <div key={index} className="text-xs text-[var(--muted-foreground)]">
-                        <span className="font-semibold text-[var(--primary)]">[{index + 1}]</span>{' '}
-                        <span className="font-mono break-all">{ref}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                            {message.role === 'assistant' && message.references && message.references.length > 0 && (() => {
+                const resolvedPapers = resolvePaperReferences(message.references);
+                return resolvedPapers.length > 0 ? (
+                  <CitedPapersSection papers={resolvedPapers} onPaperClick={onPaperClick} />
+                ) : null;
+              })()}
             </div>
           </motion.div>
         ))}

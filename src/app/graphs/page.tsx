@@ -1,7 +1,7 @@
 'use client';
 
 import { CollaborationNetwork3D } from '@/features/graphs/components/CollaborationNetwork3D';
-import graphData from '@/graph/graph_with_links.json';
+import graphData from '@/shared/services/graph.json';
 
 export default function GraphsPage() {
   return (

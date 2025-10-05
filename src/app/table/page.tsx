@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Nunito } from "next/font/google";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   BarChart,
   Bar,
@@ -11,460 +11,440 @@ import {
   CartesianGrid,
   ResponsiveContainer,
   Cell,
-} from "recharts";
+} from 'recharts';
+import { Filter, TrendingUp, X } from 'lucide-react';
+import papersData from '@/shared/services/papers.json';
 
 interface QuantitativeResult {
   variable_name: string;
-  effect_size: number;
-  direction: "Positive" | "Negative" | "Neutral";
+  effect_size?: number;
+  effect_description: string;
+  direction: 'Positive' | 'Negative' | 'Neutral';
+  units?: string;
 }
 
 interface Paper {
+  paper_id: string;
   title: string;
-  quantitative_results: QuantitativeResult[];
+  publication_year: number;
+  keywords: string[];
+  structured_data: {
+    quantitative_results?: QuantitativeResult[];
+  };
+  semantic_data: {
+    research_category: string;
+  };
 }
 
-interface BarDataItem {
-  title: string;
-  value: number;
-}
+export default function TablePage() {
+  const papers = Object.values(papersData) as Paper[];
 
-interface HeatmapRow {
-  title: string;
-  [key: string]: string;
-}
+    const [selectedYears, setSelectedYears] = useState<number[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedMetric, setSelectedMetric] = useState<string>('');
+  const [showFilters, setShowFilters] = useState(false);
 
-const filteredPapers: Paper[] = [
-  {
-    title: "Paper A",
-    quantitative_results: [
-      { variable_name: "Variable 1", effect_size: 120, direction: "Positive" },
-      { variable_name: "Variable 2", effect_size: -80, direction: "Negative" },
-      { variable_name: "Variable 3", effect_size: 100, direction: "Positive" },
-    ],
-  },
-  {
-    title: "Paper B",
-    quantitative_results: [
-      { variable_name: "Variable 1", effect_size: 110, direction: "Positive" },
-      { variable_name: "Variable 2", effect_size: 60, direction: "Positive" },
-      { variable_name: "Variable 3", effect_size: 0, direction: "Neutral" },
-    ],
-  },
-  {
-    title: "Paper C",
-    quantitative_results: [
-      { variable_name: "Variable 1", effect_size: 70, direction: "Positive" },
-      { variable_name: "Variable 2", effect_size: 30, direction: "Positive" },
-      { variable_name: "Variable 3", effect_size: 50, direction: "Positive" },
-    ],
-  },
-];
+    const filterOptions = useMemo(() => {
+    const years = [...new Set(papers.map(p => p.publication_year))].sort((a, b) => b - a);
+    const categories = [...new Set(papers.map(p => p.semantic_data?.research_category).filter(Boolean))].sort();
+    return { years, categories };
+  }, [papers]);
 
-const heatmapColors = {
-  Positive: "#4CAF50",
-  Negative: "#FF6B6B",
-  Neutral: "#9E9E9E",
-};
+    const filteredPapers = useMemo(() => {
+    return papers.filter(paper => {
+      const yearMatch = selectedYears.length === 0 || selectedYears.includes(paper.publication_year || 0);
+      const categoryMatch = selectedCategories.length === 0 ||
+        selectedCategories.includes(paper.semantic_data?.research_category || '');
+      const hasQuantData = paper.structured_data?.quantitative_results &&
+        paper.structured_data.quantitative_results.length > 0;
 
-const barColors = ["#00BCD4", "#4CAF50", "#FF9800", "#2196F3", "#9E9E9E"];
-
-const glassStyle = {
-  background: "rgba(255, 255, 255, 0.15)",
-  border: "3px solid rgba(255, 255, 255, 0.6)",
-  backdropFilter: "blur(10px)",
-  WebkitBackdropFilter: "blur(10px)",
-  borderRadius: "1rem",
-  color: "black",
-  boxShadow: "0 4px 30px rgba(255, 255, 255, 0.2)",
-};
-
-export default function FloatingGlassChat() {
-  const [metricOptions, setMetricOptions] = useState<string[]>([]);
-  const [selectedMetric, setSelectedMetric] = useState<string>("");
-  const [barData, setBarData] = useState<BarDataItem[]>([]);
-  const [heatmapData, setHeatmapData] = useState<HeatmapRow[]>([]);
-
-  useEffect(() => {
-    const uniqueVariables = new Set<string>();
-    filteredPapers.forEach((paper) => {
-      paper.quantitative_results.forEach((res) =>
-        uniqueVariables.add(res.variable_name)
-      );
+      return yearMatch && categoryMatch && hasQuantData;
     });
-    const options = Array.from(uniqueVariables);
-    setMetricOptions(options);
-    setSelectedMetric(options[0] || "");
-  }, []);
+  }, [papers, selectedYears, selectedCategories]);
 
-  useEffect(() => {
-    if (!selectedMetric) return;
-    const data: BarDataItem[] = filteredPapers.map((paper) => {
-      const result = paper.quantitative_results.find(
-        (r) => r.variable_name === selectedMetric
-      );
-      return { title: paper.title, value: result ? result.effect_size : 0 };
-    });
-    setBarData(data);
-  }, [selectedMetric]);
-
-  useEffect(() => {
-    const data: HeatmapRow[] = filteredPapers.map((paper) => {
-      const row: HeatmapRow = { title: paper.title };
-      paper.quantitative_results.forEach((res) => {
-        row[res.variable_name] = res.direction;
+    const availableMetrics = useMemo(() => {
+    const metrics = new Set<string>();
+    filteredPapers.forEach(paper => {
+      paper.structured_data.quantitative_results?.forEach(result => {
+        metrics.add(result.variable_name);
       });
+    });
+    return Array.from(metrics).sort();
+  }, [filteredPapers]);
+
+    useEffect(() => {
+    if (availableMetrics.length > 0 && !selectedMetric) {
+      setSelectedMetric(availableMetrics[0]);
+    }
+  }, [availableMetrics, selectedMetric]);
+
+    const barChartData = useMemo(() => {
+    if (!selectedMetric) return [];
+
+    return filteredPapers
+      .map(paper => {
+        const result = paper.structured_data.quantitative_results?.find(
+          r => r.variable_name === selectedMetric
+        );
+        return {
+          title: paper.title.length > 35 ? paper.title.substring(0, 35) + '...' : paper.title,
+          fullTitle: paper.title,
+          value: result?.effect_size || 0,
+          direction: result?.direction || 'Neutral',
+          units: result?.units || '',
+          description: result?.effect_description || '',
+        };
+      })
+      .filter(item => item.value !== 0)
+      .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
+      .slice(0, 10);   }, [filteredPapers, selectedMetric]);
+
+    const heatmapData = useMemo(() => {
+    return filteredPapers.slice(0, 8).map(paper => {
+      const row: Record<string, string | null> = {
+        title: paper.title.length > 40 ? paper.title.substring(0, 40) + '...' : paper.title,
+        fullTitle: paper.title,
+      };
+
+      availableMetrics.slice(0, 6).forEach(metric => {
+        const result = paper.structured_data.quantitative_results?.find(
+          r => r.variable_name === metric
+        );
+        row[metric] = result?.direction || null;
+      });
+
       return row;
     });
-    setHeatmapData(data);
-  }, []);
+  }, [filteredPapers, availableMetrics]);
 
-  const positiveCount = heatmapData.reduce((acc, row) => {
-    return (
-      acc + metricOptions.filter((metric) => row[metric] === "Positive").length
-    );
-  }, 0);
+  const getBarColor = (direction: string) => {
+    switch (direction) {
+      case 'Positive': return 'hsl(142, 76%, 36%)';
+      case 'Negative': return 'hsl(0, 84%, 60%)';
+      default: return 'hsl(210, 14%, 53%)';
+    }
+  };
 
-  const neutralCount = heatmapData.reduce((acc, row) => {
-    return (
-      acc + metricOptions.filter((metric) => row[metric] === "Neutral").length
-    );
-  }, 0);
+  const getHeatmapColor = (direction: string | null) => {
+    switch (direction) {
+      case 'Positive': return 'bg-green-500';
+      case 'Negative': return 'bg-red-500';
+      case 'Neutral': return 'bg-gray-400';
+      default: return 'bg-gray-200';
+    }
+  };
+
+  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: typeof barChartData[0] }> }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-white p-3 rounded-lg shadow-lg border border-[var(--border)] max-w-xs">
+          <p className="font-semibold text-xs text-[var(--foreground)] mb-1.5">{data.fullTitle}</p>
+          <p className="text-xs text-[var(--muted-foreground)] mb-1">
+            <span className="font-medium">Efecto:</span> {data.value.toFixed(2)} {data.units}
+          </p>
+          <p className="text-xs text-[var(--muted-foreground)]">
+            <span className="font-medium">Dirección:</span>{' '}
+            <span className={`font-semibold ${
+              data.direction === 'Positive' ? 'text-green-600' :
+              data.direction === 'Negative' ? 'text-red-600' : 'text-gray-600'
+            }`}>
+              {data.direction}
+            </span>
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const hasActiveFilters = selectedYears.length > 0 || selectedCategories.length > 0;
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: "20px",
-        right: "20px",
-        width: "350px",
-        height: "calc(100vh - 90px)",
-        ...glassStyle,
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-        zIndex: 9999,
-      }}
-    >
-      {/* Header */}
-      <div
-        style={{
-          padding: "1rem",
-          borderBottom: "3px solid rgba(255,255,255,0.6)",
-          fontWeight: "700",
-          fontSize: "1.05rem",
-          textAlign: "center",
-          color: "black",
-          userSelect: "none",
-        }}
-      >
-        VISUALIZACIONES COMPARATIVAS
-      </div>
-
-      {/* Content scrollable */}
-      <div
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          padding: "1rem",
-          color: "black",
-          fontSize: "0.85rem",
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-        }}
-      >
-        {/* Selector de métrica */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          <label htmlFor="metric-select" style={{ fontWeight: "600" }}>
-            Métrica:
-          </label>
-          <select
-            id="metric-select"
-            value={selectedMetric}
-            onChange={(e) => setSelectedMetric(e.target.value)}
-            style={{
-              flex: 1,
-              padding: "0.3rem 0.6rem",
-              borderRadius: "0.5rem",
-              border: "2px solid rgba(255,255,255,0.6)",
-              backgroundColor: "rgba(255,255,255,0.9)",
-              color: "black",
-              fontSize: "0.85rem",
-              outline: "none",
-              cursor: "pointer",
-              boxShadow: "0 0 5px rgba(0,0,0,0.1)",
-            }}
-          >
-            {metricOptions.map((metric) => (
-              <option key={metric} value={metric}>
-                {metric}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Gráfico de barras */}
-        <div
-          style={{
-            border: "3px solid rgba(255, 255, 255, 0.6)",
-            borderRadius: "1rem",
-            padding: "0.75rem",
-            backgroundColor: "rgba(255,255,255,0.15)",
-            boxShadow: "0 4px 30px rgba(255,255,255,0.2)",
-          }}
+    <div className="h-full overflow-y-auto bg-[var(--background)]">
+      <div className="max-w-[1600px] mx-auto p-6">
+                <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
         >
-          <h3
-            style={{
-              textAlign: "center",
-              fontWeight: "700",
-              fontSize: "0.95rem",
-              marginBottom: "0.75rem",
-            }}
-          >
-            TAMAÑO DEL EFECTO POR ESTUDIO
-          </h3>
-          {barData.length > 0 ? (
-            <ResponsiveContainer width="90%" height={130}>
-              <BarChart
-                data={barData}
-                margin={{ top: 5, right: 20, left: 20, bottom: 10 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                <XAxis
-                  dataKey="title"
-                  stroke="#333"
-                  angle={-45}
-                  textAnchor="end"
-                  height={40}
-                  tick={{ fill: "#333", fontSize: 9 }}
-                />
-                <YAxis stroke="#333" tick={{ fill: "#333", fontSize: 9 }} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#FFFFFF",
-                    border: "1px solid #E5E7EB",
-                    borderRadius: "8px",
-                    color: "#1F2937",
-                  }}
-                  formatter={(value: number) => value.toFixed(2)}
-                />
-                <Bar dataKey="value" radius={[8, 8, 0, 0]}>
-                  {barData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={barColors[index % barColors.length]}
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <p style={{ textAlign: "center", fontSize: "0.75rem", color: "#555" }}>
-              No hay datos para la métrica seleccionada.
-            </p>
-          )}
-        </div>
+          <h1 className="text-2xl font-bold text-[var(--foreground)] mb-2">
+            Análisis Comparativo
+          </h1>
+          <p className="text-sm text-[var(--muted-foreground)]">
+            Compara resultados cuantitativos entre estudios científicos
+          </p>
+        </motion.div>
 
-        {/* Mapa de calor */}
-        <div
-          style={{
-            border: "3px solid rgba(255, 255, 255, 0.6)",
-            borderRadius: "1rem",
-            padding: "0.75rem",
-            backgroundColor: "rgba(255,255,255,0.15)",
-            boxShadow: "0 4px 30px rgba(255,255,255,0.2)",
-          }}
-        >
-          <h3
-            style={{
-              textAlign: "center",
-              fontWeight: "700",
-              fontSize: "0.9rem",
-              marginBottom: "0.75rem",
-            }}
-          >
-            DIRECCIÓN DE EFECTO
-            <br />
-            <span style={{ fontSize: "0.7rem" }}>(VARIABLES CLAVE)</span>
-          </h3>
-          {heatmapData.length > 0 ? (
-            <div style={{ overflowX: "auto" }}>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: `80px repeat(${metricOptions.length}, 1fr)`,
-                  gap: "3px",
-                }}
-              >
-                <div></div>
-                {metricOptions.map((varName) => (
-                  <div
-                    key={varName}
-                    style={{
-                      textAlign: "center",
-                      fontWeight: "600",
-                      color: "black",
-                      fontSize: "0.7rem",
-                      padding: "0.1rem 0",
+        <div className="flex gap-6">
+                    <div className="hidden lg:block w-64 flex-shrink-0">
+            <div className="bg-white rounded-xl border border-[var(--border)] p-4 sticky top-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Filter className="w-4 h-4 text-[var(--primary)]" />
+                  <h2 className="font-semibold text-sm text-[var(--foreground)]">Filtros</h2>
+                </div>
+                {hasActiveFilters && (
+                  <button
+                    onClick={() => {
+                      setSelectedYears([]);
+                      setSelectedCategories([]);
                     }}
+                    className="text-xs text-[var(--primary)] hover:underline"
                   >
-                    {varName}
-                  </div>
-                ))}
-                {heatmapData.map((row) => (
-                  <React.Fragment key={row.title}>
-                    <div
-                      style={{
-                        fontWeight: "600",
-                        color: "black",
-                        fontSize: "0.75rem",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      {row.title}
-                    </div>
-                    {metricOptions.map((varName) => (
-                      <div
-                        key={varName}
-                        title={`${row.title} - ${varName}: ${
-                          row[varName] || "Neutral"
-                        }`}
-                        style={{
-                          backgroundColor:
-                            heatmapColors[
-                              row[varName] as keyof typeof heatmapColors
-                            ] || heatmapColors.Neutral,
-                          height: "25px",
-                          borderRadius: "0.35rem",
-                          transition: "all 0.3s ease",
-                          cursor: "pointer",
+                    Limpiar
+                  </button>
+                )}
+              </div>
+
+                            <div className="mb-4">
+                <h3 className="text-xs font-semibold text-[var(--foreground)] mb-2">Año</h3>
+                <div className="space-y-1.5 max-h-40 overflow-y-auto">
+                  {filterOptions.years.map((year, index) => (
+                    <label key={`year-${year}-${index}`} className="flex items-center gap-2 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={selectedYears.includes(year)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedYears([...selectedYears, year]);
+                          } else {
+                            setSelectedYears(selectedYears.filter(y => y !== year));
+                          }
                         }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.filter = "brightness(0.85)")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.filter = "brightness(1)")
-                        }
-                      ></div>
-                    ))}
-                  </React.Fragment>
-                ))}
+                        className="w-3.5 h-3.5 accent-[var(--primary)]"
+                      />
+                      <span className="text-xs text-[var(--muted-foreground)] group-hover:text-[var(--foreground)]">
+                        {year}
+                      </span>
+                    </label>
+                  ))}
+                </div>
               </div>
-            </div>
-          ) : (
-            <p style={{ textAlign: "center", fontSize: "0.75rem", color: "#555" }}>
-              No hay datos para el mapa de calor.
-            </p>
-          )}
-        </div>
 
-        {/* Estadísticas */}
-        <div
-          style={{
-            border: "3px solid rgba(255, 255, 255, 0.6)",
-            borderRadius: "1rem",
-            padding: "0.75rem",
-            backgroundColor: "rgba(255,255,255,0.15)",
-            boxShadow: "0 4px 30px rgba(255,255,255,0.2)",
-            color: "black",
-            textAlign: "center",
-            fontSize: "0.75rem",
-          }}
-        >
-          <h2 style={{ fontWeight: "700", fontSize: "0.9rem", marginBottom: "0.75rem" }}>
-            DIRECCIÓN DE EFECTO
-            <br />
-            <span style={{ fontSize: "0.7rem" }}>(VARIABLES CLAVE)</span>
-          </h2>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "1rem",
-              marginBottom: "0.5rem",
-            }}
-          >
-            <div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.25rem",
-                  marginBottom: "0.25rem",
-                  justifyContent: "center",
-                }}
-              >
-                <span style={{ fontSize: "1.2rem", color: "#4CAF50" }}>+</span>
-                <span
-                  style={{
-                    fontWeight: "600",
-                    fontSize: "0.75rem",
-                    color: "#4CAF50",
-                  }}
-                >
-                  Positivo
-                </span>
+                            <div>
+                <h3 className="text-xs font-semibold text-[var(--foreground)] mb-2">Categoría</h3>
+                <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                  {filterOptions.categories.map((category, index) => (
+                    <label key={`category-${category}-${index}`} className="flex items-start gap-2 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={selectedCategories.includes(category)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedCategories([...selectedCategories, category]);
+                          } else {
+                            setSelectedCategories(selectedCategories.filter(c => c !== category));
+                          }
+                        }}
+                        className="w-3.5 h-3.5 accent-[var(--primary)] mt-0.5"
+                      />
+                      <span className="text-xs text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] leading-tight">
+                        {category}
+                      </span>
+                    </label>
+                  ))}
+                </div>
               </div>
-              <div
-                style={{
-                  fontWeight: "700",
-                  fontSize: "1.3rem",
-                  color: "#4CAF50",
-                }}
-              >
-                {positiveCount}
-              </div>
-            </div>
 
-            <div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.25rem",
-                  marginBottom: "0.25rem",
-                  justifyContent: "center",
-                }}
-              >
-                <span style={{ fontSize: "1.2rem", color: "#9E9E9E" }}>-</span>
-                <span
-                  style={{
-                    fontWeight: "600",
-                    fontSize: "0.75rem",
-                    color: "#9E9E9E",
-                  }}
-                >
-                  0 Neutro
-                </span>
-              </div>
-              <div
-                style={{
-                  fontWeight: "700",
-                  fontSize: "1.3rem",
-                  color: "#9E9E9E",
-                }}
-              >
-                {neutralCount}
+              <div className="mt-4 pt-4 border-t border-[var(--border)]">
+                <p className="text-xs text-[var(--muted-foreground)]">
+                  <span className="font-semibold text-[var(--primary)]">{filteredPapers.length}</span> papers
+                </p>
               </div>
             </div>
           </div>
 
-          <div
-            style={{
-              fontSize: "0.65rem",
-              fontStyle: "italic",
-              color: "#555",
-            }}
+                    <button
+            onClick={() => setShowFilters(!showFilters)}
+            className="lg:hidden fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 bg-[var(--primary)] text-white rounded-full shadow-lg hover:shadow-xl transition-all"
           >
-            En transparencia/breve para evitar
-            <br />
-            sesgos e información no
-            <br />
-            manipulabilidad
+            <Filter className="w-4 h-4" />
+            <span className="text-sm font-medium">Filtros</span>
+          </button>
+
+                    <AnimatePresence>
+            {showFilters && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="lg:hidden fixed inset-0 z-40 bg-black/50"
+                onClick={() => setShowFilters(false)}
+              >
+                <motion.div
+                  initial={{ x: '100%' }}
+                  animate={{ x: 0 }}
+                  exit={{ x: '100%' }}
+                  className="absolute right-0 top-0 bottom-0 w-80 bg-white p-6 overflow-y-auto"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="font-semibold text-base text-[var(--foreground)]">Filtros</h2>
+                    <button onClick={() => setShowFilters(false)}>
+                      <X className="w-5 h-5 text-[var(--muted-foreground)]" />
+                    </button>
+                  </div>
+                                  </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+                    <div className="flex-1 space-y-6">
+                        {availableMetrics.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white rounded-xl border border-[var(--border)] p-4"
+              >
+                <label className="block mb-2">
+                  <span className="text-xs font-semibold text-[var(--foreground)] flex items-center gap-1.5">
+                    <TrendingUp className="w-3.5 h-3.5 text-[var(--primary)]" />
+                    Métrica para Comparación
+                  </span>
+                </label>
+                <select
+                  value={selectedMetric}
+                  onChange={(e) => setSelectedMetric(e.target.value)}
+                  className="w-full px-3 py-2 bg-white border border-[var(--border)] rounded-lg text-sm text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)] transition-all cursor-pointer"
+                >
+                  {availableMetrics.map((metric, index) => (
+                    <option key={`metric-${index}-${metric}`} value={metric}>{metric}</option>
+                  ))}
+                </select>
+              </motion.div>
+            )}
+
+                        <AnimatePresence mode="wait">
+              {barChartData.length > 0 ? (
+                <motion.div
+                  key="bar-chart"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="bg-white rounded-xl border border-[var(--border)] p-5"
+                >
+                  <h3 className="text-sm font-semibold text-[var(--foreground)] mb-4">
+                    Tamaño del Efecto por Estudio
+                  </h3>
+                  <div className="w-full h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart
+                        data={barChartData}
+                        margin={{ top: 10, right: 20, left: 10, bottom: 60 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                        <XAxis
+                          dataKey="title"
+                          angle={-45}
+                          textAnchor="end"
+                          height={80}
+                          tick={{ fill: '#6B7280', fontSize: 10 }}
+                        />
+                        <YAxis
+                          tick={{ fill: '#6B7280', fontSize: 11 }}
+                          label={{ value: 'Efecto', angle: -90, position: 'insideLeft', style: { fill: '#374151', fontSize: 11 } }}
+                        />
+                        <Tooltip content={<CustomTooltip />} />
+                        <Bar dataKey="value" radius={[6, 6, 0, 0]} animationDuration={800}>
+                          {barChartData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={getBarColor(entry.direction)} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="no-data"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="bg-white rounded-xl border border-[var(--border)] p-12 text-center"
+                >
+                  <TrendingUp className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-[var(--muted-foreground)] text-sm">
+                    No hay datos disponibles para esta métrica
+                  </p>
+                  <p className="text-xs text-[var(--muted-foreground)] mt-1">
+                    Prueba ajustar los filtros o selecciona otra métrica
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+                        {heatmapData.length > 0 && availableMetrics.slice(0, 6).length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="bg-white rounded-xl border border-[var(--border)] p-5"
+              >
+                <h3 className="text-sm font-semibold text-[var(--foreground)] mb-4">
+                  Dirección del Efecto
+                </h3>
+
+                <div className="overflow-x-auto">
+                  <div className="inline-block min-w-full">
+                                        <div className="flex gap-1.5 mb-2">
+                      <div className="w-52 flex-shrink-0"></div>
+                      {availableMetrics.slice(0, 6).map(metric => (
+                        <div
+                          key={metric}
+                          className="w-24 flex-shrink-0 text-[9px] font-semibold text-[var(--foreground)] text-center transform -rotate-45 origin-left mb-6"
+                          title={metric}
+                        >
+                          {metric.length > 15 ? metric.substring(0, 15) + '...' : metric}
+                        </div>
+                      ))}
+                    </div>
+
+                                        <div className="space-y-1.5">
+                      {heatmapData.map((row, rowIndex) => (
+                        <motion.div
+                          key={row.fullTitle || rowIndex}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: rowIndex * 0.03 }}
+                          className="flex gap-1.5 items-center"
+                        >
+                          <div className="w-52 flex-shrink-0">
+                            <p className="text-[10px] font-medium text-[var(--foreground)] truncate" title={row.fullTitle || ''}>
+                              {row.title}
+                            </p>
+                          </div>
+                          {availableMetrics.slice(0, 6).map((metric, metricIndex) => (
+                            <div
+                              key={`${rowIndex}-${metricIndex}-${metric}`}
+                              title={`${row.fullTitle} - ${metric}: ${row[metric] || 'Sin datos'}`}
+                              className={`w-24 h-10 flex-shrink-0 rounded transition-all duration-200 hover:scale-105 cursor-pointer ${
+                                getHeatmapColor(row[metric])
+                              } ${!row[metric] ? 'opacity-30' : ''}`}
+                            />
+                          ))}
+                        </motion.div>
+                      ))}
+                    </div>
+
+                                        <div className="flex items-center justify-center gap-4 mt-6 pt-4 border-t border-[var(--border)]">
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-4 h-4 bg-green-500 rounded"></div>
+                        <span className="text-xs text-[var(--muted-foreground)]">Positivo</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-4 h-4 bg-red-500 rounded"></div>
+                        <span className="text-xs text-[var(--muted-foreground)]">Negativo</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-4 h-4 bg-gray-400 rounded"></div>
+                        <span className="text-xs text-[var(--muted-foreground)]">Neutral</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
           </div>
         </div>
       </div>

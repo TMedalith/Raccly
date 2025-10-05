@@ -2,12 +2,15 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { MessageSquare, Search, BarChart3 } from 'lucide-react';
+import { MessageSquare, Search, BarChart3, Table, Map as MapIcon, TrendingUp } from 'lucide-react';
 
 const navigationItems = [
   { icon: MessageSquare, label: 'Chat', path: '/chat' },
-  { icon: Search, label: 'Explorar', path: '/explore' },
-  { icon: BarChart3, label: 'Gráficos', path: '/graphs' },
+  { icon: Search, label: 'Explore', path: '/explore' },
+  { icon: TrendingUp, label: 'Analytics', path: '/analytics' },
+  { icon: MapIcon, label: 'Map', path: '/map' },
+  { icon: Table, label: 'Table', path: '/table' },
+  { icon: BarChart3, label: 'Graphs', path: '/graphs' },
 ];
 
 export function TopNav() {
@@ -23,8 +26,7 @@ export function TopNav() {
     <nav className="bg-white border-b border-[var(--border)] shadow-sm">
       <div className="max-w-[1800px] mx-auto px-6 py-3">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <button
+                    <button
             onClick={() => router.push('/')}
             className="flex items-center gap-2 hover:opacity-80 transition-opacity"
           >
@@ -32,8 +34,7 @@ export function TopNav() {
             <h1 className="text-lg font-bold text-[var(--foreground)]">Memora Lab</h1>
           </button>
 
-          {/* Navigation Items - Centered */}
-          <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
+                    <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
             {navigationItems.map((item, index) => {
               const Icon = item.icon;
               const active = isActive(item.path);
@@ -60,8 +61,7 @@ export function TopNav() {
             })}
           </div>
 
-          {/* Spacer for balance */}
-          <div className="w-[140px]"></div>
+                    <div className="w-[140px]"></div>
         </div>
       </div>
     </nav>

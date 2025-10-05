@@ -1,14 +1,8 @@
-/**
- * LocalStorage utilities for persisting chat state
- */
 
 import type { Message } from '@/features/chat/types';
 
 const MESSAGES_STORAGE_KEY = 'memoralab_messages';
 
-/**
- * Saves messages to localStorage
- */
 export function saveMessages(sessionId: string, messages: Message[]): void {
   if (typeof window === 'undefined') return;
 
@@ -17,16 +11,12 @@ export function saveMessages(sessionId: string, messages: Message[]): void {
     allMessages[sessionId] = messages;
     localStorage.setItem(MESSAGES_STORAGE_KEY, JSON.stringify(allMessages));
 
-    // Dispatch custom event to notify other components
-    window.dispatchEvent(new Event('conversationsUpdated'));
+        window.dispatchEvent(new Event('conversationsUpdated'));
   } catch (error) {
     console.error('Error saving messages:', error);
   }
 }
 
-/**
- * Retrieves messages from localStorage for a specific session
- */
 export function loadMessages(sessionId: string): Message[] {
   if (typeof window === 'undefined') return [];
 
@@ -34,8 +24,7 @@ export function loadMessages(sessionId: string): Message[] {
     const allMessages = getAllStoredMessages();
     const messages = allMessages[sessionId] || [];
 
-    // Convert timestamp strings back to Date objects
-    return messages.map((msg) => ({
+        return messages.map((msg) => ({
       ...msg,
       timestamp: new Date(msg.timestamp),
     }));
@@ -45,9 +34,6 @@ export function loadMessages(sessionId: string): Message[] {
   }
 }
 
-/**
- * Gets all stored messages for all sessions
- */
 function getAllStoredMessages(): Record<string, Message[]> {
   if (typeof window === 'undefined') return {};
 
@@ -60,9 +46,6 @@ function getAllStoredMessages(): Record<string, Message[]> {
   }
 }
 
-/**
- * Clears messages for a specific session
- */
 export function clearSessionMessages(sessionId: string): void {
   if (typeof window === 'undefined') return;
 
@@ -75,9 +58,6 @@ export function clearSessionMessages(sessionId: string): void {
   }
 }
 
-/**
- * Clears all stored messages
- */
 export function clearAllMessages(): void {
   if (typeof window === 'undefined') return;
 
@@ -88,9 +68,6 @@ export function clearAllMessages(): void {
   }
 }
 
-/**
- * Gets all conversation sessions with their metadata
- */
 export function getAllConversations(): Array<{
   sessionId: string;
   title: string;

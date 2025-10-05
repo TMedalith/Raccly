@@ -65,8 +65,7 @@ export function FilterPanel({
 
   return (
     <div className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <SlidersHorizontal className="w-5 h-5 text-[var(--primary)]" />
           <h2 className="text-lg font-bold text-[var(--foreground)]">Control de Misión</h2>
@@ -76,8 +75,7 @@ export function FilterPanel({
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="relative">
+            <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--muted-foreground)]" />
         <input
           type="text"
@@ -96,8 +94,7 @@ export function FilterPanel({
         )}
       </div>
 
-      {/* Year Range Slider */}
-      <div>
+            <div>
         <label className="block text-sm font-semibold text-[var(--foreground)] mb-3">
           Rango de Años: {filters.yearRange[0]} - {filters.yearRange[1]}
         </label>
@@ -129,8 +126,7 @@ export function FilterPanel({
         </div>
       </div>
 
-      {/* Advanced Filters Toggle */}
-      <button
+            <button
         onClick={() => setShowAdvanced(!showAdvanced)}
         className="w-full flex items-center justify-between px-4 py-3 bg-[var(--secondary)] hover:bg-[var(--secondary)]/70 rounded-lg transition-colors"
       >
@@ -142,16 +138,14 @@ export function FilterPanel({
         />
       </button>
 
-      {/* Advanced Filters */}
-      {showAdvanced && (
+            {showAdvanced && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
           className="space-y-6"
         >
-          {/* Keywords Filter */}
-          <div>
+                    <div>
             <label className="block text-sm font-semibold text-[var(--foreground)] mb-2">
               Keywords ({filters.keywords.length} seleccionadas)
             </label>
@@ -185,8 +179,7 @@ export function FilterPanel({
             </div>
           </div>
 
-          {/* Study Design Filter */}
-          <div>
+                    <div>
             <label className="block text-sm font-semibold text-[var(--foreground)] mb-2">
               Diseño de Estudio ({filters.studyDesigns.length} seleccionados)
             </label>
@@ -222,8 +215,7 @@ export function FilterPanel({
         </motion.div>
       )}
 
-      {/* Reset Button */}
-      {hasActiveFilters && (
+            {hasActiveFilters && (
         <motion.button
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}

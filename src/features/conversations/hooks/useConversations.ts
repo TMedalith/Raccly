@@ -71,8 +71,7 @@ export function useConversations() {
   useEffect(() => {
     fetchConversations();
 
-    // Listen for storage changes to refresh conversations
-    const handleStorageChange = (e: StorageEvent) => {
+        const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'memoralab_messages') {
         fetchConversations();
       }
@@ -80,8 +79,7 @@ export function useConversations() {
 
     window.addEventListener('storage', handleStorageChange);
 
-    // Also listen for custom event for same-window updates
-    const handleLocalUpdate = () => {
+        const handleLocalUpdate = () => {
       fetchConversations();
     };
 

@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import { chatService } from '../services/chat.service';
 import { generateSessionId } from '@/shared/utils/session';
 import { loadMessages, saveMessages } from '@/shared/utils/storage';
+import { resolvePaperReferences } from '@/shared/utils/paperReference';
 import type { Message } from '../types';
 
 interface UseChatOptions {
@@ -14,32 +15,25 @@ export function useChat(options?: UseChatOptions) {
   const [error, setError] = useState<string | null>(null);
   const [activeMessageId, setActiveMessageId] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string>('');
+  const [selectedPaperId, setSelectedPaperId] = useState<string | null>(null);
 
-  // Initialize session ID - Use existing conversationId or create new
-  useEffect(() => {
-    // If conversationId is already a valid session ID, use it directly
-    // Otherwise create a new session
-    const id = options?.conversationId || generateSessionId();
+    useEffect(() => {
+            const id = options?.conversationId || generateSessionId();
     setSessionId(id);
 
-    // Load persisted messages for this session
-    const persistedMessages = loadMessages(id);
+        const persistedMessages = loadMessages(id);
     if (persistedMessages.length > 0) {
       setMessages(persistedMessages);
     }
   }, [options?.conversationId]);
 
-  // Persist messages to localStorage for all conversations
-  useEffect(() => {
+    useEffect(() => {
     if (sessionId && messages.length > 0) {
       saveMessages(sessionId, messages);
     }
   }, [messages, sessionId]);
 
-  /**
-   * Obtiene los papers del mensaje activo o del último mensaje del asistente
-   */
-  const currentPapers = useMemo(() => {
+    const currentPapers = useMemo(() => {
         if (activeMessageId) {
       const activeMessage = messages.find((m) => m.id === activeMessageId);
       if (activeMessage?.relatedPapers) {
@@ -55,10 +49,23 @@ export function useChat(options?: UseChatOptions) {
     return [];
   }, [messages, activeMessageId]);
 
-  /**
-   * Envía un mensaje del usuario y recibe la respuesta del asistente
-   */
-  const sendMessage = useCallback(async (content: string) => {
+    const citedPapers = useMemo(() => {
+    if (activeMessageId) {
+      const activeMessage = messages.find((m) => m.id === activeMessageId);
+      if (activeMessage?.references && activeMessage.references.length > 0) {
+        return resolvePaperReferences(activeMessage.references);
+      }
+    }
+
+        for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].role === 'assistant' && messages[i].references) {
+        return resolvePaperReferences(messages[i].references || []);
+      }
+    }
+    return [];
+  }, [messages, activeMessageId]);
+
+    const sendMessage = useCallback(async (content: string) => {
     if (!content.trim() || isLoading || !sessionId) return;
 
     setIsLoading(true);
@@ -77,8 +84,7 @@ export function useChat(options?: UseChatOptions) {
     try {
       const response = await chatService.sendMessage(content.trim(), sessionId);
 
-      // Update session ID if it changed
-      if (response.sessionId && response.sessionId !== sessionId) {
+            if (response.sessionId && response.sessionId !== sessionId) {
         setSessionId(response.sessionId);
       }
 
@@ -111,10 +117,7 @@ export function useChat(options?: UseChatOptions) {
     }
   }, [isLoading, sessionId]);
 
-  /**
-   * Limpia todos los mensajes
-   */
-  const clearMessages = useCallback(() => {
+    const clearMessages = useCallback(() => {
     setMessages([]);
     setError(null);
     if (sessionId) {
@@ -122,10 +125,7 @@ export function useChat(options?: UseChatOptions) {
     }
   }, [sessionId]);
 
-  /**
-   * Carga el historial de una conversación
-   */
-  const loadConversation = useCallback(async () => {
+    const loadConversation = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
@@ -139,11 +139,12 @@ export function useChat(options?: UseChatOptions) {
     }
   }, []);
 
-  /**
-   * Establece el mensaje activo (el que está visible en el viewport)
-   */
-  const setActiveMessage = useCallback((messageId: string | null) => {
+    const setActiveMessage = useCallback((messageId: string | null) => {
     setActiveMessageId(messageId);
+  }, []);
+
+    const selectPaper = useCallback((paperId: string | null) => {
+    setSelectedPaperId(paperId);
   }, []);
 
   return {
@@ -151,11 +152,14 @@ export function useChat(options?: UseChatOptions) {
     isLoading,
     error,
     currentPapers,
+    citedPapers,
     activeMessageId,
     sessionId,
+    selectedPaperId,
     sendMessage,
     clearMessages,
     loadConversation,
     setActiveMessage,
+    selectPaper,
   };
 }

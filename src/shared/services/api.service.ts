@@ -22,12 +22,11 @@ export class ApiService {
       baseURL: API_BASE_URL,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': 'QG5HtOLSkc7NxMQWDTsft6ppq1TD1Rln3rISP6O8',
       },
-      timeout: 30000, // 30 seconds timeout for AI responses
-    });
+      timeout: 30000,     });
 
-    // Request interceptor for debugging
-    this.client.interceptors.request.use(
+        this.client.interceptors.request.use(
       (config) => {
         console.log('API Request:', config.method?.toUpperCase(), config.url, config.data);
         return config;
@@ -37,8 +36,7 @@ export class ApiService {
       }
     );
 
-    // Response interceptor for error handling
-    this.client.interceptors.response.use(
+        this.client.interceptors.response.use(
       (response) => {
         console.log('API Response:', response.status, response.data);
         return response;

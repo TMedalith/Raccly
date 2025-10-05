@@ -15,7 +15,7 @@ interface ChatInterfaceProps {
 export function ChatInterface({ conversationId, showRelatedPapers = true, initialQuery }: ChatInterfaceProps) {
   const [input, setInput] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const { messages, isLoading, currentPapers, sendMessage, setActiveMessage, activeMessageId, sessionId } = useChat({ conversationId });
+  const { messages, isLoading, currentPapers, citedPapers, sendMessage, setActiveMessage, activeMessageId, sessionId, selectedPaperId, selectPaper } = useChat({ conversationId });
   const hasProcessedInitialQuery = useRef(false);
 
     useEffect(() => {
@@ -49,6 +49,7 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
             isLoading={isLoading}
             onMessageVisible={setActiveMessage}
             activeMessageId={activeMessageId}
+            onPaperClick={selectPaper}
           />
         </div>
 
@@ -61,7 +62,7 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyPress}
-                placeholder="Escribe tu pregunta sobre papers científicos..."
+                placeholder="Ask about scientific papers..."
                 rows={1}
                 className="flex-1 resize-none rounded-xl border border-[var(--border)] bg-white px-4 py-3 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent transition-all"
                 style={{ maxHeight: '200px', minHeight: '48px' }}
@@ -81,7 +82,7 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
       {}
       {showRelatedPapers && (
         <div className="w-80 flex-shrink-0 border-l border-[var(--border)] bg-white/50 backdrop-blur-sm overflow-y-auto custom-scrollbar">
-          <RelatedPapersList papers={currentPapers} isLoading={isLoading} />
+          <RelatedPapersList papers={currentPapers} citedPapers={citedPapers} isLoading={isLoading} selectedPaperId={selectedPaperId} />
         </div>
       )}
     </div>

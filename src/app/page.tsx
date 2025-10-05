@@ -36,10 +36,11 @@ export default function HomePage() {
   const router = useRouter();
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
   const [windowDimensions, setWindowDimensions] = useState({ width: 1920, height: 1080 });
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // Only run on client side
-    if (typeof window !== 'undefined') {
+    setIsMounted(true);
+        if (typeof window !== 'undefined') {
       setWindowDimensions({
         width: window.innerWidth,
         height: window.innerHeight,
@@ -59,32 +60,32 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen w-full overflow-hidden bg-gradient-to-br from-[var(--navy)] via-[var(--blue-medium)] to-[var(--blue-light)]">
-      {/* Animated background particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-2 h-2 bg-white/20 rounded-full"
-            initial={{
-              x: Math.random() * windowDimensions.width,
-              y: Math.random() * windowDimensions.height,
-            }}
-            animate={{
-              x: Math.random() * windowDimensions.width,
-              y: Math.random() * windowDimensions.height,
-            }}
-            transition={{
-              duration: Math.random() * 20 + 10,
-              repeat: Infinity,
-              repeatType: 'reverse',
-            }}
-          />
-        ))}
-      </div>
+            {isMounted && (
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 bg-white/20 rounded-full"
+              initial={{
+                x: Math.random() * windowDimensions.width,
+                y: Math.random() * windowDimensions.height,
+              }}
+              animate={{
+                x: Math.random() * windowDimensions.width,
+                y: Math.random() * windowDimensions.height,
+              }}
+              transition={{
+                duration: Math.random() * 20 + 10,
+                repeat: Infinity,
+                repeatType: 'reverse',
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-12">
-        {/* Hero Section */}
-        <motion.div
+                <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -148,8 +149,7 @@ export default function HomePage() {
           </motion.div>
         </motion.div>
 
-        {/* Features Grid */}
-        <motion.div
+                <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 0.8 }}
@@ -194,8 +194,7 @@ export default function HomePage() {
           })}
         </motion.div>
 
-        {/* Stats Section */}
-        <motion.div
+                <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.4, duration: 0.8 }}
@@ -224,8 +223,7 @@ export default function HomePage() {
           ))}
         </motion.div>
 
-        {/* CTA Footer */}
-        <motion.div
+                <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2, duration: 0.8 }}
