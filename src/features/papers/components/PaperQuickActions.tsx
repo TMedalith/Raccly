@@ -7,7 +7,6 @@ import { generateAPACitation, generateBibTeXCitation } from '@/shared/utils/pape
 
 interface PaperQuickActionsProps {
   paper: PaperData;
-  onCompare?: (paperId: string) => void;
   className?: string;
   compact?: boolean;
 }
@@ -16,7 +15,6 @@ type CitationFormat = 'apa' | 'bibtex' | 'mla' | 'chicago';
 
 export const PaperQuickActions = memo(function PaperQuickActions({
   paper,
-  onCompare,
   className = '',
   compact = false
 }: PaperQuickActionsProps) {
