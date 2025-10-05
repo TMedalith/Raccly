@@ -18,6 +18,7 @@ export const chatService = {
         papers: [], // No papers from endpoint yet
         sessionId: apiResponse.sessionId,
         agentAliasId: apiResponse.agent_alias_id,
+        references: apiResponse.references || [],
       };
     } catch (error) {
       console.error('Chat service error:', error);
@@ -34,7 +35,7 @@ export const chatService = {
    * @param conversationId - ID de la conversación
    * @returns Promise con el historial de mensajes
    */
-  async getConversationHistory(_conversationId: string) {
+  async getConversationHistory() {
     // TODO: Implement conversation history retrieval from backend
     await new Promise((resolve) => setTimeout(resolve, 500));
     return [];

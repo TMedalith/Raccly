@@ -131,10 +131,10 @@ export function MessageList({ messages, isLoading, onMessageVisible, activeMessa
                 {message.content}
               </p>
 
-              {}
+              {/* Referencias de Papers */}
               {message.role === 'assistant' && message.relatedPapers && message.relatedPapers.length > 0 && (
                 <div className="mt-4 pt-4 border-t border-[--border]">
-                  <p className="text-xs font-semibold text-[--muted-foreground] mb-2">Referencias:</p>
+                  <p className="text-xs font-semibold text-[--muted-foreground] mb-2">Papers relacionados:</p>
                   <div className="space-y-1">
                     {message.relatedPapers.map((paper, index) => (
                       <div key={paper.id} className="text-xs text-[var(--muted-foreground)]">
@@ -143,6 +143,21 @@ export function MessageList({ messages, isLoading, onMessageVisible, activeMessa
                         {' - '}
                         {paper.authors.slice(0, 2).join(', ')}
                         {paper.authors.length > 2 && ' et al.'} ({paper.year})
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Referencias de API */}
+              {message.role === 'assistant' && message.references && message.references.length > 0 && (
+                <div className="mt-4 pt-4 border-t border-[--border]">
+                  <p className="text-xs font-semibold text-[--muted-foreground] mb-2">Fuentes:</p>
+                  <div className="space-y-1">
+                    {message.references.map((ref, index) => (
+                      <div key={index} className="text-xs text-[var(--muted-foreground)]">
+                        <span className="font-semibold text-[var(--primary)]">[{index + 1}]</span>{' '}
+                        <span className="font-mono break-all">{ref}</span>
                       </div>
                     ))}
                   </div>

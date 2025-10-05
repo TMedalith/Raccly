@@ -11,6 +11,7 @@ interface ChatResponse {
   response: string;
   sessionId: string;
   agent_alias_id: string;
+  references?: string[];
 }
 
 export class ApiService {

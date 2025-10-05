@@ -24,10 +24,13 @@ export function TopNav() {
       <div className="max-w-[1800px] mx-auto px-6 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-2">
+          <button
+            onClick={() => router.push('/')}
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          >
             <span className="text-2xl">🔬</span>
             <h1 className="text-lg font-bold text-[var(--foreground)]">Memora Lab</h1>
-          </div>
+          </button>
 
           {/* Navigation Items - Centered */}
           <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">

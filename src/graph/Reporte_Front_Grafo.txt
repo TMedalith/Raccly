@@ -1,0 +1,110 @@
+
+REPORTE PARA FRONT — GRAFO PAPERS–AUTORES
+=========================================
+
+1) ARCHIVOS ENTREGADOS
+----------------------
+- graph_with_links.json  (principal para renderizar)
+- nodes.csv              (auditoría/tabular de nodos)
+- edges.csv              (auditoría/tabular de conexiones)
+
+2) ESTRUCTURA DEL JSON (graph_with_links.json)
+----------------------------------------------
+{
+  "nodes": [ ... ],
+  "links": [ ... ],
+  "edges": [ ... ],   <-- alias de "links", mismo contenido
+  "build": { "md5": "...", "community_mode": "..." }  (opcional)
+}
+
+=> Para consumir: usar data.nodes y data.links (o data.edges si su código espera "edges").
+
+3) NODOS (nodes)
+----------------
+Cada elemento describe un PAPER o un AUTOR.
+
+Campos:
+- id          (string, clave única)  -> usarla para referenciar en links
+- label       (string, a mostrar)    -> título del paper o nombre del autor
+- node_type   ("paper" | "author")
+- (solo en papers, si existe) year, topic, venue, url, source_pdf
+
+Ejemplos:
+- { "id": "paper:paper_001", "label": "Título…", "node_type": "paper", "year": 2017, "topic": "space-..." }
+- { "id": "author:md5:24feed...", "label": "Ada Lovelace", "node_type": "author" }
+
+4) CONEXIONES (links / edges)
+-----------------------------
+Cada elemento indica QUIÉN se conecta con QUIÉN.
+
+Campos mínimos:
+- source  (string) -> id del nodo origen
+- target  (string) -> id del nodo destino
+- edge_type (string) -> tipo de relación
+
+Campos opcionales:
+- author_order (int) -> orden de firma del autor en un paper
+- weight       (float) -> intensidad (coautoría = nº de papers juntos; similitud = score)
+
+Tipos de arista:
+- authored          : autor ↔ paper
+- coauthor          : autor ↔ autor (colaboración; weight = recuento de coautorías)
+- paper_similarity  : paper ↔ paper (si se incluye; weight = fuerza de similitud)
+
+Ejemplos:
+- { "source": "author:md5:24feed...", "target": "paper:paper_001", "edge_type": "authored", "author_order": 1 }
+- { "source": "author:md5:AAA...", "target": "author:md5:BBB...", "edge_type": "coauthor", "weight": 2.0 }
+- { "source": "paper:paper_001", "target": "paper:paper_002", "edge_type": "paper_similarity", "weight": 0.63 }
+
+IMPORTANTE: Las aristas se pueden tratar como NO DIRIGIDAS (undirected) para layout.
+
+5) CSVs
+-------
+nodes.csv -> columnas: id, label, node_type, year, topic, venue, url, source_pdf
+edges.csv -> columnas: source, target, edge_type, author_order, weight
+
+6) CONSUMO TÍPICO EN LIBRERÍAS
+------------------------------
+D3 (force):
+-----------
+const data  = await d3.json("graph_with_links.json");
+const nodes = data.nodes;
+const links = data.links || data.edges;   // fallback por compatibilidad
+
+const sim = d3.forceSimulation(nodes)
+  .force("link", d3.forceLink(links).id(d => d.id))
+  .force("charge", d3.forceManyBody().strength(-60))
+  .force("center", d3.forceCenter(width/2, height/2));
+
+Vis.js:
+-------
+const nodesDS = new vis.DataSet(data.nodes.map(n => ({ id: n.id, label: n.label, group: n.node_type })));
+const edgesDS = new vis.DataSet((data.links || data.edges).map(e => ({ from: e.source, to: e.target, value: e.weight })));
+new vis.Network(container, { nodes: nodesDS, edges: edgesDS }, {});
+
+Cytoscape.js:
+-------------
+const elements = {
+  nodes: data.nodes.map(n => ({ data: { id: n.id, label: n.label, node_type: n.node_type } })),
+  edges: (data.links || data.edges).map(e => ({ data: { id: `${e.source}-${e.target}`, source: e.source, target: e.target, edge_type: e.edge_type, weight: e.weight } }))
+};
+cytoscape({ container, elements });
+
+7) SUGERENCIAS DE UI (opcionales)
+---------------------------------
+- Color por node_type (paper/author) o por topic cuando exista.
+- Tamaño del nodo por grado (nº de links) o por un score si se añade.
+- Grosor de la arista por weight (si existe).
+- Tooltips:
+  - Paper: label + year + venue + url
+  - Autor: label + nº de papers (puede derivarse del grado en "authored").
+
+8) CHECKLIST DE INTEGRACIÓN
+---------------------------
+[ ] Cargar "graph_with_links.json" (no versiones antiguas).
+[ ] Usar data.nodes y data.links (o data.edges).
+[ ] Mapear link.source/target a node.id (exacto, sin transformar).
+[ ] No filtrar "authored" por weight (puede no traer weight).
+[ ] Tratar aristas como no dirigidas para layout, salvo que su lógica requiera otra cosa.
+
+
