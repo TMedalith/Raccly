@@ -13,10 +13,10 @@ export function CitedPapersSection({ papers, onPaperClick }: CitedPapersSectionP
   if (papers.length === 0) return null;
 
   return (
-    <div className="mt-6 pt-4 border-t border-gray-200">
+    <div className="mt-6 pt-4 border-t border-white/20">
       <div className="flex items-center justify-between mb-3">
-        <h4 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-          <FileText className="w-4 h-4 text-[var(--primary)]" />
+        <h4 className="text-sm font-semibold text-white flex items-center gap-2">
+          <FileText className="w-4 h-4 text-cyan-400" />
           Cited Sources ({papers.length})
         </h4>
       </div>
@@ -25,11 +25,11 @@ export function CitedPapersSection({ papers, onPaperClick }: CitedPapersSectionP
         {papers.map((paper, index) => (
           <div
             key={paper.paper_id}
-            className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-3 border border-blue-200 hover:border-[var(--primary)] transition-all"
+            className="bg-white/5 backdrop-blur-xl rounded-xl p-3 border border-white/20 hover:border-cyan-400 transition-all"
           >
             <div className="flex gap-3">
                             <div className="flex-shrink-0">
-                <div className="w-7 h-7 rounded-lg bg-[var(--primary)] text-white text-sm font-bold flex items-center justify-center shadow-sm">
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm font-bold flex items-center justify-center shadow-sm">
                   {index + 1}
                 </div>
               </div>
@@ -39,11 +39,11 @@ export function CitedPapersSection({ papers, onPaperClick }: CitedPapersSectionP
                   onClick={() => onPaperClick?.(paper.paper_id)}
                   className="text-left w-full"
                 >
-                  <h5 className="text-sm font-semibold text-gray-800 line-clamp-2 hover:text-[var(--primary)] transition-colors mb-1">
+                  <h5 className="text-sm font-semibold text-white line-clamp-2 hover:text-cyan-400 transition-colors mb-1">
                     {paper.title}
                   </h5>
 
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-600 mb-2">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-blue-200 mb-2">
                     <div className="flex items-center gap-1">
                       <Users className="w-3 h-3" />
                       <span>

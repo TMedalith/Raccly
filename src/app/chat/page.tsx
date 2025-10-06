@@ -77,8 +77,8 @@ function ChatPageContent() {
   }
 
   return (
-    <div className="h-full overflow-hidden flex items-center justify-center p-8 bg-gradient-to-br from-[#0a0e27] via-[#0f1435] to-[#0a0e27]">
-      <div className="w-full max-w-[800px] space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0e27] via-[#0f1435] to-[#0a0e27] pt-32 pb-16 px-8">
+      <div className="w-full max-w-[900px] mx-auto space-y-10">
         {}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -185,7 +185,7 @@ export default function ChatPage() {
   return (
     <Suspense fallback={
       <div className="h-full flex items-center justify-center">
-        <div className="animate-pulse text-[var(--muted-foreground)]">Cargando...</div>
+        <div className="animate-pulse text-[var(--muted-foreground)]">Loading...</div>
       </div>
     }>
       <ChatPageContent />

@@ -154,11 +154,11 @@ export function RelatedPapersList({ papers, isLoading = false, selectedPaperId, 
 
   if (viewingPaper) {
     return (
-      <div className="h-full flex flex-col bg-gray-50">
-        <div className="p-4 bg-white border-b border-gray-200">
+      <div className="h-full flex flex-col">
+        <div className="p-4 bg-white/5 border-b border-white/20 backdrop-blur-xl">
           <button
             onClick={() => setViewingPaper(null)}
-            className="flex items-center gap-2 text-sm text-[var(--primary)] hover:underline"
+            className="flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300"
           >
             <ChevronLeft className="w-4 h-4" />
             Back
@@ -173,13 +173,13 @@ export function RelatedPapersList({ papers, isLoading = false, selectedPaperId, 
 
     if (allPapers.length === 0 && !isLoading) {
     return (
-      <div className="h-full flex flex-col bg-gray-50">
-        <div className="p-5 border-b border-gray-200 bg-white">
-          <h3 className="text-base font-semibold text-gray-800 flex items-center gap-2">
-            <FileText className="w-5 h-5 text-[var(--primary)]" />
+      <div className="h-full flex flex-col">
+        <div className="p-5 border-b border-white/20 bg-white/5 backdrop-blur-xl">
+          <h3 className="text-base font-semibold text-white flex items-center gap-2">
+            <FileText className="w-5 h-5 text-cyan-400" />
             Research Papers
           </h3>
-          <p className="text-xs text-gray-600 mt-1">
+          <p className="text-xs text-blue-200 mt-1">
             Ask a question to find relevant papers
           </p>
         </div>
@@ -254,16 +254,16 @@ export function RelatedPapersList({ papers, isLoading = false, selectedPaperId, 
 
     if (isLoading && allPapers.length === 0) {
     return (
-      <div className="h-full flex flex-col bg-gray-50">
-        <div className="p-5 border-b border-gray-200 bg-white">
-          <h3 className="text-base font-semibold text-gray-800">
+      <div className="h-full flex flex-col">
+        <div className="p-5 border-b border-white/20 bg-white/5 backdrop-blur-xl">
+          <h3 className="text-base font-semibold text-white">
             Related Papers
           </h3>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <div className="w-8 h-8 border-3 border-[var(--primary)] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <p className="text-sm text-gray-600">Searching papers...</p>
+            <div className="w-8 h-8 border-3 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+            <p className="text-sm text-blue-200">Searching papers...</p>
           </div>
         </div>
       </div>
@@ -271,19 +271,19 @@ export function RelatedPapersList({ papers, isLoading = false, selectedPaperId, 
   }
 
     return (
-    <div className="h-full flex flex-col bg-gray-50">
-            <div className="p-4 border-b border-gray-200 bg-white">
+    <div className="h-full flex flex-col">
+            <div className="p-4 border-b border-white/20 bg-white/5 backdrop-blur-xl">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-base font-semibold text-gray-800 flex items-center gap-2">
-            <FileText className="w-5 h-5 text-[var(--primary)]" />
+          <h3 className="text-base font-semibold text-white flex items-center gap-2">
+            <FileText className="w-5 h-5 text-cyan-400" />
             Papers
-            <span className="text-sm font-normal text-gray-500">
+            <span className="text-sm font-normal text-blue-200">
               ({filteredPapers.length})
             </span>
           </h3>
           <button
             onClick={handleExportAll}
-            className="flex items-center gap-1 px-2 py-1 text-xs text-[var(--primary)] hover:bg-[var(--primary)]/10 rounded transition-all"
+            className="flex items-center gap-1 px-2 py-1 text-xs text-cyan-400 hover:bg-cyan-500/20 rounded transition-all"
           >
             <Download className="w-3.5 h-3.5" />
             Export
@@ -295,21 +295,21 @@ export function RelatedPapersList({ papers, isLoading = false, selectedPaperId, 
             <select
               value={yearFilter}
               onChange={(e) => setYearFilter(e.target.value)}
-              className="w-full text-xs px-2 py-1.5 border border-gray-300 rounded-lg bg-white"
+              className="w-full text-xs px-2 py-1.5 border border-white/20 rounded-lg bg-white/10 text-white"
             >
-              <option value="all">All Years</option>
+              <option value="all" className="bg-[#0f1435]">All Years</option>
               {availableYears.map((year, index) => (
-                <option key={`year-${year}-${index}`} value={year || ''}>{year}</option>
+                <option key={`year-${year}-${index}`} value={year || ''} className="bg-[#0f1435]">{year}</option>
               ))}
             </select>
             <select
               value={methodFilter}
               onChange={(e) => setMethodFilter(e.target.value)}
-              className="w-full text-xs px-2 py-1.5 border border-gray-300 rounded-lg bg-white"
+              className="w-full text-xs px-2 py-1.5 border border-white/20 rounded-lg bg-white/10 text-white"
             >
-              <option value="all">All Methodologies</option>
+              <option value="all" className="bg-[#0f1435]">All Methodologies</option>
               {availableMethodologies.map((method, index) => (
-                <option key={`method-${method}-${index}`} value={method}>{method}</option>
+                <option key={`method-${method}-${index}`} value={method} className="bg-[#0f1435]">{method}</option>
               ))}
             </select>
           </div>
@@ -389,27 +389,27 @@ function PaperCard({ paper, isCited, onView, onCopyDOI }: PaperCardProps) {
     const methodology = paper.structured_data?.methodology?.study_design?.split(' ')[0] || 'Study';
 
   return (
-    <div className={`bg-white rounded-lg border transition-all overflow-hidden group ${
+    <div className={`bg-white/5 backdrop-blur-xl rounded-lg border transition-all overflow-hidden group ${
       isCited
-        ? 'border-[var(--primary)] shadow-sm'
-        : 'border-gray-200 hover:border-[var(--primary)]'
+        ? 'border-cyan-400 shadow-sm'
+        : 'border-white/20 hover:border-cyan-400'
     }`}>
       <button
         onClick={onView}
         className="w-full text-left p-3"
       >
         <div className="flex items-start justify-between gap-2 mb-2">
-          <h5 className="text-xs font-semibold text-gray-800 line-clamp-2 group-hover:text-[var(--primary)] transition-colors flex-1">
+          <h5 className="text-xs font-semibold text-white line-clamp-2 group-hover:text-cyan-400 transition-colors flex-1">
             {paper.title}
           </h5>
           {isCited && (
-            <span className="flex-shrink-0 text-[10px] font-medium px-2 py-0.5 rounded-full bg-[var(--primary)] text-white">
+            <span className="flex-shrink-0 text-[10px] font-medium px-2 py-0.5 rounded-full bg-cyan-500 text-white">
               CITED
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-gray-600 mb-1">
+        <div className="flex items-center gap-2 text-xs text-blue-200 mb-1">
           {paper.publication_year && <span>{paper.publication_year}</span>}
           {paper.publication_year && paper.journal && paper.journal.trim() && <span>•</span>}
           {paper.journal && paper.journal.trim() && (
@@ -418,7 +418,7 @@ function PaperCard({ paper, isCited, onView, onCopyDOI }: PaperCardProps) {
         </div>
 
         {paper.authors && paper.authors.length > 0 && (
-          <div className="flex items-center gap-1 text-xs text-gray-500">
+          <div className="flex items-center gap-1 text-xs text-blue-200/70">
             <Users className="w-3 h-3" />
             <span className="truncate">
               {paper.authors[0].location?.institution || paper.authors[0].name}
@@ -433,7 +433,7 @@ function PaperCard({ paper, isCited, onView, onCopyDOI }: PaperCardProps) {
             href={paper.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 px-2 py-1 text-xs text-[var(--primary)] hover:bg-[var(--primary)]/10 rounded transition-all"
+            className="flex items-center gap-1 px-2 py-1 text-xs text-cyan-400 hover:bg-cyan-500/20 rounded transition-all"
             onClick={(e) => e.stopPropagation()}
           >
             <ExternalLink className="w-3 h-3" />
@@ -447,14 +447,14 @@ function PaperCard({ paper, isCited, onView, onCopyDOI }: PaperCardProps) {
               e.stopPropagation();
               onCopyDOI(paper.doi);
             }}
-            className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 rounded transition-all"
+            className="flex items-center gap-1 px-2 py-1 text-xs text-blue-200 hover:bg-white/10 rounded transition-all"
           >
             <Copy className="w-3 h-3" />
             DOI
           </button>
         )}
 
-        <span className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+        <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-blue-200">
           {methodology}
         </span>
       </div>

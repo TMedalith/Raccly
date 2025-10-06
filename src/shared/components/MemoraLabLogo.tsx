@@ -9,7 +9,7 @@ interface MemoraLabLogoProps {
   className?: string;
 }
 
-export function MemoraLabLogo({ size = 40, showText = false, className = '' }: MemoraLabLogoProps) {
+export function MemoraLabLogo({ size = 40, className = '' }: MemoraLabLogoProps) {
   return (
     <motion.div
       initial={{ opacity: 0, rotate: -10 }}
@@ -31,20 +31,19 @@ export function MemoraLabLogo({ size = 40, showText = false, className = '' }: M
 }
 
 // Compact version for navbar
-export function CompactMemoraLogo({ size = 50 }: { size?: number }) {
+export function CompactMemoraLogo({ size = 40 }: { size?: number }) {
   return (
     <motion.div
-      whileHover={{ scale: 1.15, rotate: 5 }}
+      whileHover={{ scale: 1.1, rotate: 5 }}
       transition={{ duration: 0.3, type: "spring" }}
-      className="flex-shrink-0 relative"
+      className="flex-shrink-0"
     >
-      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-xl"></div>
       <Image
         src="/logo.png"
         alt="Memora Lab"
         width={size}
         height={size}
-        className="object-contain relative z-10 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]"
+        className="object-contain"
         priority
       />
     </motion.div>

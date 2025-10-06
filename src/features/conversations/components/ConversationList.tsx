@@ -29,12 +29,12 @@ export function ConversationList() {
   if (error) {
     return (
       <div className="text-center py-4">
-        <p className="text-sm text-[var(--destructive)] mb-2">Error al cargar</p>
+        <p className="text-sm text-[var(--destructive)] mb-2">Error loading</p>
         <button
           onClick={refresh}
           className="text-sm text-[var(--primary)] hover:text-[var(--navy)]"
         >
-          Reintentar
+          Retry
         </button>
       </div>
     );
@@ -43,7 +43,7 @@ export function ConversationList() {
   if (conversations.length === 0) {
     return (
       <div className="text-center py-4">
-        <p className="text-sm text-[var(--muted-foreground)]">No hay conversaciones</p>
+        <p className="text-sm text-[var(--muted-foreground)]">No conversations</p>
       </div>
     );
   }

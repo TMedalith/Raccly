@@ -108,7 +108,7 @@ export default function MapPage() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-[#0a0e27] via-[#0f1435] to-[#0a0e27]">
+    <div className="h-screen flex flex-col bg-gradient-to-br from-[#0a0e27] via-[#0f1435] to-[#0a0e27] pt-24">
             <div className="bg-white/5 backdrop-blur-xl border-b border-white/20 shadow-xl">
         <div className="max-w-[1800px] mx-auto px-6 py-5">
           <div className="flex items-center justify-between">

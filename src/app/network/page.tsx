@@ -128,7 +128,7 @@ export default function NetworkPage() {
   }, [allPapers]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0e27] via-[#0f1435] to-[#0a0e27] p-6 pt-24">
       <div className="max-w-7xl mx-auto">
                 <div className="flex items-center justify-between mb-6">
           <div>

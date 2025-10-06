@@ -101,13 +101,13 @@ export function useChat(options?: UseChatOptions) {
 
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al enviar mensaje';
+      const errorMessage = err instanceof Error ? err.message : 'Error sending message';
       setError(errorMessage);
 
       const errorMsg: Message = {
         id: `error-${Date.now()}`,
         role: 'assistant',
-        content: 'Lo siento, hubo un error al procesar tu solicitud. Por favor, intenta de nuevo.',
+        content: 'Sorry, there was an error processing your request. Please try again.',
         timestamp: new Date(),
       };
 
@@ -133,7 +133,7 @@ export function useChat(options?: UseChatOptions) {
       const history = await chatService.getConversationHistory();
       setMessages(history);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al cargar conversación');
+      setError(err instanceof Error ? err.message : 'Error loading conversation');
     } finally {
       setIsLoading(false);
     }

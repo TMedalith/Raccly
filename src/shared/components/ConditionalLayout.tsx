@@ -12,9 +12,9 @@ export function ConditionalLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className="relative min-h-screen">
       <TopNav />
-      <main className="flex-1 overflow-y-auto bg-[var(--background)]">
+      <main className="relative">
         {children}
       </main>
     </div>

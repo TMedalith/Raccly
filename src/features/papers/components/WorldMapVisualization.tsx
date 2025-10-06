@@ -2,7 +2,7 @@
 
 import { memo, useMemo, useState } from 'react';
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps';
-import { MapPin, Globe } from 'lucide-react';
+import { Globe } from 'lucide-react';
 import type { PaperData } from '@/shared/utils/paperReference';
 
 const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';

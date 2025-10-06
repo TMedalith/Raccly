@@ -17,7 +17,7 @@ export const chatService = {
       throw new Error(
         error instanceof Error
           ? error.message
-          : 'Error al procesar tu mensaje. Por favor intenta de nuevo.'
+          : 'Error processing your message. Please try again.'
       );
     }
   },

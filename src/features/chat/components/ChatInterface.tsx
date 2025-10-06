@@ -44,7 +44,7 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
   };
 
   return (
-    <div className="flex h-full gap-6">
+    <div className="flex h-screen gap-6 bg-gradient-to-br from-[#0a0e27] via-[#0f1435] to-[#0a0e27] pt-24">
       {}
       <div className="flex-1 flex flex-col min-w-0">
         <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-8">
@@ -58,7 +58,7 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
         </div>
 
         {}
-        <div className="border-t border-[var(--border)] bg-white/80 backdrop-blur-sm px-6 py-4">
+        <div className="border-t border-white/20 bg-white/5 backdrop-blur-xl px-6 py-4">
           <div className="max-w-4xl mx-auto">
             <div className="relative flex items-end gap-3">
               <textarea
@@ -68,13 +68,13 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
                 onKeyDown={handleKeyPress}
                 placeholder="Ask about scientific papers..."
                 rows={1}
-                className="flex-1 resize-none rounded-xl border border-[var(--border)] bg-white px-4 py-3 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent transition-all"
+                className="flex-1 resize-none rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white placeholder:text-blue-200/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all"
                 style={{ maxHeight: '200px', minHeight: '48px' }}
               />
               <button
                 onClick={handleSend}
                 disabled={!input.trim() || isLoading}
-                className="flex-shrink-0 rounded-xl bg-[var(--primary)] p-3 text-white hover:bg-[var(--navy)] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                className="flex-shrink-0 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 p-3 text-white hover:shadow-lg hover:shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105"
               >
                 <Send className="w-5 h-5" />
               </button>
@@ -85,7 +85,7 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
 
       {}
       {showRelatedPapers && (
-        <div className="w-80 flex-shrink-0 border-l border-[var(--border)] bg-white/50 backdrop-blur-sm overflow-y-auto custom-scrollbar">
+        <div className="w-80 flex-shrink-0 border-l border-white/20 bg-white/5 backdrop-blur-xl overflow-y-auto custom-scrollbar">
           <RelatedPapersList papers={currentPapers} citedPapers={citedPapers} isLoading={isLoading} selectedPaperId={selectedPaperId} />
         </div>
       )}

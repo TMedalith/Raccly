@@ -91,9 +91,9 @@ export default function ComparePage() {
 
   if (compareList.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-[#0a0e27] via-[#0f1435] to-[#0a0e27] p-6 pt-24">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Compare Papers</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">Compare Papers</h1>
           <p className="text-gray-600 mb-8">Side-by-side comparison of research papers</p>
 
           <div className="bg-white rounded-xl p-12 border border-gray-200 text-center">
@@ -152,7 +152,7 @@ export default function ComparePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0e27] via-[#0f1435] to-[#0a0e27] p-6 pt-24">
       <div className="max-w-7xl mx-auto">
                 <div className="flex items-center justify-between mb-6">
           <div>

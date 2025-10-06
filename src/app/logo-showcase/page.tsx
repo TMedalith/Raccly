@@ -4,7 +4,7 @@ import { AnimatedLogo, CompactLogo, LoadingLogo } from '@/shared/components/Anim
 
 export default function LogoShowcasePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-gray-100 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0e27] via-[#0f1435] to-[#0a0e27] p-8 pt-24">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
@@ -197,7 +197,7 @@ export default function LogoShowcasePage() {
           </h2>
           <div className="bg-gray-800 rounded-xl p-6 overflow-x-auto">
             <pre className="text-sm text-green-400">
-{`import { AnimatedLogo, CompactLogo, LoadingLogo } from '@/shared/components/AnimatedLogo';
+              {`import { AnimatedLogo, CompactLogo, LoadingLogo } from '@/shared/components/AnimatedLogo';
 
 // Logo completo con texto
 <AnimatedLogo size={120} showText={true} />

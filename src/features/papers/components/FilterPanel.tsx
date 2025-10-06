@@ -64,10 +64,10 @@ export function FilterPanel({
     filters.yearRange[1] !== filterOptions.yearRange[1];
 
   return (
-    <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl p-6 space-y-6">
+    <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/20 shadow-lg p-6 space-y-6 sticky top-28">
             <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="p-2 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500">
+          <div className="p-2 rounded-xl bg-gradient-to-br from-[#4C6B9C] to-[#6BB6CE]">
             <SlidersHorizontal className="w-5 h-5 text-white" />
           </div>
           <h2 className="text-lg font-bold text-white font-[family-name:var(--font-orbitron)]">Filters</h2>
@@ -84,12 +84,12 @@ export function FilterPanel({
           value={filters.searchQuery}
           onChange={(e) => onUpdateFilters({ searchQuery: e.target.value })}
           placeholder="Search in title, abstract, conclusions..."
-          className="w-full pl-10 pr-10 py-3 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all text-sm bg-white/5 text-white placeholder:text-blue-200/50"
+          className="w-full pl-10 pr-10 py-3 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all text-sm bg-white/10 text-white placeholder:text-blue-200/50"
         />
         {filters.searchQuery && (
           <button
             onClick={() => onUpdateFilters({ searchQuery: '' })}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-white/10 rounded transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-white/20 rounded transition-colors"
           >
             <X className="w-4 h-4 text-blue-200" />
           </button>
@@ -111,7 +111,7 @@ export function FilterPanel({
                 yearRange: [parseInt(e.target.value), filters.yearRange[1]],
               })
             }
-            className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+            className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-cyan-500"
           />
           <input
             type="range"
@@ -123,7 +123,7 @@ export function FilterPanel({
                 yearRange: [filters.yearRange[0], parseInt(e.target.value)],
               })
             }
-            className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+            className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-cyan-500"
           />
         </div>
       </div>
@@ -134,7 +134,7 @@ export function FilterPanel({
       >
         <span className="text-sm font-semibold text-white">Advanced Filters</span>
         <ChevronDown
-          className={`w-5 h-5 text-white transition-transform ${
+          className={`w-5 h-5 text-blue-200 transition-transform ${
             showAdvanced ? 'rotate-180' : ''
           }`}
         />
@@ -156,7 +156,7 @@ export function FilterPanel({
               value={keywordSearch}
               onChange={(e) => setKeywordSearch(e.target.value)}
               placeholder="Search keyword..."
-              className="w-full px-3 py-2 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/50 mb-3 text-sm bg-white/5 text-white placeholder:text-blue-200/50"
+              className="w-full px-3 py-2 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/50 mb-3 text-sm bg-white/10 text-white placeholder:text-blue-200/50"
             />
             <div className="max-h-48 overflow-y-auto space-y-1 custom-scrollbar">
               {filteredKeywords.map((keyword) => (
@@ -190,7 +190,7 @@ export function FilterPanel({
               value={designSearch}
               onChange={(e) => setDesignSearch(e.target.value)}
               placeholder="Search design..."
-              className="w-full px-3 py-2 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/50 mb-3 text-sm bg-white/5 text-white placeholder:text-blue-200/50"
+              className="w-full px-3 py-2 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/50 mb-3 text-sm bg-white/10 text-white placeholder:text-blue-200/50"
             />
             <div className="max-h-48 overflow-y-auto space-y-1 custom-scrollbar">
               {filteredDesigns.map((design) => (

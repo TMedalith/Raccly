@@ -1,38 +1,45 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ExternalLink, Lightbulb, FlaskConical, Users, Calendar } from 'lucide-react';
+import { ExternalLink, Users, Calendar, ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import type { PaperData } from '../types/paper';
 
 interface PaperCardProps {
   paper: PaperData;
-  isExpanded?: boolean;
-  onToggleExpand?: () => void;
   viewMode?: 'grid' | 'list';
 }
 
-export function PaperCard({ paper, isExpanded = false, onToggleExpand }: PaperCardProps) {
+export function PaperCard({ paper }: PaperCardProps) {
+  const router = useRouter();
+
+  // Extract just the number before the first dash (e.g., "002 - Title..." -> "002")
+  const extractPaperId = (fullId: string): string => {
+    const match = fullId.match(/^(\d+)\s*-/);
+    return match ? match[1] : fullId;
+  };
+
+  const paperId = extractPaperId(paper.paper_id);
+
   return (
     <motion.div
       layout
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      whileHover={{ scale: isExpanded ? 1 : 1.01 }}
+      whileHover={{ y: -8, scale: 1.02 }}
       transition={{ duration: 0.2 }}
-      onClick={onToggleExpand}
-      className={`bg-white rounded-lg border border-[var(--border)] hover:border-[var(--primary)] hover:shadow-md transition-all cursor-pointer ${
-        isExpanded ? 'col-span-full ring-2 ring-[var(--primary)]' : ''
-      }`}
+      onClick={() => router.push(`/paper/${paperId}`)}
+      className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/20 hover:border-cyan-400/50 transition-all cursor-pointer group hover:shadow-xl hover:shadow-cyan-500/20"
     >
-      <div className="p-5">
+      <div className="p-6">
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 mb-3">
+        <div className="flex items-start justify-between gap-4 mb-4">
           <div className="flex-1">
-            <h3 className="text-base font-bold text-[var(--foreground)] leading-tight mb-2 line-clamp-2">
+            <h3 className="text-lg font-bold text-white leading-tight mb-3 line-clamp-2 group-hover:text-cyan-400 transition-colors">
               {paper.title}
             </h3>
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-[var(--muted-foreground)]">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-white/60">
               {paper.authors && paper.authors.length > 0 && (
                 <>
                   <span className="flex items-center gap-1">
@@ -57,137 +64,44 @@ export function PaperCard({ paper, isExpanded = false, onToggleExpand }: PaperCa
               )}
             </div>
           </div>
-          <a
-            href={`https://doi.org/${paper.doi}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="flex-shrink-0 p-1.5 hover:bg-[var(--secondary)] rounded-lg transition-colors"
-          >
-            <ExternalLink className="w-4 h-4 text-[var(--primary)]" />
-          </a>
+          <div className="flex flex-col gap-2">
+            <a
+              href={`https://doi.org/${paper.doi}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="flex-shrink-0 p-2 hover:bg-white/10 rounded-lg transition-colors"
+            >
+              <ExternalLink className="w-5 h-5 text-cyan-400" />
+            </a>
+            <div className="p-2 hover:bg-white/10 rounded-lg transition-colors">
+              <ArrowRight className="w-5 h-5 text-cyan-400 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
         </div>
 
-                {paper.structured_data?.research_question && (
-          <div className="mb-3 p-3 bg-[var(--secondary)]/50 rounded-lg">
-            <div className="flex items-start gap-2">
-              <FlaskConical className="w-4 h-4 text-[var(--primary)] flex-shrink-0 mt-0.5" />
-              <p className="text-xs text-[var(--foreground)] line-clamp-2">
-                {paper.structured_data.research_question}
-              </p>
-            </div>
-          </div>
-        )}
+        {/* Abstract Preview */}
+        <p className="text-sm text-white/70 leading-relaxed mb-4 line-clamp-3">
+          {paper.abstract}
+        </p>
 
-                {paper.structured_data?.main_conclusion && (
-          <div className="mb-3 p-3 bg-amber-50 rounded-lg">
-            <div className="flex items-start gap-2">
-              <Lightbulb className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-              <p className="text-xs text-[var(--foreground)] font-medium line-clamp-2">
-                {paper.structured_data.main_conclusion}
-              </p>
-            </div>
-          </div>
-        )}
-
-                {paper.keywords && paper.keywords.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {paper.keywords.slice(0, 5).map((keyword) => (
+        {/* Keywords */}
+        {paper.keywords && paper.keywords.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {paper.keywords.slice(0, 4).map((keyword) => (
               <span
                 key={keyword}
-                className="px-2 py-0.5 text-xs font-medium rounded bg-[var(--primary)]/10 text-[var(--primary)]"
+                className="px-3 py-1 text-xs font-medium rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
               >
                 {keyword}
               </span>
             ))}
-            {paper.keywords.length > 5 && (
-              <span className="px-2 py-0.5 text-xs font-medium text-[var(--muted-foreground)]">
-                +{paper.keywords.length - 5}
+            {paper.keywords.length > 4 && (
+              <span className="px-3 py-1 text-xs font-medium text-white/60 bg-white/10 rounded-full border border-white/20">
+                +{paper.keywords.length - 4}
               </span>
             )}
           </div>
-        )}
-
-                {isExpanded && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="border-t border-[var(--border)] pt-4 mt-4 space-y-4"
-          >
-                        <div>
-              <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2">Abstract</h4>
-              <p className="text-sm text-[var(--muted-foreground)] leading-relaxed">{paper.abstract}</p>
-            </div>
-
-                        {paper.structured_data?.methodology && (
-              <div>
-                <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2">Methodology</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {paper.structured_data.methodology.study_design && (
-                    <div className="text-sm">
-                      <span className="font-medium text-[var(--foreground)]">Study Design:</span>{' '}
-                      <span className="text-[var(--muted-foreground)]">
-                        {paper.structured_data.methodology.study_design}
-                      </span>
-                    </div>
-                  )}
-                  {paper.structured_data.methodology.sample_size && (
-                    <div className="text-sm">
-                      <span className="font-medium text-[var(--foreground)]">Sample Size:</span>{' '}
-                      <span className="text-[var(--muted-foreground)]">
-                        {paper.structured_data.methodology.sample_size}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-                        {paper.structured_data?.quantitative_results && paper.structured_data.quantitative_results.length > 0 && (
-              <div>
-                <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2">Key Findings</h4>
-                <div className="space-y-2">
-                  {paper.structured_data.quantitative_results.map((result, idx) => (
-                    <div
-                      key={idx}
-                      className={`p-3 rounded-lg border ${
-                        result.direction === 'Positive'
-                          ? 'bg-green-50 border-green-200'
-                          : result.direction === 'Negative'
-                          ? 'bg-red-50 border-red-200'
-                          : 'bg-gray-50 border-gray-200'
-                      }`}
-                    >
-                      <p className="text-xs font-semibold text-[var(--foreground)] mb-1">
-                        {result.variable_name}
-                      </p>
-                      <p className="text-sm text-[var(--muted-foreground)]">{result.effect_description}</p>
-                      {result.effect_size && (
-                        <p className="text-xs text-[var(--muted-foreground)] mt-1">
-                          Effect: {result.effect_size} {result.units}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-                        {paper.authors && paper.authors.length > 0 && (
-              <div>
-                <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2">Authors & Affiliations</h4>
-                <div className="space-y-2">
-                  {paper.authors.map((author, idx) => (
-                    <div key={idx} className="text-sm">
-                      <span className="font-medium text-[var(--foreground)]">{author?.name || 'Unknown'}</span>
-                      <span className="text-[var(--muted-foreground)]"> - {author?.location?.institution || 'Unknown'}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </motion.div>
         )}
       </div>
     </motion.div>

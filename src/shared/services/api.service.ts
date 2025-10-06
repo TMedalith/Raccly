@@ -59,7 +59,7 @@ export class ApiService {
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data?.message || 'Error al comunicarse con el servidor');
+        throw new Error(error.response?.data?.message || 'Error communicating with server');
       }
       throw error;
     }

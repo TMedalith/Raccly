@@ -72,15 +72,23 @@ export function getAllPapers(): PaperData[] {
 export function findPaperById(paperId: string): PaperData | null {
   const papers = papersData as unknown as Record<string, PaperData>;
 
-    if (papers[paperId]) {
+  // First try exact match
+  if (papers[paperId]) {
     return papers[paperId];
   }
 
-    const keys = Object.keys(papers);
-  const matchingKey = keys.find(key =>
-    key.toLowerCase().includes(paperId.toLowerCase()) ||
-    paperId.toLowerCase().includes(key.toLowerCase())
-  );
+  // If paperId is a number like "002", find the key that starts with "002 -"
+  const keys = Object.keys(papers);
+  const matchingKey = keys.find(key => {
+    // Extract the number before the dash in the key
+    const keyMatch = key.match(/^(\d+)\s*-/);
+    if (keyMatch && keyMatch[1] === paperId) {
+      return true;
+    }
+    // Fallback to substring matching
+    return key.toLowerCase().includes(paperId.toLowerCase()) ||
+           paperId.toLowerCase().includes(key.toLowerCase());
+  });
 
   return matchingKey ? papers[matchingKey] : null;
 }
