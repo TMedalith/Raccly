@@ -48,6 +48,23 @@ export default function HomePage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { scrollYProgress } = useScroll();
   const { play } = useAudio();
+  const [audioInitialized, setAudioInitialized] = useState(false);
+
+  useEffect(() => {
+    if (!audioInitialized) {
+      console.log('Intentando reproducir audio...');
+      const audio = new Audio('/mp3/Welcome 1.mp3');
+      audio.volume = 1.0;
+      audio.play()
+        .then(() => {
+          console.log('Audio reproducido exitosamente');
+          setAudioInitialized(true);
+        })
+        .catch(error => {
+          console.error('Error al reproducir el audio:', error);
+        });
+    }
+  }, [audioInitialized]);
 
   const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.3], [1, 0.8]);
@@ -58,8 +75,6 @@ export default function HomePage() {
         // Autoplay might be blocked, handle gracefully
       });
     }
-    // Play welcome audio on page load
-    play(['Welcome 1.mp3', "I'm.mp3"]);
   }, [play]);
 
   return (
