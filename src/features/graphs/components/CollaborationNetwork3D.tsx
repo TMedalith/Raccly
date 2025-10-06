@@ -286,7 +286,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
         <button
           onClick={() => setShowHelp(!showHelp)}
           className="p-2.5 bg-[#171a21]/90 backdrop-blur-sm border border-[#232734] rounded-lg hover:border-[var(--primary)] transition-colors group"
-          title="Ayuda"
+          title="Help"
         >
           <Info className="w-5 h-5 text-[#a7aab2] group-hover:text-[var(--primary)]" />
         </button>
@@ -340,7 +340,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
               </div>
               <div className="flex gap-2">
                 <span className="font-semibold text-[var(--primary)] min-w-[80px]">Filters:</span>
-                <span>Usa el panel izquierdo para filtrar por tipo y comunidad</span>
+                <span>Use the left panel to filter by type and community</span>
               </div>
             </div>
         </div>
@@ -391,7 +391,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
                 <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 custom-scrollbar">
 
                 <div className="space-y-2">
-          <h4 className="text-xs font-semibold text-[#e7e7e7] mb-2">Tipos de Conexión</h4>
+          <h4 className="text-xs font-semibold text-[#e7e7e7] mb-2">Connection Types</h4>
           <div className="space-y-1.5">
             <label className="flex items-center gap-2 px-2 py-1.5 hover:bg-[#232734]/30 rounded-lg cursor-pointer transition-colors">
               <input
@@ -432,7 +432,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
                 {availableCommunities.length > 0 && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-semibold text-[#e7e7e7]">Comunidades</h4>
+              <h4 className="text-xs font-semibold text-[#e7e7e7]">Communities</h4>
               {filters.selectedCommunities.size > 0 && (
                 <button
                   onClick={() => setFilters({ ...filters, selectedCommunities: new Set() })}
@@ -446,7 +446,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
               {availableCommunities.map((community) => {
                 const communityNode = graphData.nodes.find(n => n.community === community);
                 const count = graphData.nodes.filter(n => n.community === community).length;
-                const label = communityNode?.community_label || `Comunidad ${community}`;
+                const label = communityNode?.community_label || `Community ${community}`;
                 const isSelected = filters.selectedCommunities.has(community);
 
                 return (
@@ -543,7 +543,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
                 )}
                 {(hoverNode || selectedNode)?.community_label && (
                   <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--primary)]/20 border border-[var(--primary)] rounded-lg">
-                    <span className="text-[#a7aab2]">Comunidad:</span>
+                    <span className="text-[#a7aab2]">Community:</span>
                     <span className="text-[#e7e7e7] font-medium">{(hoverNode || selectedNode)?.community_label}</span>
                   </div>
                 )}

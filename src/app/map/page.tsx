@@ -190,7 +190,7 @@ export default function MapPage() {
                   <div className="p-2 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500">
                     <TrendingUp className="w-5 h-5 text-white" />
                   </div>
-                  Estadísticas Globales
+                  Global Statistics
                 </h3>
                 <PapersStatistics papers={displayedPapers} />
               </div>
@@ -200,7 +200,7 @@ export default function MapPage() {
                   <div className="p-2 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500">
                     <Globe className="w-5 h-5 text-white" />
                   </div>
-                  Top Países
+                  Top Countries
                 </h3>
                 <div className="space-y-2 max-h-64 overflow-y-auto custom-scrollbar">
                   {countryStats.slice(0, 10).map(({ country, count }) => (
