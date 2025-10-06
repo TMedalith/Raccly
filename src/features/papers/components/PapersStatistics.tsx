@@ -92,7 +92,7 @@ export const PapersStatistics = memo(function PapersStatistics({
             <div className="bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-lg p-3 border border-purple-200/50">
         <div className="flex items-center gap-2 mb-1">
           <Users className="w-4 h-4 text-purple-600" />
-          <span className="text-xs font-medium text-purple-900">Autors</span>
+          <span className="text-xs font-medium text-purple-900">Authors</span>
         </div>
         <div className="text-2xl font-bold text-purple-700">{stats.totalAuthors}</div>
       </div>
