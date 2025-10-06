@@ -235,7 +235,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Buscar nodos por nombre, tema o comunidad..."
+            placeholder="Search nodes by name, topic or community..."
             className="w-full pl-12 pr-12 py-3.5 bg-[#171a21]/95 backdrop-blur-md border-2 border-[#2b3147] rounded-2xl text-[#e7e7e7] placeholder-[#6b7280] focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20 transition-all shadow-lg text-sm font-medium"
           />
           {searchTerm && (
@@ -323,7 +323,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
             </div>
             <div className="space-y-3 text-xs text-[#a7aab2]">
               <div className="flex gap-2">
-                <span className="font-semibold text-[var(--primary)] min-w-[80px]">Buscar:</span>
+                <span className="font-semibold text-[var(--primary)] min-w-[80px]">Search:</span>
                 <span>Usa la barra superior para encontrar nodos rápidamente</span>
               </div>
               <div className="flex gap-2">
@@ -339,7 +339,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
                 <span>Usa la rueda para hacer zoom</span>
               </div>
               <div className="flex gap-2">
-                <span className="font-semibold text-[var(--primary)] min-w-[80px]">Filtros:</span>
+                <span className="font-semibold text-[var(--primary)] min-w-[80px]">Filters:</span>
                 <span>Usa el panel izquierdo para filtrar por tipo y comunidad</span>
               </div>
             </div>
@@ -351,7 +351,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-[var(--primary)]" />
-              <h3 className="font-bold text-sm text-[#e7e7e7]">Filtros</h3>
+              <h3 className="font-bold text-sm text-[#e7e7e7]">Filters</h3>
             </div>
             {hasActiveFilters && (
               <button
@@ -365,7 +365,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
                 }}
                 className="text-xs text-[var(--primary)] hover:text-[#8fb9ff] font-medium"
               >
-                Limpiar todo
+                Clear all
               </button>
             )}
           </div>
@@ -438,7 +438,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
                   onClick={() => setFilters({ ...filters, selectedCommunities: new Set() })}
                   className="text-xs font-medium text-[var(--primary)] hover:text-[#8fb9ff]"
                 >
-                  Limpiar ({filters.selectedCommunities.size})
+                  Clear ({filters.selectedCommunities.size})
                 </button>
               )}
             </div>
@@ -520,7 +520,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
               <div className="flex flex-wrap gap-3 text-xs">
                 {(hoverNode || selectedNode)?.year && (
                   <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#232734]/50 rounded-lg">
-                    <span className="text-[#a7aab2]">Año:</span>
+                    <span className="text-[#a7aab2]">Year:</span>
                     <span className="text-[#e7e7e7] font-medium">{(hoverNode || selectedNode)?.year}</span>
                   </div>
                 )}

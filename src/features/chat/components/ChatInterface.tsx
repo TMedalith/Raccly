@@ -5,6 +5,7 @@ import { Send } from 'lucide-react';
 import { MessageList } from './MessageList';
 import { RelatedPapersList } from './RelatedPapersList';
 import { useChat } from '../hooks/useChat';
+import { useAudio } from '@/shared/hooks/useAudio';
 
 interface ChatInterfaceProps {
   conversationId?: string;
@@ -17,6 +18,7 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { messages, isLoading, currentPapers, citedPapers, sendMessage, setActiveMessage, activeMessageId, sessionId, selectedPaperId, selectPaper } = useChat({ conversationId });
   const hasProcessedInitialQuery = useRef(false);
+  const { play } = useAudio();
 
     useEffect(() => {
     if (initialQuery && !hasProcessedInitialQuery.current && sessionId) {
@@ -28,8 +30,10 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
+    play(['Understood.mp3', 'Processing.mp3']);
     const messageToSend = input;
-    setInput('');     await sendMessage(messageToSend);
+    setInput('');
+    await sendMessage(messageToSend);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

@@ -49,10 +49,12 @@ export function PaperCard({ paper, isExpanded = false, onToggleExpand }: PaperCa
                     <Calendar className="w-3 h-3" />
                     {paper.publication_year}
                   </span>
-                  <span>•</span>
+                  {paper.journal && paper.journal.trim() && <span>•</span>}
                 </>
               )}
-              <span className="font-medium truncate max-w-[200px]">{paper.journal || 'Unknown'}</span>
+              {paper.journal && paper.journal.trim() && (
+                <span className="font-medium truncate max-w-[200px]">{paper.journal}</span>
+              )}
             </div>
           </div>
           <a

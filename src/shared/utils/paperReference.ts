@@ -58,7 +58,15 @@ export function extractPaperIdFromS3Path(s3Path: string): string | null {
 
 export function getAllPapers(): PaperData[] {
   const papers = papersData as unknown as Record<string, PaperData>;
-  return Object.values(papers);
+  // Filter out papers with missing essential data
+  return Object.values(papers).filter(paper =>
+    paper.title &&
+    paper.authors &&
+    paper.authors.length > 0 &&
+    paper.publication_year &&
+    paper.publication_year > 0 &&
+    paper.journal
+  );
 }
 
 export function findPaperById(paperId: string): PaperData | null {

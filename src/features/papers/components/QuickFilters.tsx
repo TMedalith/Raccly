@@ -98,7 +98,7 @@ export const QuickFilters = memo(function QuickFilters({
             <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-[var(--muted-foreground)]" />
-          <span className="text-sm font-medium text-[var(--foreground)]">Filtros</span>
+          <span className="text-sm font-medium text-[var(--foreground)]">Filters</span>
           {activeFiltersCount > 0 && (
             <span className="px-2 py-0.5 text-xs font-medium bg-[var(--primary)] text-white rounded-full">
               {activeFiltersCount}
@@ -111,7 +111,7 @@ export const QuickFilters = memo(function QuickFilters({
             className="text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] flex items-center gap-1 transition-colors"
           >
             <X className="w-3 h-3" />
-            Limpiar
+            Clear
           </button>
         )}
       </div>
@@ -119,7 +119,7 @@ export const QuickFilters = memo(function QuickFilters({
             <div className="space-y-2">
         <div className="flex items-center gap-2 text-xs font-medium text-[var(--muted-foreground)]">
           <SortDesc className="w-3 h-3" />
-          Ordenar por
+          Sort by
         </div>
         <div className="flex gap-2">
           {(['relevance', 'year', 'citations'] as const).map((sort) => (
@@ -132,7 +132,7 @@ export const QuickFilters = memo(function QuickFilters({
                   : 'bg-gray-100 text-[var(--foreground)] hover:bg-gray-200'
               }`}
             >
-              {sort === 'relevance' ? 'Relevancia' : sort === 'year' ? 'Año' : 'Citas'}
+              {sort === 'relevance' ? 'Relevance' : sort === 'year' ? 'Year' : 'Citations'}
             </button>
           ))}
         </div>
@@ -142,7 +142,7 @@ export const QuickFilters = memo(function QuickFilters({
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-xs font-medium text-[var(--muted-foreground)]">
             <Calendar className="w-3 h-3" />
-            Rango de años
+            Year range
           </div>
           <div className="space-y-2">
             <div className="flex gap-2 text-xs">
@@ -172,7 +172,7 @@ export const QuickFilters = memo(function QuickFilters({
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-xs font-medium text-[var(--muted-foreground)]">
             <Globe className="w-3 h-3" />
-            Países ({filters.countries?.length || 0} seleccionados)
+            Countries ({filters.countries?.length || 0} selected)
           </div>
           <div className="max-h-48 overflow-y-auto custom-scrollbar space-y-1">
             {countries.slice(0, 20).map((country) => {

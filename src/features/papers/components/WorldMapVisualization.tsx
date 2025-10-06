@@ -209,26 +209,16 @@ export const WorldMapVisualization = memo(function WorldMapVisualization({
         })}
       </ComposableMap>
 
-            <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm rounded-lg p-3 shadow-lg text-xs">
-        <div className="flex items-center gap-2 mb-2">
-          <MapPin className="w-4 h-4 text-[var(--primary)]" />
-          <span className="font-medium text-[var(--foreground)]">Distribución Global</span>
-        </div>
-        <div className="space-y-1 text-[var(--muted-foreground)]">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-[var(--primary)] opacity-20" />
-            <span>Pocos papers</span>
+                    <div className="legend-colors flex items-center gap-2">
+          <div className="legend-item flex items-center gap-1">
+            <div className="w-3 h-3 bg-blue-200 rounded"></div>
+            <span>Few papers</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-[var(--primary)] opacity-60" />
-            <span>Muchos papers</span>
+          <div className="legend-item flex items-center gap-1">
+            <div className="w-3 h-3 bg-blue-600 rounded"></div>
+            <span>Many papers</span>
           </div>
         </div>
-        <div className="mt-2 pt-2 border-t border-[var(--border)]">
-          <span className="font-medium text-[var(--foreground)]">{locations.length}</span>
-          <span className="text-[var(--muted-foreground)]"> ubicaciones</span>
-        </div>
-      </div>
     </div>
   );
 });

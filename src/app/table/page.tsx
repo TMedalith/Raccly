@@ -36,8 +36,24 @@ interface Paper {
   };
 }
 
+// Type guard to validate papers have essential data
+function isValidPaper(paper: unknown): paper is Paper {
+  const p = paper as Record<string, unknown>;
+  return Boolean(
+    p.title &&
+    p.authors &&
+    Array.isArray(p.authors) &&
+    p.authors.length > 0 &&
+    p.publication_year &&
+    typeof p.publication_year === 'number' &&
+    p.publication_year > 0 &&
+    p.journal
+  );
+}
+
 export default function TablePage() {
-  const papers = Object.values(papersData) as Paper[];
+  // Filter out papers with missing essential data
+  const papers = Object.values(papersData as Record<string, unknown>).filter(isValidPaper);
 
     const [selectedYears, setSelectedYears] = useState<number[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -161,28 +177,30 @@ export default function TablePage() {
   const hasActiveFilters = selectedYears.length > 0 || selectedCategories.length > 0;
 
   return (
-    <div className="h-full overflow-y-auto bg-[var(--background)]">
+    <div className="h-full overflow-y-auto bg-gradient-to-br from-[#0a0e27] via-[#0f1435] to-[#0a0e27]">
       <div className="max-w-[1600px] mx-auto p-6">
                 <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-6"
         >
-          <h1 className="text-2xl font-bold text-[var(--foreground)] mb-2">
+          <h1 className="text-4xl font-bold text-white mb-2 font-[family-name:var(--font-orbitron)]">
             Análisis Comparativo
           </h1>
-          <p className="text-sm text-[var(--muted-foreground)]">
+          <p className="text-lg text-blue-200 font-[family-name:var(--font-space-grotesk)]">
             Compara resultados cuantitativos entre estudios científicos
           </p>
         </motion.div>
 
         <div className="flex gap-6">
                     <div className="hidden lg:block w-64 flex-shrink-0">
-            <div className="bg-white rounded-xl border border-[var(--border)] p-4 sticky top-6">
+            <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/20 p-4 sticky top-6 shadow-xl">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <Filter className="w-4 h-4 text-[var(--primary)]" />
-                  <h2 className="font-semibold text-sm text-[var(--foreground)]">Filtros</h2>
+                  <div className="p-2 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500">
+                    <Filter className="w-4 h-4 text-white" />
+                  </div>
+                  <h2 className="font-semibold text-sm text-white">Filters</h2>
                 </div>
                 {hasActiveFilters && (
                   <button
@@ -190,16 +208,16 @@ export default function TablePage() {
                       setSelectedYears([]);
                       setSelectedCategories([]);
                     }}
-                    className="text-xs text-[var(--primary)] hover:underline"
+                    className="text-xs text-cyan-400 hover:text-cyan-300 hover:underline"
                   >
-                    Limpiar
+                    Clear
                   </button>
                 )}
               </div>
 
                             <div className="mb-4">
-                <h3 className="text-xs font-semibold text-[var(--foreground)] mb-2">Año</h3>
-                <div className="space-y-1.5 max-h-40 overflow-y-auto">
+                <h3 className="text-xs font-semibold text-white mb-2">Year</h3>
+                <div className="space-y-1.5 max-h-40 overflow-y-auto custom-scrollbar">
                   {filterOptions.years.map((year, index) => (
                     <label key={`year-${year}-${index}`} className="flex items-center gap-2 cursor-pointer group">
                       <input
@@ -212,9 +230,9 @@ export default function TablePage() {
                             setSelectedYears(selectedYears.filter(y => y !== year));
                           }
                         }}
-                        className="w-3.5 h-3.5 accent-[var(--primary)]"
+                        className="w-3.5 h-3.5 accent-cyan-500"
                       />
-                      <span className="text-xs text-[var(--muted-foreground)] group-hover:text-[var(--foreground)]">
+                      <span className="text-xs text-blue-200 group-hover:text-white">
                         {year}
                       </span>
                     </label>
@@ -223,8 +241,8 @@ export default function TablePage() {
               </div>
 
                             <div>
-                <h3 className="text-xs font-semibold text-[var(--foreground)] mb-2">Categoría</h3>
-                <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                <h3 className="text-xs font-semibold text-white mb-2">Category</h3>
+                <div className="space-y-1.5 max-h-48 overflow-y-auto custom-scrollbar">
                   {filterOptions.categories.map((category, index) => (
                     <label key={`category-${category}-${index}`} className="flex items-start gap-2 cursor-pointer group">
                       <input
@@ -237,9 +255,9 @@ export default function TablePage() {
                             setSelectedCategories(selectedCategories.filter(c => c !== category));
                           }
                         }}
-                        className="w-3.5 h-3.5 accent-[var(--primary)] mt-0.5"
+                        className="w-3.5 h-3.5 accent-cyan-500 mt-0.5"
                       />
-                      <span className="text-xs text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] leading-tight">
+                      <span className="text-xs text-blue-200 group-hover:text-white leading-tight">
                         {category}
                       </span>
                     </label>
@@ -247,9 +265,9 @@ export default function TablePage() {
                 </div>
               </div>
 
-              <div className="mt-4 pt-4 border-t border-[var(--border)]">
-                <p className="text-xs text-[var(--muted-foreground)]">
-                  <span className="font-semibold text-[var(--primary)]">{filteredPapers.length}</span> papers
+              <div className="mt-4 pt-4 border-t border-white/20">
+                <p className="text-xs text-blue-200">
+                  <span className="font-semibold text-cyan-400">{filteredPapers.length}</span> papers
                 </p>
               </div>
             </div>
@@ -260,7 +278,7 @@ export default function TablePage() {
             className="lg:hidden fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 bg-[var(--primary)] text-white rounded-full shadow-lg hover:shadow-xl transition-all"
           >
             <Filter className="w-4 h-4" />
-            <span className="text-sm font-medium">Filtros</span>
+            <span className="text-sm font-medium">Filters</span>
           </button>
 
                     <AnimatePresence>
@@ -280,7 +298,7 @@ export default function TablePage() {
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="font-semibold text-base text-[var(--foreground)]">Filtros</h2>
+                    <h2 className="font-semibold text-base text-[var(--foreground)]">Filters</h2>
                     <button onClick={() => setShowFilters(false)}>
                       <X className="w-5 h-5 text-[var(--muted-foreground)]" />
                     </button>
@@ -295,21 +313,23 @@ export default function TablePage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-xl border border-[var(--border)] p-4"
+                className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/20 p-4 shadow-xl"
               >
                 <label className="block mb-2">
-                  <span className="text-xs font-semibold text-[var(--foreground)] flex items-center gap-1.5">
-                    <TrendingUp className="w-3.5 h-3.5 text-[var(--primary)]" />
+                  <span className="text-sm font-semibold text-white flex items-center gap-2">
+                    <div className="p-2 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500">
+                      <TrendingUp className="w-4 h-4 text-white" />
+                    </div>
                     Métrica para Comparación
                   </span>
                 </label>
                 <select
                   value={selectedMetric}
                   onChange={(e) => setSelectedMetric(e.target.value)}
-                  className="w-full px-3 py-2 bg-white border border-[var(--border)] rounded-lg text-sm text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)] transition-all cursor-pointer"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all cursor-pointer backdrop-blur-xl"
                 >
                   {availableMetrics.map((metric, index) => (
-                    <option key={`metric-${index}-${metric}`} value={metric}>{metric}</option>
+                    <option key={`metric-${index}-${metric}`} value={metric} className="bg-[#0f1435] text-white">{metric}</option>
                   ))}
                 </select>
               </motion.div>
@@ -322,9 +342,12 @@ export default function TablePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="bg-white rounded-xl border border-[var(--border)] p-5"
+                  className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/20 p-6 shadow-xl"
                 >
-                  <h3 className="text-sm font-semibold text-[var(--foreground)] mb-4">
+                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2 font-[family-name:var(--font-space-grotesk)]">
+                    <div className="p-2 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500">
+                      <TrendingUp className="w-5 h-5 text-white" />
+                    </div>
                     Tamaño del Efecto por Estudio
                   </h3>
                   <div className="w-full h-80">
@@ -361,14 +384,16 @@ export default function TablePage() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="bg-white rounded-xl border border-[var(--border)] p-12 text-center"
+                  className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/20 p-12 text-center shadow-xl"
                 >
-                  <TrendingUp className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <p className="text-[var(--muted-foreground)] text-sm">
+                  <div className="p-4 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                    <TrendingUp className="w-10 h-10 text-cyan-400" />
+                  </div>
+                  <p className="text-white text-base font-semibold mb-2">
                     No hay datos disponibles para esta métrica
                   </p>
-                  <p className="text-xs text-[var(--muted-foreground)] mt-1">
-                    Prueba ajustar los filtros o selecciona otra métrica
+                  <p className="text-sm text-blue-200">
+                    Try adjusting the filters or selecting another metric
                   </p>
                 </motion.div>
               )}
@@ -379,9 +404,12 @@ export default function TablePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="bg-white rounded-xl border border-[var(--border)] p-5"
+                className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/20 p-6 shadow-xl"
               >
-                <h3 className="text-sm font-semibold text-[var(--foreground)] mb-4">
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2 font-[family-name:var(--font-space-grotesk)]">
+                  <div className="p-2 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500">
+                    <TrendingUp className="w-5 h-5 text-white" />
+                  </div>
                   Dirección del Efecto
                 </h3>
 

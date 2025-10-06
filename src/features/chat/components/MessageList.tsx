@@ -79,7 +79,7 @@ export function MessageList({ messages, isLoading, onMessageVisible, activeMessa
           Comienza una conversación
         </h2>
         <p className="text-[var(--muted-foreground)] max-w-md">
-          Pregunta sobre papers científicos, conceptos de investigación o busca literatura relevante.
+          Ask about scientific papers, research concepts, or search for relevant literature.
         </p>
       </div>
     );

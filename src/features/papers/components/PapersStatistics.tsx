@@ -100,7 +100,7 @@ export const PapersStatistics = memo(function PapersStatistics({
             <div className="bg-gradient-to-br from-green-50 to-green-100/50 rounded-lg p-3 border border-green-200/50">
         <div className="flex items-center gap-2 mb-1">
           <Globe2 className="w-4 h-4 text-green-600" />
-          <span className="text-xs font-medium text-green-900">Países</span>
+          <span className="text-xs font-medium text-green-900">Countries</span>
         </div>
         <div className="text-2xl font-bold text-green-700">{stats.countries}</div>
         {stats.topCountry && (
@@ -113,13 +113,13 @@ export const PapersStatistics = memo(function PapersStatistics({
             <div className="bg-gradient-to-br from-orange-50 to-orange-100/50 rounded-lg p-3 border border-orange-200/50">
         <div className="flex items-center gap-2 mb-1">
           <Calendar className="w-4 h-4 text-orange-600" />
-          <span className="text-xs font-medium text-orange-900">Años</span>
+          <span className="text-xs font-medium text-orange-900">Years</span>
         </div>
         <div className="text-lg font-bold text-orange-700">{stats.yearRange}</div>
         {stats.recentPapers > 0 && (
           <div className="text-xs text-orange-600 mt-1 flex items-center gap-1">
             <TrendingUp className="w-3 h-3" />
-            {stats.recentPapers} recientes
+            {stats.recentPapers} recent
           </div>
         )}
       </div>

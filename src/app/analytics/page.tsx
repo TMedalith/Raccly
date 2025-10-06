@@ -1,20 +1,29 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { getAllPapers } from '@/shared/utils/paperReference';
-import { TrendingUp, Users, BookOpen, Calendar, Building2, FlaskConical } from 'lucide-react';
+import { TrendingUp, Users, BookOpen, Calendar, Building2, FlaskConical, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useAudio } from '@/shared/hooks/useAudio';
 
 // Dynamic import to avoid SSR issues with ECharts
 const ReactECharts = dynamic(() => import('echarts-for-react'), { ssr: false });
 
 export default function AnalyticsPage() {
+  const { play } = useAudio();
   const allPapers = getAllPapers();
 
-    const selectedYears = useMemo(() => [] as number[], []);
+  // Play audio guide when page loads - "On the right" indicating analytics on the right side
+  useEffect(() => {
+    play(['On the rig.mp3']);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const selectedYears = useMemo(() => [] as number[], []);
   const selectedMethodology = 'all';
 
-    const filteredPapers = useMemo(() => {
+  const filteredPapers = useMemo(() => {
     return allPapers.filter(paper => {
       const yearMatch = selectedYears.length === 0 || (paper.publication_year && selectedYears.includes(paper.publication_year));
       const methodMatch = selectedMethodology === 'all' || paper.structured_data?.methodology?.study_design?.startsWith(selectedMethodology);
@@ -23,7 +32,7 @@ export default function AnalyticsPage() {
   }, [allPapers, selectedYears, selectedMethodology]);
 
   const analytics = useMemo(() => {
-        const publicationsByYear = new Map<number, number>();
+    const publicationsByYear = new Map<number, number>();
     filteredPapers.forEach(paper => {
       if (paper.publication_year) {
         publicationsByYear.set(
@@ -37,7 +46,7 @@ export default function AnalyticsPage() {
       .sort((a, b) => a[0] - b[0])
       .map(([year, count]) => ({ year, papers: count }));
 
-        const authorCounts = new Map<string, number>();
+    const authorCounts = new Map<string, number>();
     filteredPapers.forEach(paper => {
       paper.authors?.forEach(author => {
         if (author?.name) {
@@ -51,7 +60,7 @@ export default function AnalyticsPage() {
       .slice(0, 10)
       .map(([name, value]) => ({ name, value }));
 
-        const journalCounts = new Map<string, number>();
+    const journalCounts = new Map<string, number>();
     filteredPapers.forEach(paper => {
       if (paper.journal) {
         journalCounts.set(paper.journal, (journalCounts.get(paper.journal) || 0) + 1);
@@ -63,7 +72,7 @@ export default function AnalyticsPage() {
       .slice(0, 5)
       .map(([name, value]) => ({ name, value }));
 
-        const institutionCounts = new Map<string, number>();
+    const institutionCounts = new Map<string, number>();
     filteredPapers.forEach(paper => {
       paper.authors?.forEach(author => {
         if (author?.location?.institution) {
@@ -79,17 +88,20 @@ export default function AnalyticsPage() {
       .sort((a, b) => b[1] - a[1])
       .slice(0, 10);
 
-        const methodologyCounts = new Map<string, number>();
+    const methodologyCounts = new Map<string, number>();
     filteredPapers.forEach(paper => {
-      const methodology = paper.structured_data?.methodology?.study_design?.split(' ')[0] || 'Unknown';
-      methodologyCounts.set(methodology, (methodologyCounts.get(methodology) || 0) + 1);
+      const methodology = paper.structured_data?.methodology?.study_design;
+      if (methodology && methodology.trim() !== '') {
+        const methodType = methodology.split(' ')[0];
+        methodologyCounts.set(methodType, (methodologyCounts.get(methodType) || 0) + 1);
+      }
     });
 
     const methodologies = Array.from(methodologyCounts.entries())
       .sort((a, b) => b[1] - a[1])
       .map(([name, value]) => ({ name, value }));
 
-        const keywordCounts = new Map<string, number>();
+    const keywordCounts = new Map<string, number>();
     filteredPapers.forEach(paper => {
       paper.keywords?.forEach(keyword => {
         if (keyword) {
@@ -116,145 +128,265 @@ export default function AnalyticsPage() {
     };
   }, [filteredPapers]);
 
+  const statCards = [
+    {
+      icon: BookOpen,
+      value: analytics.totalPapers,
+      label: 'Total Papers',
+      color: 'from-[#22D3EE] to-[#3B82F6]',
+      bgColor: 'bg-gradient-to-br from-[#22D3EE]/10 to-[#3B82F6]/10',
+      iconBg: 'bg-gradient-to-br from-[#22D3EE] to-[#3B82F6]',
+      iconColor: 'text-white'
+    },
+    {
+      icon: Users,
+      value: analytics.totalAuthors,
+      label: 'Unique Authors',
+      color: 'from-[#C084FC] to-[#EC4899]',
+      bgColor: 'bg-gradient-to-br from-[#C084FC]/10 to-[#EC4899]/10',
+      iconBg: 'bg-gradient-to-br from-[#C084FC] to-[#EC4899]',
+      iconColor: 'text-white'
+    },
+    {
+      icon: BookOpen,
+      value: analytics.totalJournals,
+      label: 'Journals',
+      color: 'from-[#4ADE80] to-[#10B981]',
+      bgColor: 'bg-gradient-to-br from-[#4ADE80]/10 to-[#10B981]/10',
+      iconBg: 'bg-gradient-to-br from-[#4ADE80] to-[#10B981]',
+      iconColor: 'text-white'
+    },
+    {
+      icon: Building2,
+      value: analytics.totalInstitutions,
+      label: 'Institutions',
+      color: 'from-[#FBBF24] to-[#F59E0B]',
+      bgColor: 'bg-gradient-to-br from-[#FBBF24]/10 to-[#F59E0B]/10',
+      iconBg: 'bg-gradient-to-br from-[#FBBF24] to-[#F59E0B]',
+      iconColor: 'text-white'
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0e27] via-[#0f1435] to-[#0a0e27] p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Research Analytics</h1>
-          <p className="text-gray-600">Advanced insights and interactive visualizations from the research database</p>
-        </div>                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-xl p-6 border border-gray-200">
-            <div className="flex items-center justify-between mb-2">
-              <BookOpen className="w-8 h-8 text-[var(--primary)] opacity-20" />
-              <TrendingUp className="w-5 h-5 text-green-500" />
-            </div>
-            <p className="text-2xl font-bold text-[var(--primary)]">{analytics.totalPapers}</p>
-            <p className="text-sm text-gray-600">Total Papers</p>
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <Sparkles className="w-8 h-8 text-cyan-400" />
+            <h1 className="text-4xl font-bold text-white font-[family-name:var(--font-orbitron)]">
+              Research Analytics
+            </h1>
           </div>
+          <p className="text-blue-200 text-lg font-[family-name:var(--font-space-grotesk)]">
+            Advanced insights and interactive visualizations from the research database
+          </p>
+        </motion.div>
 
-          <div className="bg-white rounded-xl p-6 border border-gray-200">
-            <div className="flex items-center justify-between mb-2">
-              <Users className="w-8 h-8 text-blue-600 opacity-20" />
-            </div>
-            <p className="text-2xl font-bold text-blue-600">{analytics.totalAuthors}</p>
-            <p className="text-sm text-gray-600">Unique Authors</p>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 border border-gray-200">
-            <div className="flex items-center justify-between mb-2">
-              <BookOpen className="w-8 h-8 text-green-600 opacity-20" />
-            </div>
-            <p className="text-2xl font-bold text-green-600">{analytics.totalJournals}</p>
-            <p className="text-sm text-gray-600">Journals</p>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 border border-gray-200">
-            <div className="flex items-center justify-between mb-2">
-              <Building2 className="w-8 h-8 text-purple-600 opacity-20" />
-            </div>
-            <p className="text-2xl font-bold text-purple-600">{analytics.totalInstitutions}</p>
-            <p className="text-sm text-gray-600">Institutions</p>
-          </div>
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {statCards.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ y: -8, scale: 1.03 }}
+                className={`${stat.bgColor} backdrop-blur-xl rounded-3xl p-6 border border-white/20 hover:border-white/40 transition-all shadow-lg hover:shadow-2xl`}
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`p-4 rounded-2xl ${stat.iconBg} shadow-lg`}>
+                    <Icon className={`w-7 h-7 ${stat.iconColor}`} />
+                  </div>
+                  <div className="p-2 rounded-xl bg-green-500/20">
+                    <TrendingUp className="w-4 h-4 text-green-400" />
+                  </div>
+                </div>
+                <p className={`text-4xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-2 font-[family-name:var(--font-orbitron)]`}>
+                  {stat.value.toLocaleString()}
+                </p>
+                <p className="text-sm text-blue-200/80 font-[family-name:var(--font-space-grotesk)]">{stat.label}</p>
+              </motion.div>
+            );
+          })}
         </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                            {/* Publications Over Time */}
-          <div className="bg-white rounded-xl p-6 border border-gray-200">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-[var(--primary)]" />
+        {/* Charts Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          {/* Publications Over Time */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white/5 backdrop-blur-xl rounded-3xl p-6 border border-white/20 hover:border-white/30 transition-all shadow-xl"
+          >
+            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-white font-[family-name:var(--font-space-grotesk)]">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-[#22D3EE] to-[#3B82F6]">
+                <Calendar className="w-5 h-5 text-white" />
+              </div>
               Publications Over Time
             </h3>
             <ReactECharts
               option={{
+                backgroundColor: 'transparent',
                 tooltip: {
                   trigger: 'axis',
-                  formatter: '{b}: {c} papers'
+                  formatter: '{b}: {c} papers',
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                  borderColor: '#60a5fa',
+                  textStyle: { color: '#fff' }
                 },
                 grid: { left: '3%', right: '4%', bottom: '3%', top: '3%', containLabel: true },
                 xAxis: {
                   type: 'category',
                   data: analytics.yearlyData.map(d => d.year),
                   boundaryGap: false,
-                  axisLabel: { color: '#6b7280' }
+                  axisLabel: { color: '#93c5fd' },
+                  axisLine: { lineStyle: { color: '#1e3a8a' } }
                 },
                 yAxis: {
                   type: 'value',
-                  axisLabel: { color: '#6b7280' }
+                  axisLabel: { color: '#93c5fd' },
+                  splitLine: { lineStyle: { color: '#1e3a8a', type: 'dashed' } }
                 },
                 series: [{
                   data: analytics.yearlyData.map(d => d.papers),
                   type: 'line',
                   smooth: true,
-                  lineStyle: { color: '#1e3a8a', width: 3 },
-                  areaStyle: { color: 'rgba(30, 58, 138, 0.1)' },
-                  itemStyle: { color: '#1e3a8a' },
+                  lineStyle: {
+                    color: '#22d3ee',
+                    width: 4,
+                    shadowColor: 'rgba(34, 211, 238, 0.5)',
+                    shadowBlur: 10
+                  },
+                  areaStyle: {
+                    color: {
+                      type: 'linear',
+                      x: 0, y: 0, x2: 0, y2: 1,
+                      colorStops: [
+                        { offset: 0, color: 'rgba(34, 211, 238, 0.6)' },
+                        { offset: 0.5, color: 'rgba(59, 130, 246, 0.3)' },
+                        { offset: 1, color: 'rgba(59, 130, 246, 0)' }
+                      ]
+                    }
+                  },
+                  itemStyle: {
+                    color: '#22d3ee',
+                    borderColor: '#fff',
+                    borderWidth: 2
+                  },
                   emphasis: { focus: 'series' }
                 }]
               }}
               style={{ height: '300px' }}
               opts={{ renderer: 'canvas' }}
             />
-          </div>
+          </motion.div>
 
-                    {/* Top Authors */}
-          <div className="bg-white rounded-xl p-6 border border-gray-200">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Users className="w-5 h-5 text-[var(--primary)]" />
+          {/* Top Authors */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white/5 backdrop-blur-xl rounded-3xl p-6 border border-white/20 hover:border-white/30 transition-all shadow-xl"
+          >
+            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-white font-[family-name:var(--font-space-grotesk)]">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-[#C084FC] to-[#EC4899]">
+                <Users className="w-5 h-5 text-white" />
+              </div>
               Top Authors
             </h3>
             <ReactECharts
               option={{
+                backgroundColor: 'transparent',
                 tooltip: {
                   trigger: 'axis',
                   axisPointer: { type: 'shadow' },
-                  formatter: '{b}: {c} papers'
+                  formatter: '{b}: {c} papers',
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                  borderColor: '#c084fc',
+                  textStyle: { color: '#fff' }
                 },
                 grid: { left: '3%', right: '4%', bottom: '3%', top: '3%', containLabel: true },
                 xAxis: {
                   type: 'value',
-                  axisLabel: { color: '#6b7280' }
+                  axisLabel: { color: '#c4b5fd' },
+                  splitLine: { lineStyle: { color: '#1e3a8a', type: 'dashed' } }
                 },
                 yAxis: {
                   type: 'category',
                   data: analytics.topAuthors.map(a => a.name).reverse(),
-                  axisLabel: { 
-                    color: '#1f2937',
+                  axisLabel: {
+                    color: '#e0e7ff',
                     formatter: (value: string) => value.length > 25 ? value.substring(0, 25) + '...' : value
-                  }
+                  },
+                  axisLine: { lineStyle: { color: '#1e3a8a' } }
                 },
                 series: [{
                   data: analytics.topAuthors.map(a => a.value).reverse(),
                   type: 'bar',
                   itemStyle: {
-                    color: '#1e3a8a',
-                    borderRadius: [0, 4, 4, 0]
+                    color: {
+                      type: 'linear',
+                      x: 0, y: 0, x2: 1, y2: 0,
+                      colorStops: [
+                        { offset: 0, color: '#a78bfa' },
+                        { offset: 1, color: '#c084fc' }
+                      ]
+                    },
+                    borderRadius: [0, 8, 8, 0]
                   },
                   emphasis: {
-                    itemStyle: { color: '#3b82f6' }
+                    itemStyle: {
+                      color: {
+                        type: 'linear',
+                        x: 0, y: 0, x2: 1, y2: 0,
+                        colorStops: [
+                          { offset: 0, color: '#c084fc' },
+                          { offset: 1, color: '#e879f9' }
+                        ]
+                      }
+                    }
                   }
                 }]
               }}
               style={{ height: '300px' }}
             />
-          </div>
+          </motion.div>
 
-                            {/* Top Journals */}
-          <div className="bg-white rounded-xl p-6 border border-gray-200">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-[var(--primary)]" />
+          {/* Top Journals */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white/5 backdrop-blur-xl rounded-3xl p-6 border border-white/20 hover:border-white/30 transition-all shadow-xl"
+          >
+            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-white font-[family-name:var(--font-space-grotesk)]">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-[#4ADE80] to-[#10B981]">
+                <BookOpen className="w-5 h-5 text-white" />
+              </div>
               Top Journals
             </h3>
             <ReactECharts
               option={{
+                backgroundColor: 'transparent',
                 tooltip: {
                   trigger: 'item',
-                  formatter: '{b}: {c} papers ({d}%)'
+                  formatter: '{b}: {c} papers ({d}%)',
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                  borderColor: '#34d399',
+                  textStyle: { color: '#fff' }
                 },
                 legend: {
                   orient: 'vertical',
                   left: 'left',
-                  textStyle: { color: '#4b5563' }
+                  textStyle: { color: '#a7f3d0' }
                 },
                 series: [{
                   type: 'pie',
@@ -263,12 +395,13 @@ export default function AnalyticsPage() {
                   avoidLabelOverlap: true,
                   itemStyle: {
                     borderRadius: 10,
-                    borderColor: '#fff',
+                    borderColor: 'rgba(0, 0, 0, 0.3)',
                     borderWidth: 2
                   },
                   label: {
                     show: true,
-                    formatter: '{d}%'
+                    formatter: '{d}%',
+                    color: '#fff'
                   },
                   emphasis: {
                     label: { show: true, fontSize: 16, fontWeight: 'bold' }
@@ -277,25 +410,36 @@ export default function AnalyticsPage() {
                     value: j.value,
                     name: j.name,
                     itemStyle: {
-                      color: ['#1e3a8a', '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd'][idx]
+                      color: ['#34d399', '#10b981', '#059669', '#047857', '#065f46'][idx]
                     }
                   }))
                 }]
               }}
               style={{ height: '300px' }}
             />
-          </div>
+          </motion.div>
 
           {/* Top Institutions */}
-          <div className="bg-white rounded-xl p-6 border border-gray-200">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Building2 className="w-5 h-5 text-[var(--primary)]" />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5 }}
+            className="bg-white/5 backdrop-blur-xl rounded-3xl p-6 border border-white/20 hover:border-white/30 transition-all shadow-xl"
+          >
+            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-white font-[family-name:var(--font-space-grotesk)]">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-[#FBBF24] to-[#F59E0B]">
+                <Building2 className="w-5 h-5 text-white" />
+              </div>
               Top Institutions
             </h3>
             <ReactECharts
               option={{
+                backgroundColor: 'transparent',
                 tooltip: {
-                  formatter: (params: { name: string; value: number }) => `${params.name}: ${params.value} papers`
+                  formatter: (params: { name: string; value: number }) => `${params.name}: ${params.value} papers`,
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                  borderColor: '#fb923c',
+                  textStyle: { color: '#fff' }
                 },
                 series: [{
                   type: 'treemap',
@@ -310,7 +454,7 @@ export default function AnalyticsPage() {
                     color: '#fff'
                   },
                   itemStyle: {
-                    borderColor: '#fff',
+                    borderColor: 'rgba(0, 0, 0, 0.3)',
                     borderWidth: 2,
                     gapWidth: 2
                   },
@@ -333,79 +477,131 @@ export default function AnalyticsPage() {
                   visualMin: Math.min(...analytics.topInstitutions.map(i => i[1])),
                   visualMax: Math.max(...analytics.topInstitutions.map(i => i[1])),
                   colorAlpha: [0.6, 1],
-                  color: ['#1e3a8a', '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd']
+                  color: ['#fb923c', '#f97316', '#ea580c', '#c2410c', '#9a3412']
                 }]
               }}
               style={{ height: '300px' }}
             />
-          </div>
+          </motion.div>
         </div>
 
-        {/* Charts Section 2 */}
+        {/* Second Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Research Methodologies */}
-          <div className="bg-white rounded-xl p-6 border border-gray-200">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <FlaskConical className="w-5 h-5 text-[var(--primary)]" />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.6 }}
+            className="bg-white/5 backdrop-blur-xl rounded-3xl p-6 border border-white/20 hover:border-white/30 transition-all shadow-xl"
+          >
+            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-white font-[family-name:var(--font-space-grotesk)]">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-[#FBBF24] to-[#F59E0B]">
+                <FlaskConical className="w-5 h-5 text-white" />
+              </div>
               Research Methodologies
             </h3>
             <ReactECharts
               option={{
+                backgroundColor: 'transparent',
                 tooltip: {
                   trigger: 'axis',
                   axisPointer: { type: 'shadow' },
                   formatter: (params: Array<{ name: string; value: number }>) => {
                     const percentage = ((params[0].value / analytics.totalPapers) * 100).toFixed(1);
                     return `${params[0].name}: ${params[0].value} papers (${percentage}%)`;
-                  }
+                  },
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                  borderColor: '#fbbf24',
+                  textStyle: { color: '#fff' }
                 },
                 grid: { left: '3%', right: '4%', bottom: '3%', top: '3%', containLabel: true },
                 xAxis: {
                   type: 'value',
-                  axisLabel: { color: '#6b7280' }
+                  axisLabel: { color: '#fde68a' },
+                  splitLine: { lineStyle: { color: '#1e3a8a', type: 'dashed' } }
                 },
                 yAxis: {
                   type: 'category',
                   data: analytics.methodologies.map(m => m.name).reverse(),
-                  axisLabel: { 
-                    color: '#1f2937',
+                  axisLabel: {
+                    color: '#fef3c7',
                     fontSize: 11
-                  }
+                  },
+                  axisLine: { lineStyle: { color: '#1e3a8a' } }
                 },
                 series: [{
                   data: analytics.methodologies.map(m => m.value).reverse(),
                   type: 'bar',
                   itemStyle: {
-                    color: '#10b981',
-                    borderRadius: [0, 4, 4, 0]
+                    color: {
+                      type: 'linear',
+                      x: 0, y: 0, x2: 1, y2: 0,
+                      colorStops: [
+                        { offset: 0, color: '#fbbf24' },
+                        { offset: 1, color: '#f59e0b' }
+                      ]
+                    },
+                    borderRadius: [0, 8, 8, 0]
                   },
                   emphasis: {
-                    itemStyle: { color: '#059669' }
+                    itemStyle: {
+                      color: {
+                        type: 'linear',
+                        x: 0, y: 0, x2: 1, y2: 0,
+                        colorStops: [
+                          { offset: 0, color: '#fcd34d' },
+                          { offset: 1, color: '#fbbf24' }
+                        ]
+                      }
+                    }
                   }
                 }]
               }}
               style={{ height: '300px' }}
             />
-          </div>
+          </motion.div>
 
-                    <div className="bg-white rounded-xl p-6 border border-gray-200">
-            <h3 className="text-lg font-semibold mb-4">Top Keywords</h3>
-            <div className="flex flex-wrap gap-2">
+          {/* Top Keywords */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.7 }}
+            className="bg-white/5 backdrop-blur-xl rounded-3xl p-6 border border-white/20 hover:border-white/30 transition-all shadow-xl"
+          >
+            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-white font-[family-name:var(--font-space-grotesk)]">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-[#EC4899] to-[#8B5CF6]">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              Top Keywords
+            </h3>
+            <div className="flex flex-wrap gap-3">
               {analytics.topKeywords.map((keyword, index) => {
-                const size = Math.min(12 + (keyword[1] / 10), 20);
+                const size = Math.min(12 + (keyword[1] / 10), 18);
+                const colors = [
+                  'from-cyan-400 to-blue-500',
+                  'from-purple-400 to-pink-500',
+                  'from-green-400 to-emerald-500',
+                  'from-orange-400 to-red-500',
+                  'from-yellow-400 to-orange-500'
+                ];
+                const color = colors[index % colors.length];
                 return (
-                  <span
+                  <motion.span
                     key={`keyword-${index}-${keyword[0]}`}
-                    className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-all cursor-pointer"
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.7 + index * 0.05 }}
+                    whileHover={{ scale: 1.1, y: -5 }}
+                    className={`px-4 py-2 bg-gradient-to-r ${color} rounded-full text-white font-medium hover:shadow-lg transition-all cursor-pointer backdrop-blur-sm border border-white/20`}
                     style={{ fontSize: `${size}px` }}
                     title={`${keyword[1]} papers`}
                   >
                     {keyword[0]}
-                  </span>
+                  </motion.span>
                 );
               })}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

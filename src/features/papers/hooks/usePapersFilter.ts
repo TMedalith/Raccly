@@ -2,11 +2,44 @@ import { useState, useMemo, useCallback } from 'react';
 import type { PaperData, PaperFilters } from '../types/paper';
 import papersData from '@/shared/services/papers.json';
 
-const papers: PaperData[] = Object.values(papersData) as PaperData[];
+// Type guard to validate papers have essential data
+function isValidPaper(paper: unknown): paper is PaperData {
+  const p = paper as Record<string, unknown>;
+  return Boolean(
+    p.title &&
+    p.authors &&
+    Array.isArray(p.authors) &&
+    p.authors.length > 0 &&
+    p.publication_year &&
+    typeof p.publication_year === 'number' &&
+    p.publication_year > 0 &&
+    p.journal
+  );
+}
+
+// Filter out papers with missing essential data
+const papers: PaperData[] = Object.values(papersData).filter(isValidPaper);
+
+// Calculate the actual year range from papers data
+const getActualYearRange = (): [number, number] => {
+  let minYear = Infinity;
+  let maxYear = -Infinity;
+
+  papers.forEach((paper) => {
+    if (paper.publication_year !== null && paper.publication_year > 0) {
+      if (paper.publication_year < minYear) minYear = paper.publication_year;
+      if (paper.publication_year > maxYear) maxYear = paper.publication_year;
+    }
+  });
+
+  return [minYear === Infinity ? 2010 : minYear, maxYear === -Infinity ? 2025 : maxYear];
+};
+
+const actualYearRange = getActualYearRange();
 
 export function usePapersFilter() {
   const [filters, setFilters] = useState<PaperFilters>({
-    yearRange: [2013, 2025],
+    yearRange: actualYearRange,
     keywords: [],
     studyDesigns: [],
     searchQuery: '',
@@ -19,13 +52,16 @@ export function usePapersFilter() {
     let maxYear = -Infinity;
 
     papers.forEach((paper) => {
-            paper.keywords?.forEach((keyword) => allKeywords.add(keyword));
+      // Collect unique keywords
+      paper.keywords?.forEach((keyword) => allKeywords.add(keyword));
 
-            if (paper.structured_data?.methodology?.study_design) {
+      // Collect unique study designs
+      if (paper.structured_data?.methodology?.study_design) {
         allStudyDesigns.add(paper.structured_data.methodology.study_design);
       }
 
-            if (paper.publication_year !== null) {
+      // Calculate year range (filter out invalid years)
+      if (paper.publication_year !== null && paper.publication_year > 0) {
         if (paper.publication_year < minYear) minYear = paper.publication_year;
         if (paper.publication_year > maxYear) maxYear = paper.publication_year;
       }
@@ -34,7 +70,10 @@ export function usePapersFilter() {
     return {
       keywords: Array.from(allKeywords).sort(),
       studyDesigns: Array.from(allStudyDesigns).sort(),
-      yearRange: [minYear, maxYear] as [number, number],
+      yearRange: [
+        minYear === Infinity ? 2010 : minYear, 
+        maxYear === -Infinity ? 2025 : maxYear
+      ] as [number, number],
     };
   }, []);
 

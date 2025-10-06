@@ -410,9 +410,11 @@ function PaperCard({ paper, isCited, onView, onCopyDOI }: PaperCardProps) {
         </div>
 
         <div className="flex items-center gap-2 text-xs text-gray-600 mb-1">
-          <span>{paper.publication_year}</span>
-          <span>•</span>
-          <span className="truncate">{paper.journal || 'Journal'}</span>
+          {paper.publication_year && <span>{paper.publication_year}</span>}
+          {paper.publication_year && paper.journal && paper.journal.trim() && <span>•</span>}
+          {paper.journal && paper.journal.trim() && (
+            <span className="truncate">{paper.journal}</span>
+          )}
         </div>
 
         {paper.authors && paper.authors.length > 0 && (

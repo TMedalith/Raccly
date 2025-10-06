@@ -69,18 +69,20 @@ export function PaperDetailsCard({ paper }: PaperDetailsCardProps) {
         <div className="bg-blue-50 rounded-lg p-3">
           <div className="flex items-center gap-1.5 mb-1">
             <Calendar className="w-3.5 h-3.5 text-blue-600" />
-            <span className="text-xs font-semibold text-blue-900">Año</span>
+            <span className="text-xs font-semibold text-blue-900">Year</span>
           </div>
           <p className="text-sm font-bold text-blue-700">{paper.publication_year}</p>
         </div>
 
-        <div className="bg-purple-50 rounded-lg p-3">
-          <div className="flex items-center gap-1.5 mb-1">
-            <BookOpen className="w-3.5 h-3.5 text-purple-600" />
-            <span className="text-xs font-semibold text-purple-900">Journal</span>
+        {paper.journal && paper.journal.trim() && (
+          <div className="bg-purple-50 rounded-lg p-3">
+            <div className="flex items-center gap-1.5 mb-1">
+              <BookOpen className="w-3.5 h-3.5 text-purple-600" />
+              <span className="text-xs font-semibold text-purple-900">Journal</span>
+            </div>
+            <p className="text-xs font-medium text-purple-700 line-clamp-2">{paper.journal}</p>
           </div>
-          <p className="text-xs font-medium text-purple-700 line-clamp-2">{paper.journal}</p>
-        </div>
+        )}
       </div>
 
             <div className="space-y-2">
@@ -151,7 +153,7 @@ export function PaperDetailsCard({ paper }: PaperDetailsCardProps) {
           <div className="bg-indigo-50 rounded-lg p-3 space-y-2">
             {paper.structured_data.methodology.study_design && (
               <div>
-                <p className="text-xs font-semibold text-indigo-900">Diseño:</p>
+                <p className="text-xs font-semibold text-indigo-900">Design:</p>
                 <p className="text-xs text-indigo-700">{paper.structured_data.methodology.study_design}</p>
               </div>
             )}
