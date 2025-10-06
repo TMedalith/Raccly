@@ -47,7 +47,15 @@ export default function HomePage() {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { scrollYProgress } = useScroll();
-  const { play } = useAudio();
+  const { play, stop } = useAudio();
+
+  const handleNavigation = (path: string, audioFiles?: string[]) => {
+    stop(); // Detiene cualquier audio que se esté reproduciendo
+    if (audioFiles) {
+      play(audioFiles);
+    }
+    router.push(path);
+  };
   const [audioInitialized, setAudioInitialized] = useState(false);
 
   useEffect(() => {
@@ -141,7 +149,7 @@ export default function HomePage() {
             className="flex justify-center"
           >
             <button
-              onClick={() => router.push('/chat')}
+              onClick={() => handleNavigation('/chat', ['Help Phrases1 .mp3', 'voice commands.mp3'])}
               className="group px-10 py-5 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold rounded-full hover:shadow-2xl hover:shadow-cyan-500/50 transition-all flex items-center gap-3 justify-center text-lg hover:scale-105"
             >
               <MessageSquare className="w-6 h-6" />
@@ -355,7 +363,7 @@ export default function HomePage() {
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
             <button
-              onClick={() => router.push('/chat')}
+              onClick={() => handleNavigation('/chat', ['Help Phrases1 .mp3', 'voice commands.mp3'])}
               className="group px-10 py-5 bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold rounded-full hover:shadow-2xl hover:shadow-cyan-500/50 transition-all flex items-center gap-3 justify-center text-lg hover:scale-105"
             >
               <Rocket className="w-6 h-6 group-hover:-rotate-45 transition-transform" />
@@ -385,22 +393,22 @@ export default function HomePage() {
               </h4>
               <ul className="space-y-2">
                 <li>
-                  <button onClick={() => router.push('/chat')} className="text-blue-200 hover:text-cyan-400 transition-colors">
+                  <button onClick={() => handleNavigation('/chat', ['Help Phrases1 .mp3', 'voice commands.mp3'])} className="text-blue-200 hover:text-cyan-400 transition-colors">
                     AI Chat
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => router.push('/graphs')} className="text-blue-200 hover:text-cyan-400 transition-colors">
+                  <button onClick={() => handleNavigation('/graphs', ['Processing.mp3'])} className="text-blue-200 hover:text-cyan-400 transition-colors">
                     Network
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => router.push('/explore')} className="text-blue-200 hover:text-cyan-400 transition-colors">
+                  <button onClick={() => handleNavigation('/explore', ['Great ques.mp3'])} className="text-blue-200 hover:text-cyan-400 transition-colors">
                     Papers
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => router.push('/analytics')} className="text-blue-200 hover:text-cyan-400 transition-colors">
+                  <button onClick={() => handleNavigation('/analytics', ['Processing.mp3'])} className="text-blue-200 hover:text-cyan-400 transition-colors">
                     Analytics
                   </button>
                 </li>
