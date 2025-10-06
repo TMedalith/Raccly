@@ -1,24 +1,16 @@
 'use client';
 
-import { useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { getAllPapers } from '@/shared/utils/paperReference';
 import { TrendingUp, Users, BookOpen, Calendar, Building2, FlaskConical, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useAudio } from '@/shared/hooks/useAudio';
 
 // Dynamic import to avoid SSR issues with ECharts
 const ReactECharts = dynamic(() => import('echarts-for-react'), { ssr: false });
 
 export default function AnalyticsPage() {
-  const { play } = useAudio();
   const allPapers = getAllPapers();
-
-  // Play audio guide when page loads - "On the right" indicating analytics on the right side
-  useEffect(() => {
-    play(['On the rig.mp3']);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const selectedYears = useMemo(() => [] as number[], []);
   const selectedMethodology = 'all';

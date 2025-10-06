@@ -16,7 +16,7 @@ const navigationItems = [
 export function TopNav() {
   const router = useRouter();
   const pathname = usePathname();
-  const { play } = useAudio();
+  const { play, stop } = useAudio();
 
   const isActive = (path: string) => {
     if (path === '/chat') return pathname === '/chat' || pathname.startsWith('/chat/');
@@ -24,10 +24,16 @@ export function TopNav() {
   };
 
   const handleNavigation = (path: string, audio: string[]) => {
+    // Primero detener cualquier audio existente
+    stop();
+
+    // Iniciar la navegación inmediatamente
+    router.push(path);
+    
+    // Reproducir el audio después
     if (audio.length > 0) {
       play(audio);
     }
-    router.push(path);
   };
 
   return (
