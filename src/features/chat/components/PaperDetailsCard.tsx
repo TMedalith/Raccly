@@ -48,7 +48,7 @@ export function PaperDetailsCard({ paper }: PaperDetailsCardProps) {
             <div className="space-y-2">
         <div className="flex items-center gap-2 text-sm font-semibold text-white">
           <Users className="w-4 h-4 text-cyan-400" />
-          <span>Autores</span>
+          <span>Autors</span>
         </div>
         <div className="space-y-1.5">
           {paper.authors.slice(0, 5).map((author, idx) => (
