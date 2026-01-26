@@ -7,12 +7,6 @@ resolution-markers = [
     "python_full_version < '3.13'",
 ]
 
-[manifest]
-members = [
-    "rag",
-    "zubp",
-]
-
 [[package]]
 name = "aiohappyeyeballs"
 version = "2.6.1"
@@ -836,6 +830,39 @@ wheels = [
 ]
 
 [[package]]
+name = "llama-cloud"
+version = "0.1.46"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "certifi" },
+    { name = "httpx" },
+    { name = "pydantic" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/40/f3/f4d6520f8d546e6c5a02f6ebeed5c09774a074b8d2c24ad559ace97a56a6/llama_cloud-0.1.46.tar.gz", hash = "sha256:e86f8791c053590d70cc59e0fc13ce72f9b681a8e658bc61df86d0285288d8ee", size = 127752, upload-time = "2026-01-21T18:40:57.103Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c4/3a/6caaea28c8c804add33c91d356ed7d5a5412d6c9598e1450af95a15e0bcd/llama_cloud-0.1.46-py3-none-any.whl", hash = "sha256:6c6546c09c04a038c86d84d42f00eae8fd3bff49991ad3aab844bd866ecdf352", size = 361989, upload-time = "2026-01-21T18:40:54.863Z" },
+]
+
+[[package]]
+name = "llama-cloud-services"
+version = "0.6.91"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+    { name = "llama-cloud" },
+    { name = "llama-index-core" },
+    { name = "packaging" },
+    { name = "platformdirs" },
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+    { name = "tenacity" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/db/55/291b1be189f1ec42bcdccb4530f810d0ecbd904cf5bb1416fc4331487aad/llama_cloud_services-0.6.91.tar.gz", hash = "sha256:24a04ae49afb05fe38f023d3577cd881eba4e9ff1443ebf7f60e2ad0e4315179", size = 63494, upload-time = "2026-01-21T20:45:11.224Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8c/d6/a0a19cd5727483c5c6943a735a025c6c1695a8e876f061ae9d7496b6388b/llama_cloud_services-0.6.91-py3-none-any.whl", hash = "sha256:894150a01cb8c3f042ea630394390a16d2f10983dc3546117b28bdd217547a90", size = 76433, upload-time = "2026-01-21T20:45:12.461Z" },
+]
+
+[[package]]
 name = "llama-index-core"
 version = "0.14.13"
 source = { registry = "https://pypi.org/simple" }
@@ -874,6 +901,19 @@ wheels = [
 ]
 
 [[package]]
+name = "llama-index-embeddings-openai"
+version = "0.5.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "llama-index-core" },
+    { name = "openai" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/10/36/90336d054a5061a3f5bc17ac2c18ef63d9d84c55c14d557de484e811ea4d/llama_index_embeddings_openai-0.5.1.tar.gz", hash = "sha256:1c89867a48b0d0daa3d2d44f5e76b394b2b2ef9935932daf921b9e77939ccda8", size = 7020, upload-time = "2025-09-08T20:17:44.681Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/23/4a/8ab11026cf8deff8f555aa73919be0bac48332683111e5fc4290f352dc50/llama_index_embeddings_openai-0.5.1-py3-none-any.whl", hash = "sha256:a2fcda3398bbd987b5ce3f02367caee8e84a56b930fdf43cc1d059aa9fd20ca5", size = 7011, upload-time = "2025-09-08T20:17:44.015Z" },
+]
+
+[[package]]
 name = "llama-index-instrumentation"
 version = "0.4.2"
 source = { registry = "https://pypi.org/simple" }
@@ -884,6 +924,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/af/b9/a7a74de6d8aacf4be329329495983d78d96b1a6e69b6d9fcf4a233febd4b/llama_index_instrumentation-0.4.2.tar.gz", hash = "sha256:dc4957b64da0922060690e85a6be9698ac08e34e0f69e90b01364ddec4f3de7f", size = 46146, upload-time = "2025-10-13T20:44:48.85Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/40/54/df8063b0441242e250e03d1e31ebde5dffbe24e1af32b025cb1a4544150c/llama_index_instrumentation-0.4.2-py3-none-any.whl", hash = "sha256:b4989500e6454059ab3f3c4a193575d47ab1fadb730c2e8f2b962649ae88b70b", size = 15411, upload-time = "2025-10-13T20:44:47.685Z" },
+]
+
+[[package]]
+name = "llama-index-llms-openai"
+version = "0.6.13"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "llama-index-core" },
+    { name = "openai" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8b/f9/8ee42db8ce58e72846c119ba2061facbf3475f648506990a61ccf0d5d643/llama_index_llms_openai-0.6.13.tar.gz", hash = "sha256:e3b7422bc72276e00a980d826477d0b14d5bf743ba69c4a4f0bdee0f5225d450", size = 25784, upload-time = "2026-01-13T11:42:12.729Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/70/42/ab78f9c472d99552e4a1227a097d017b2f8ec8814cfec1e9813c036cd37d/llama_index_llms_openai-0.6.13-py3-none-any.whl", hash = "sha256:f0f8665381eb8e553de187a492da999830817733357364f151a3d4f3e3db746f", size = 26787, upload-time = "2026-01-13T11:42:13.812Z" },
 ]
 
 [[package]]
@@ -904,6 +957,20 @@ wheels = [
 ]
 
 [[package]]
+name = "llama-index-vector-stores-qdrant"
+version = "0.9.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "grpcio" },
+    { name = "llama-index-core" },
+    { name = "qdrant-client" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/99/63/646ec9d7035429d4fb5488146ab7a9d55e955fb855f0a7e7fc29f6eb136f/llama_index_vector_stores_qdrant-0.9.1.tar.gz", hash = "sha256:215e24278bde44c6746d60c7df3f8811f943c20524a496e0c954eeb6449e8319", size = 14688, upload-time = "2026-01-13T11:13:07.123Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1d/d2/e258a2b5526fe42d6ca60a054b3830948d6411e3f075de542ba492c5f5d1/llama_index_vector_stores_qdrant-0.9.1-py3-none-any.whl", hash = "sha256:de71d0e867c04c87aa81ab35b092c32d684961c26a1cda601856faf29b21a598", size = 14944, upload-time = "2026-01-13T11:13:08.08Z" },
+]
+
+[[package]]
 name = "llama-index-workflows"
 version = "2.12.2"
 source = { registry = "https://pypi.org/simple" }
@@ -915,6 +982,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/d1/ee/8c58554942933f33752ccb86451ea0a15493808eb934f4899e4d2c43a408/llama_index_workflows-2.12.2.tar.gz", hash = "sha256:37e05cd3483c64f410176fe614db8c84b6f42fc32cdadb3cc8ac8de18f01a97b", size = 79771, upload-time = "2026-01-15T20:30:24.509Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c2/2a/4188d3cb65c539fcac3a467f77d7ac32d6136d0802d0b2ba113d51adfbf6/llama_index_workflows-2.12.2-py3-none-any.whl", hash = "sha256:888baf7e557f7fbe10d442f354bdc3415390757f0ac9268d32f89401128ae508", size = 102617, upload-time = "2026-01-15T20:30:25.42Z" },
+]
+
+[[package]]
+name = "llama-parse"
+version = "0.6.91"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "llama-cloud-services" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e2/8e/3171da9d28644da43eaedce8fb0979c3b4e2f1099057ffab79c69ad02de2/llama_parse-0.6.91.tar.gz", hash = "sha256:ba06267a482121c032c79ab93184cccf4867e231a813bac63b69ad0da32a5b5e", size = 3578, upload-time = "2026-01-21T20:45:09.712Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/45/41/969d279edea31afe9c424b40c46f714e153ee81ad26a93fdd5fba7aeaec1/llama_parse-0.6.91-py3-none-any.whl", hash = "sha256:1a7d93c6fb50b4cf9421d687e88aa84522463e21778e0d61b0538b24a20f3343", size = 4878, upload-time = "2026-01-21T20:45:08.987Z" },
 ]
 
 [[package]]
@@ -1736,7 +1815,11 @@ dependencies = [
     { name = "fastapi" },
     { name = "inngest" },
     { name = "llama-index-core" },
+    { name = "llama-index-embeddings-openai" },
+    { name = "llama-index-llms-openai" },
     { name = "llama-index-readers-file" },
+    { name = "llama-index-vector-stores-qdrant" },
+    { name = "llama-parse" },
     { name = "openai" },
     { name = "python-dotenv" },
     { name = "qdrant-client" },
@@ -1749,7 +1832,11 @@ requires-dist = [
     { name = "fastapi", specifier = ">=0.116.1" },
     { name = "inngest", specifier = ">=0.5.6" },
     { name = "llama-index-core", specifier = ">=0.14.0" },
+    { name = "llama-index-embeddings-openai", specifier = ">=0.5.1" },
+    { name = "llama-index-llms-openai", specifier = ">=0.6.13" },
     { name = "llama-index-readers-file", specifier = ">=0.5.4" },
+    { name = "llama-index-vector-stores-qdrant", specifier = ">=0.9.1" },
+    { name = "llama-parse", specifier = ">=0.6.91" },
     { name = "openai", specifier = ">=1.107.0" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
     { name = "qdrant-client", specifier = ">=1.15.1" },
@@ -2439,8 +2526,3 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/48/b7/503c98092fb3b344a179579f55814b613c1fbb1c23b3ec14a7b008a66a6e/yarl-1.22.0-cp314-cp314t-win_arm64.whl", hash = "sha256:9f6d73c1436b934e3f01df1e1b21ff765cd1d28c77dfb9ace207f746d4610ee1", size = 85171, upload-time = "2025-10-06T14:12:16.935Z" },
     { url = "https://files.pythonhosted.org/packages/73/ae/b48f95715333080afb75a4504487cbe142cae1268afc482d06692d605ae6/yarl-1.22.0-py3-none-any.whl", hash = "sha256:1380560bdba02b6b6c90de54133c81c9f2a453dee9912fe58c1dcced1edb7cff", size = 46814, upload-time = "2025-10-06T14:12:53.872Z" },
 ]
-
-[[package]]
-name = "zubp"
-version = "0.1.0"
-source = { virtual = "zubp" }
