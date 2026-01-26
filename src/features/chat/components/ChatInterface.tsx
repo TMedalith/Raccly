@@ -16,7 +16,8 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { messages, isLoading, sendMessage, setActiveMessage, activeMessageId, sessionId, selectPaper } = useChat({ conversationId });
-  const hasProcessedInitialQuery = useRef(false);
+  // showRelatedPapers ya no se usa, así que lo quitamos del destructuring
+  // ...existing code...
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {

@@ -4,22 +4,16 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import {
   MessageSquare,
-  ArrowRight,
-  Bot,
   Sparkles,
   FileText,
   Zap,
-  Globe,
-  TrendingUp,
-  Users,
   Target,
   Rocket,
   BookOpen,
   DollarSign,
-  BarChart3,
   Star
 } from 'lucide-react';
-import { OwlLogo, OwlChat, OwlScientist, OwlAstronaut, OwlFlying, OwlMini } from '@/shared/components/OwlIcons';
+import { OwlLogo, OwlChat, OwlScientist, OwlAstronaut, OwlMini } from '@/shared/components/OwlIcons';
 
 export default function HomePage() {
   const router = useRouter();
@@ -438,7 +432,7 @@ export default function HomePage() {
                   </div>
                 </div>
                 <p className="text-slate-700 leading-relaxed font-[family-name:var(--font-inter)] italic">
-                  "{testimonial.quote}"
+                  &quot;{testimonial.quote}&quot;
                 </p>
                 <div className="flex gap-1 mt-4">
                   {[...Array(5)].map((_, i) => (

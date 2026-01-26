@@ -12,10 +12,7 @@ interface PaperCardProps {
 
 export function PaperCard({ paper, onClick }: PaperCardProps) {
   // Extract just the number before the first dash (e.g., "002 - Title..." -> "002")
-  const extractPaperId = (fullId: string): string => {
-    const match = fullId.match(/^(\d+)\s*-/);
-    return match ? match[1] : fullId;
-  };
+  // extractPaperId ya no se usa, así que lo quitamos
 
 
   return (
