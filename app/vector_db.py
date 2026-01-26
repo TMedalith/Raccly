@@ -37,3 +37,18 @@ class QdrantStorage:
             storage_context=self.storage_context
         )
         return index.as_query_engine(similarity_top_k=top_k)
+
+def insert_nodes_from_json(json_path, qdrant_storage=None):
+    """
+    Carga nodos desde un archivo JSON y los inserta en Qdrant.
+    """
+    import json
+    if qdrant_storage is None:
+        qdrant_storage = QdrantStorage()
+    with open(json_path, 'r', encoding='utf-8') as f:
+        nodes_data = json.load(f)
+    all_nodes = []
+    for nodes in nodes_data.values():
+        all_nodes.extend(nodes)
+    qdrant_storage.insert_nodes(all_nodes)
+    print(f"✅ Todos los nodos de {json_path} insertados en Qdrant.")
