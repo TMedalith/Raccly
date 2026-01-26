@@ -41,23 +41,23 @@ async def query(request: QueryRequest):
         "sources": list(set(sources))
     }
 
-@app.post("/upload-pdf")
-async def upload_pdf(file: UploadFile = File(...)):
-    """Sube PDF y triggerea procesamiento"""
-    if not file.filename.endswith('.pdf'):
-        raise HTTPException(400, "Solo PDFs")
+# @app.post("/upload-pdf")
+# async def upload_pdf(file: UploadFile = File(...)):
+#     """Sube PDF y triggerea procesamiento"""
+#     if not file.filename.endswith('.pdf'):
+#         raise HTTPException(400, "Solo PDFs")
     
-    pdf_content =  await file.read()
+#     pdf_content =  await file.read()
     
-    inngest_client.send_sync(
-        inngest_client.Event(
-            name="pdf/uploaded",
-            data={
-                "pdf_content": pdf_content,
-                "filename": file.filename
-            }
-        )
-    )
+#     inngest_client.send_sync(
+#         inngest_client.Event(
+#             name="pdf/uploaded",
+#             data={
+#                 "pdf_content": pdf_content,
+#                 "filename": file.filename
+#             }
+#         )
+#     )
 
 
 @app.get("/health")
