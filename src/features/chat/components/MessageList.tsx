@@ -1,10 +1,11 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Bot, Loader2 } from 'lucide-react';
+import { User, Loader2, TrendingUp, BarChart3, Microscope, Rocket, Dna, Zap } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { resolvePaperReferences } from '@/shared/utils/paperReference';
 import { CitedPapersSection } from './CitedPapersSection';
+import { OwlLogo } from '@/shared/components/OwlIcons';
 import type { Message } from '../types';
 
 interface MessageListProps {
@@ -13,11 +14,39 @@ interface MessageListProps {
   onMessageVisible?: (messageId: string | null) => void;
   activeMessageId?: string | null;
   onPaperClick?: (paperId: string) => void;
+  onSendMessage?: (message: string) => void;
 }
 
-export function MessageList({ messages, isLoading, onMessageVisible, activeMessageId, onPaperClick }: MessageListProps) {
+export function MessageList({ messages, isLoading, onMessageVisible, activeMessageId, onPaperClick, onSendMessage }: MessageListProps) {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
+  const suggestedQuestions = [
+    {
+      icon: TrendingUp,
+      text: 'What are the effects of microgravity on plant growth?',
+    },
+    {
+      icon: BarChart3,
+      text: 'How does spaceflight affect bone density in mice?',
+    },
+    {
+      icon: Microscope,
+      text: 'Latest findings in COVID-19 molecular mechanisms',
+    },
+    {
+      icon: Rocket,
+      text: 'Arabidopsis gravitropism mechanisms',
+    },
+    {
+      icon: Dna,
+      text: 'Skeletal muscle atrophy in space missions',
+    },
+    {
+      icon: Zap,
+      text: 'Radiation effects on biological systems',
+    },
+  ];
 
     useEffect(() => {
     if (!onMessageVisible) return;
@@ -71,16 +100,59 @@ export function MessageList({ messages, isLoading, onMessageVisible, activeMessa
   };
   if (messages.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-center px-4">
-        <div className="w-16 h-16 rounded-full bg-cyan-500/20 flex items-center justify-center mb-4">
-          <Bot className="w-8 h-8 text-cyan-400" />
-        </div>
-        <h2 className="text-2xl font-semibold text-white mb-2">
-          Comienza una conversación
-        </h2>
-        <p className="text-blue-200 max-w-md">
-          Ask about scientific papers, research concepts, or search for relevant literature.
-        </p>
+      <div className="flex flex-col items-center justify-center px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-8"
+        >
+          <div className="w-16 h-16 rounded-full bg-[#d4f78a] border-2 border-slate-900 flex items-center justify-center mb-4 mx-auto">
+            <OwlLogo className="w-10 h-10" />
+          </div>
+          <h2 className="text-3xl font-bold text-slate-900 mb-2 font-[family-name:var(--font-space-grotesk)]">
+            What do you want to research today?
+          </h2>
+          <p className="text-slate-600 font-[family-name:var(--font-inter)]">
+            Ask about papers, trends, or comparisons
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="w-full space-y-3"
+        >
+          <h3 className="text-sm font-semibold text-slate-700 font-[family-name:var(--font-space-grotesk)]">
+            Suggested Research Questions:
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {suggestedQuestions.map((suggestion, index) => {
+              const Icon = suggestion.icon;
+              return (
+                <motion.button
+                  key={index}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 + index * 0.05 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => onSendMessage?.(suggestion.text)}
+                  className="p-4 bg-white border-2 border-slate-900 rounded-2xl text-left transition-all hover:bg-[#d4f78a] group"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 rounded-xl bg-slate-900 flex-shrink-0">
+                      <Icon className="w-4 h-4 text-[#d4f78a] group-hover:text-white transition-colors" />
+                    </div>
+                    <p className="text-sm text-slate-900 flex-1 leading-relaxed font-[family-name:var(--font-inter)]">
+                      {suggestion.text}
+                    </p>
+                  </div>
+                </motion.button>
+              );
+            })}
+          </div>
+        </motion.div>
       </div>
     );
   }
@@ -109,28 +181,28 @@ export function MessageList({ messages, isLoading, onMessageVisible, activeMessa
             <div
               className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center shadow-sm ${
                 message.role === 'user'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500'
-                  : 'bg-white/10 border-2 border-cyan-400'
+                  ? 'bg-[#d4f78a] border-2 border-slate-900'
+                  : 'bg-white border-2 border-slate-900'
               }`}
             >
               {message.role === 'user' ? (
-                <User className="w-5 h-5 text-white" />
+                <User className="w-5 h-5 text-slate-900" />
               ) : (
-                <Bot className="w-5 h-5 text-cyan-400" />
+                <OwlLogo className="w-6 h-6" />
               )}
             </div>
 
             {}
             <div
-              className={`flex-1 rounded-2xl px-5 py-4 shadow-sm transition-all ${
+              className={`flex-1 rounded-2xl px-5 py-4 shadow-sm transition-all break-words ${
                 message.role === 'user'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium'
+                  ? 'bg-[#d4f78a] text-slate-900 font-medium border-2 border-slate-900'
                   : message.id === activeMessageId && message.relatedPapers && message.relatedPapers.length > 0
-                  ? 'bg-white/10 border-2 border-cyan-400 shadow-md backdrop-blur-xl'
-                  : 'bg-white/5 border border-white/20 backdrop-blur-xl'
+                  ? 'bg-white border-2 border-slate-900 shadow-md'
+                  : 'bg-white border-2 border-slate-900'
               }`}
             >
-              <p className={`text-sm leading-relaxed ${message.role === 'assistant' ? 'text-white' : ''}`}>
+              <p className={`text-sm leading-relaxed whitespace-pre-wrap break-words ${message.role === 'assistant' ? 'text-slate-900' : ''}`}>
                 {message.content}
               </p>
 
@@ -150,13 +222,13 @@ export function MessageList({ messages, isLoading, onMessageVisible, activeMessa
             animate={{ opacity: 1, y: 0 }}
             className="flex gap-4"
           >
-            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white/10 border-2 border-cyan-400 flex items-center justify-center">
-              <Bot className="w-5 h-5 text-cyan-400" />
+            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white border-2 border-slate-900 flex items-center justify-center">
+              <OwlLogo className="w-6 h-6" />
             </div>
-            <div className="flex-1 rounded-2xl px-5 py-4 bg-white/5 border border-white/20 backdrop-blur-xl">
-              <div className="flex items-center gap-2 text-blue-200">
+            <div className="flex-1 rounded-2xl px-5 py-4 bg-white border-2 border-slate-900">
+              <div className="flex items-center gap-2 text-slate-600">
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-sm">Buscando información...</span>
+                <span className="text-sm">Searching information...</span>
               </div>
             </div>
           </motion.div>

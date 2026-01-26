@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { Users, FileText, Filter, Search, ZoomIn, ZoomOut, Maximize, X, Info } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import type { NodeObject } from 'react-force-graph-3d';
 
 const ForceGraph3D = dynamic(() => import('react-force-graph-3d'), { ssr: false });
@@ -48,12 +49,28 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<GraphNode[]>([]);
   const [showHelp, setShowHelp] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [filters, setFilters] = useState({
     showAuthored: true,
     showCoauthor: true,
     showSimilarity: true,
     selectedCommunities: new Set<number>(),
   });
+
+  // Check screen size
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsLargeScreen(window.innerWidth >= 1024);
+      if (window.innerWidth >= 1024) {
+        setShowFilters(true);
+      }
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
     const availableCommunities = useMemo(() => {
     const communities = new Set<number>();
@@ -225,18 +242,18 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
   }, [filters]);
 
   return (
-    <div className="relative w-full h-full bg-gradient-to-br from-[#0f1115] via-[#141825] to-[#0f1115]">
-            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 w-full max-w-xl px-4">
+    <div className="relative w-full h-full bg-[radial-gradient(circle_at_center,_white_0%,_#fef9c3_100%)]">
+            <div className="absolute top-2 sm:top-4 left-1/2 transform -translate-x-1/2 z-10 w-[calc(100%-2rem)] sm:w-full max-w-md px-2 sm:px-4">
         <div className="relative group">
-          <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
-            <Search className="w-5 h-5 text-[#6b7280] group-focus-within:text-[var(--primary)] transition-colors" />
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
+            <Search className="w-4 h-4 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
           </div>
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search nodes by name, topic or community..."
-            className="w-full pl-12 pr-12 py-3.5 bg-[#171a21]/95 backdrop-blur-md border-2 border-[#2b3147] rounded-2xl text-[#e7e7e7] placeholder-[#6b7280] focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20 transition-all shadow-lg text-sm font-medium"
+            placeholder="Search..."
+            className="w-full pl-10 pr-10 py-2.5 sm:py-3 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 transition-all shadow-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-space-grotesk)]"
           />
           {searchTerm && (
             <button
@@ -244,31 +261,31 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
                 setSearchTerm('');
                 setSearchResults([]);
               }}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 p-1 hover:bg-[#232734] rounded-lg transition-colors"
+              className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 p-1 hover:bg-slate-100 rounded-lg transition-colors"
             >
-              <X className="w-4 h-4 text-[#6b7280] hover:text-[#e7e7e7]" />
+              <X className="w-3 h-3 sm:w-4 sm:h-4 text-slate-600 hover:text-slate-900" />
             </button>
           )}
         </div>
 
                 {searchResults.length > 0 && (
-          <div className="absolute top-full mt-2 w-full bg-[#171a21]/98 backdrop-blur-sm border border-[#232734] rounded-xl overflow-hidden shadow-2xl">
+          <div className="absolute top-full mt-2 w-full bg-white border-2 border-slate-900 rounded-xl overflow-hidden shadow-2xl">
               <div className="max-h-80 overflow-y-auto">
                 {searchResults.map((node) => (
                   <button
                     key={node.id}
                     onClick={() => focusOnNode(node)}
-                    className="w-full px-4 py-3 text-left hover:bg-[#232734]/50 transition-colors border-b border-[#232734] last:border-b-0"
+                    className="w-full px-4 py-3 text-left hover:bg-slate-100 transition-colors border-b-2 border-slate-200 last:border-b-0"
                   >
                     <div className="flex items-start gap-3">
                       {node.node_type === 'author' ? (
-                        <Users className="w-4 h-4 text-[#6b9cff] mt-0.5 flex-shrink-0" />
+                        <Users className="w-4 h-4 text-slate-900 mt-0.5 flex-shrink-0" />
                       ) : (
-                        <FileText className="w-4 h-4 text-[#ff7b7b] mt-0.5 flex-shrink-0" />
+                        <FileText className="w-4 h-4 text-slate-900 mt-0.5 flex-shrink-0" />
                       )}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-[#e7e7e7] font-medium truncate">{node.label}</p>
-                        <div className="flex gap-2 mt-1 text-xs text-[#a7aab2]">
+                        <p className="text-sm text-slate-900 font-medium truncate font-[family-name:var(--font-space-grotesk)]">{node.label}</p>
+                        <div className="flex gap-2 mt-1 text-xs text-slate-600">
                           <span>{node.node_type === 'paper' ? 'Paper' : 'Autor'}</span>
                           {node.year && <span>• {node.year}</span>}
                           {node.community_label && <span>• {node.community_label}</span>}
@@ -282,222 +299,269 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
         )}
       </div>
 
-            <div className="absolute top-4 right-4 z-10 flex gap-2">
+            <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10 flex gap-2">
         <button
           onClick={() => setShowHelp(!showHelp)}
-          className="p-2.5 bg-[#171a21]/90 backdrop-blur-sm border border-[#232734] rounded-lg hover:border-[var(--primary)] transition-colors group"
+          className="p-2 sm:p-2.5 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all shadow-lg group"
           title="Help"
         >
-          <Info className="w-5 h-5 text-[#a7aab2] group-hover:text-[var(--primary)]" />
+          <Info className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600 group-hover:text-slate-900" />
         </button>
         <button
           onClick={handleZoomIn}
-          className="p-2.5 bg-[#171a21]/90 backdrop-blur-sm border border-[#232734] rounded-lg hover:border-[var(--primary)] transition-colors group"
+          className="p-2 sm:p-2.5 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all shadow-lg group"
           title="Acercar"
         >
-          <ZoomIn className="w-5 h-5 text-[#a7aab2] group-hover:text-[var(--primary)]" />
+          <ZoomIn className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600 group-hover:text-slate-900" />
         </button>
         <button
           onClick={handleZoomOut}
-          className="p-2.5 bg-[#171a21]/90 backdrop-blur-sm border border-[#232734] rounded-lg hover:border-[var(--primary)] transition-colors group"
+          className="p-2 sm:p-2.5 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all shadow-lg group"
           title="Alejar"
         >
-          <ZoomOut className="w-5 h-5 text-[#a7aab2] group-hover:text-[var(--primary)]" />
+          <ZoomOut className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600 group-hover:text-slate-900" />
         </button>
         <button
           onClick={handleResetCamera}
-          className="p-2.5 bg-[#171a21]/90 backdrop-blur-sm border border-[#232734] rounded-lg hover:border-[var(--primary)] transition-colors group"
+          className="p-2 sm:p-2.5 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all shadow-lg group"
           title="Reiniciar vista"
         >
-          <Maximize className="w-5 h-5 text-[#a7aab2] group-hover:text-[var(--primary)]" />
+          <Maximize className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600 group-hover:text-slate-900" />
         </button>
       </div>
 
             {showHelp && (
-        <div className="absolute top-20 right-4 z-20 w-80 bg-[#171a21]/98 backdrop-blur-sm border border-[#232734] rounded-xl p-5 shadow-2xl">
+        <div className="absolute top-16 sm:top-20 right-2 sm:right-4 z-20 w-[calc(100vw-2rem)] max-w-sm sm:w-80 bg-white border-2 border-slate-900 rounded-xl p-3 sm:p-5 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-[#e7e7e7]">Cómo usar la red 3D</h3>
-              <button onClick={() => setShowHelp(false)} className="text-[#a7aab2] hover:text-[#e7e7e7]">
+              <h3 className="text-sm font-semibold text-slate-900 font-[family-name:var(--font-space-grotesk)]">Cómo usar la red 3D</h3>
+              <button onClick={() => setShowHelp(false)} className="text-slate-600 hover:text-slate-900">
                 <X className="w-4 h-4" />
               </button>
             </div>
-            <div className="space-y-3 text-xs text-[#a7aab2]">
+            <div className="space-y-3 text-xs text-slate-600">
               <div className="flex gap-2">
-                <span className="font-semibold text-[var(--primary)] min-w-[80px]">Search:</span>
+                <span className="font-semibold text-slate-900 min-w-[80px]">Search:</span>
                 <span>Usa la barra superior para encontrar nodos rápidamente</span>
               </div>
               <div className="flex gap-2">
-                <span className="font-semibold text-[var(--primary)] min-w-[80px]">Click:</span>
+                <span className="font-semibold text-slate-900 min-w-[80px]">Click:</span>
                 <span>Selecciona un nodo para ver sus conexiones</span>
               </div>
               <div className="flex gap-2">
-                <span className="font-semibold text-[var(--primary)] min-w-[80px]">Arrastrar:</span>
+                <span className="font-semibold text-slate-900 min-w-[80px]">Arrastrar:</span>
                 <span>Mueve el mouse para rotar la vista</span>
               </div>
               <div className="flex gap-2">
-                <span className="font-semibold text-[var(--primary)] min-w-[80px]">Scroll:</span>
+                <span className="font-semibold text-slate-900 min-w-[80px]">Scroll:</span>
                 <span>Usa la rueda para hacer zoom</span>
               </div>
               <div className="flex gap-2">
-                <span className="font-semibold text-[var(--primary)] min-w-[80px]">Filters:</span>
+                <span className="font-semibold text-slate-900 min-w-[80px]">Filters:</span>
                 <span>Use the left panel to filter by type and community</span>
               </div>
             </div>
         </div>
       )}
 
-            <div className="absolute top-4 left-4 z-10 bg-[#171a21]/95 backdrop-blur-md border border-[#2b3147] rounded-2xl shadow-2xl w-72 max-h-[calc(100vh-2rem)] flex flex-col">
-                <div className="p-4 border-b border-[#232734]">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-[var(--primary)]" />
-              <h3 className="font-bold text-sm text-[#e7e7e7]">Filters</h3>
-            </div>
-            {hasActiveFilters && (
-              <button
-                onClick={() => {
-                  setFilters({
-                    showAuthored: true,
-                    showCoauthor: true,
-                    showSimilarity: true,
-                    selectedCommunities: new Set(),
-                  });
-                }}
-                className="text-xs text-[var(--primary)] hover:text-[#8fb9ff] font-medium"
-              >
-                Clear all
-              </button>
-            )}
-          </div>
+      {/* Botón Toggle Filters */}
+      {!showFilters && (
+        <button
+          onClick={() => setShowFilters(true)}
+          className="absolute top-2 sm:top-4 left-2 sm:left-4 z-20 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border-2 border-slate-900 text-slate-900 hover:bg-[#d4f78a] transition-all text-sm font-bold font-[family-name:var(--font-space-grotesk)] shadow-xl"
+        >
+          <Filter className="w-5 h-5" />
+          <span>Filters</span>
+        </button>
+      )}
 
-                    {(filteredGraphData.nodes.length < graphData.nodes.length || filteredGraphData.links.length < graphData.links.length) && (
-            <div className="flex items-center gap-3 text-xs">
-              <div className="flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-[var(--primary)]" />
-                <span className="text-[#a7aab2]">
-                  <span className="text-[#e7e7e7] font-semibold">{filteredGraphData.nodes.length}</span>/{graphData.nodes.length}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-[#8fb9ff]" />
-                <span className="text-[#a7aab2]">
-                  <span className="text-[#e7e7e7] font-semibold">{filteredGraphData.links.length}</span> enlaces
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
+      {/* Backdrop para móvil */}
+      <AnimatePresence>
+        {showFilters && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowFilters(false)}
+            className="absolute inset-0 bg-black/70 z-30 lg:hidden backdrop-blur-sm cursor-pointer"
+          />
+        )}
+      </AnimatePresence>
 
-                <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 custom-scrollbar">
-
-                <div className="space-y-2">
-          <h4 className="text-xs font-semibold text-[#e7e7e7] mb-2">Connection Types</h4>
-          <div className="space-y-1.5">
-            <label className="flex items-center gap-2 px-2 py-1.5 hover:bg-[#232734]/30 rounded-lg cursor-pointer transition-colors">
-              <input
-                type="checkbox"
-                checked={filters.showAuthored}
-                onChange={(e) => setFilters({ ...filters, showAuthored: e.target.checked })}
-                className="w-3.5 h-3.5 rounded border-[#2a3042] bg-[#1e2230] text-[var(--primary)]"
-              />
-              <span className="text-xs text-[#e7e7e7]">Autoría</span>
-              <span className="text-xs text-[#6b7280] ml-auto">autor → paper</span>
-            </label>
-
-            <label className="flex items-center gap-2 px-2 py-1.5 hover:bg-[#232734]/30 rounded-lg cursor-pointer transition-colors">
-              <input
-                type="checkbox"
-                checked={filters.showCoauthor}
-                onChange={(e) => setFilters({ ...filters, showCoauthor: e.target.checked })}
-                className="w-3.5 h-3.5 rounded border-[#2a3042] bg-[#1e2230] text-[var(--primary)]"
-              />
-              <span className="text-xs text-[#e7e7e7]">Co-autoría</span>
-              <span className="text-xs text-[#6b7280] ml-auto">autor ↔ autor</span>
-            </label>
-
-            <label className="flex items-center gap-2 px-2 py-1.5 hover:bg-[#232734]/30 rounded-lg cursor-pointer transition-colors">
-              <input
-                type="checkbox"
-                checked={filters.showSimilarity}
-                onChange={(e) => setFilters({ ...filters, showSimilarity: e.target.checked })}
-                className="w-3.5 h-3.5 rounded border-[#2a3042] bg-[#1e2230] text-[var(--primary)]"
-              />
-              <span className="text-xs text-[#e7e7e7]">Similitud</span>
-              <span className="text-xs text-[#6b7280] ml-auto">paper ↔ paper</span>
-            </label>
-          </div>
-        </div>
-
-
-                {availableCommunities.length > 0 && (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <h4 className="text-xs font-semibold text-[#e7e7e7]">Communities</h4>
-              {filters.selectedCommunities.size > 0 && (
+      {/* Panel de Filtros */}
+      <AnimatePresence>
+        {showFilters && (
+          <motion.div
+            initial={{ x: -100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -100, opacity: 0 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 180 }}
+            className="absolute top-2 sm:top-4 left-2 sm:left-4 z-40 bg-white border-2 border-slate-900 rounded-2xl shadow-2xl w-[min(340px,calc(100vw-1rem))] lg:w-80 xl:w-96 max-h-[calc(100vh-2rem)] flex flex-col"
+          >
+            <div className="p-3 sm:p-4 border-b-2 border-slate-900">
+              <div className="flex items-center justify-between mb-2 sm:mb-3">
                 <button
-                  onClick={() => setFilters({ ...filters, selectedCommunities: new Set() })}
-                  className="text-xs font-medium text-[var(--primary)] hover:text-[#8fb9ff]"
+                  onClick={() => setShowFilters(false)}
+                  className="flex items-center gap-2 hover:opacity-70 transition-opacity"
                 >
-                  Clear ({filters.selectedCommunities.size})
+                  <Filter className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900" />
+                  <h3 className="font-bold text-sm sm:text-base text-slate-900 font-[family-name:var(--font-space-grotesk)]">Filters</h3>
                 </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setShowFilters(false)}
+                    className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                    aria-label="Close filters"
+                  >
+                    <X className="w-5 h-5 text-slate-600" />
+                  </button>
+                  {hasActiveFilters && (
+                    <button
+                      onClick={() => {
+                        setFilters({
+                          showAuthored: true,
+                          showCoauthor: true,
+                          showSimilarity: true,
+                          selectedCommunities: new Set(),
+                        });
+                      }}
+                      className="text-xs text-slate-900 hover:text-[#d4f78a] font-medium"
+                    >
+                      Clear all
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {(filteredGraphData.nodes.length < graphData.nodes.length || filteredGraphData.links.length < graphData.links.length) && (
+                <div className="flex items-center gap-3 text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-[#d4f78a] border border-slate-900" />
+                    <span className="text-slate-600">
+                      <span className="text-slate-900 font-semibold">{filteredGraphData.nodes.length}</span>/{graphData.nodes.length}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-slate-900" />
+                    <span className="text-slate-600">
+                      <span className="text-slate-900 font-semibold">{filteredGraphData.links.length}</span> enlaces
+                    </span>
+                  </div>
+                </div>
               )}
             </div>
-            <div className="space-y-1 max-h-80 overflow-y-auto pr-1 custom-scrollbar">
-              {availableCommunities.map((community) => {
-                const communityNode = graphData.nodes.find(n => n.community === community);
-                const count = graphData.nodes.filter(n => n.community === community).length;
-                const label = communityNode?.community_label || `Community ${community}`;
-                const isSelected = filters.selectedCommunities.has(community);
 
-                return (
-                  <button
-                    key={community}
-                    onClick={() => toggleCommunity(community)}
-                    title={label}
-                    className={`group w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-colors ${
-                      isSelected
-                        ? 'bg-[var(--primary)]/20'
-                        : 'hover:bg-[#232734]/30'
-                    }`}
-                  >
-                    <div
-                      className="w-2 h-2 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: communityNode?.color || '#6b9cff' }}
+            <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-4 space-y-4 custom-scrollbar">
+              {/* Connection Types */}
+              <div className="space-y-2">
+                <h4 className="text-xs font-semibold text-slate-900 mb-2 font-[family-name:var(--font-space-grotesk)]">Connection Types</h4>
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-2 px-2 py-1.5 hover:bg-slate-100 rounded-lg cursor-pointer transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={filters.showAuthored}
+                      onChange={(e) => setFilters({ ...filters, showAuthored: e.target.checked })}
+                      className="w-3.5 h-3.5 rounded border-slate-900 bg-white accent-[#d4f78a]"
                     />
-                    <span className={`text-xs truncate flex-1 text-left ${isSelected ? 'text-[#e7e7e7] font-medium' : 'text-[#a7aab2]'}`}>
-                      {label}
-                    </span>
-                    <span className={`text-xs font-semibold flex-shrink-0 ${isSelected ? 'text-[var(--primary)]' : 'text-[#6b7280]'}`}>
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
+                    <span className="text-xs text-slate-900">Authorship</span>
+                    <span className="text-xs text-slate-600 ml-auto">autor → paper</span>
+                  </label>
+
+                  <label className="flex items-center gap-2 px-2 py-1.5 hover:bg-slate-100 rounded-lg cursor-pointer transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={filters.showCoauthor}
+                      onChange={(e) => setFilters({ ...filters, showCoauthor: e.target.checked })}
+                      className="w-3.5 h-3.5 rounded border-slate-900 bg-white accent-[#d4f78a]"
+                    />
+                    <span className="text-xs text-slate-900">Co-authorship</span>
+                    <span className="text-xs text-slate-600 ml-auto">autor ↔ autor</span>
+                  </label>
+
+                  <label className="flex items-center gap-2 px-2 py-1.5 hover:bg-slate-100 rounded-lg cursor-pointer transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={filters.showSimilarity}
+                      onChange={(e) => setFilters({ ...filters, showSimilarity: e.target.checked })}
+                      className="w-3.5 h-3.5 rounded border-slate-900 bg-white accent-[#d4f78a]"
+                    />
+                    <span className="text-xs text-slate-900">Similarity</span>
+                    <span className="text-xs text-slate-600 ml-auto">paper ↔ paper</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Communities */}
+              {availableCommunities.length > 0 && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-semibold text-slate-900 font-[family-name:var(--font-space-grotesk)]">Communities</h4>
+                    {filters.selectedCommunities.size > 0 && (
+                      <button
+                        onClick={() => setFilters({ ...filters, selectedCommunities: new Set() })}
+                        className="text-xs font-medium text-slate-900 hover:text-[#d4f78a]"
+                      >
+                        Clear ({filters.selectedCommunities.size})
+                      </button>
+                    )}
+                  </div>
+                  <div className="space-y-1 max-h-80 overflow-y-auto pr-1 custom-scrollbar">
+                    {availableCommunities.map((community) => {
+                      const communityNode = graphData.nodes.find(n => n.community === community);
+                      const count = graphData.nodes.filter(n => n.community === community).length;
+                      const label = communityNode?.community_label || `Community ${community}`;
+                      const isSelected = filters.selectedCommunities.has(community);
+
+                      return (
+                        <button
+                          key={community}
+                          onClick={() => toggleCommunity(community)}
+                          title={label}
+                          className={`group w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-colors ${
+                            isSelected
+                              ? 'bg-[#d4f78a] border border-slate-900'
+                              : 'hover:bg-slate-100'
+                          }`}
+                        >
+                          <div
+                            className="w-2 h-2 rounded-full flex-shrink-0 border border-slate-900"
+                            style={{ backgroundColor: communityNode?.color || '#d4f78a' }}
+                          />
+                          <span className={`text-xs truncate flex-1 text-left ${isSelected ? 'text-slate-900 font-medium' : 'text-slate-600'}`}>
+                            {label}
+                          </span>
+                          <span className={`text-xs font-semibold flex-shrink-0 ${isSelected ? 'text-slate-900' : 'text-slate-600'}`}>
+                            {count}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
+          </motion.div>
         )}
-      </div>
-      </div>
+      </AnimatePresence>
 
             {(hoverNode || selectedNode) && (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 bg-[#171a21]/98 backdrop-blur-sm border border-[#232734] rounded-xl p-5 max-w-2xl w-full mx-4 shadow-2xl">
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 bg-white border-2 border-slate-900 rounded-xl p-5 max-w-2xl w-full mx-4 shadow-2xl">
             <div className="space-y-3">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
                   {(hoverNode || selectedNode)?.node_type === 'author' ? (
-                    <div className="p-2 bg-[#6b9cff]/20 rounded-lg">
-                      <Users className="w-5 h-5 text-[#6b9cff]" />
+                    <div className="p-2 bg-[#d4f78a] border-2 border-slate-900 rounded-lg">
+                      <Users className="w-5 h-5 text-slate-900" />
                     </div>
                   ) : (
-                    <div className="p-2 bg-[#ff7b7b]/20 rounded-lg">
-                      <FileText className="w-5 h-5 text-[#ff7b7b]" />
+                    <div className="p-2 bg-[#d4f78a] border-2 border-slate-900 rounded-lg">
+                      <FileText className="w-5 h-5 text-slate-900" />
                     </div>
                   )}
                   <div>
-                    <span className="font-semibold text-xs text-[#a7aab2] uppercase tracking-wide">
+                    <span className="font-semibold text-xs text-slate-600 uppercase tracking-wide">
                       {(hoverNode || selectedNode)?.node_type === 'paper' ? 'Paper' : 'Autor'}
                     </span>
-                    <p className="text-base text-[#fff] font-medium leading-relaxed mt-0.5">
+                    <p className="text-base text-slate-900 font-medium leading-relaxed mt-0.5 font-[family-name:var(--font-space-grotesk)]">
                       {(hoverNode || selectedNode)?.label}
                     </p>
                   </div>
@@ -509,7 +573,7 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
                       setHighlightNodes(new Set());
                       setHighlightLinks(new Set());
                     }}
-                    className="text-[#a7aab2] hover:text-[#e7e7e7] flex-shrink-0"
+                    className="text-slate-600 hover:text-slate-900 flex-shrink-0"
                     title="Cerrar"
                   >
                     <X className="w-5 h-5" />
@@ -519,15 +583,15 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
 
               <div className="flex flex-wrap gap-3 text-xs">
                 {(hoverNode || selectedNode)?.year && (
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#232734]/50 rounded-lg">
-                    <span className="text-[#a7aab2]">Year:</span>
-                    <span className="text-[#e7e7e7] font-medium">{(hoverNode || selectedNode)?.year}</span>
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-slate-900 rounded-lg">
+                    <span className="text-slate-600">Year:</span>
+                    <span className="text-slate-900 font-medium">{(hoverNode || selectedNode)?.year}</span>
                   </div>
                 )}
                 {(hoverNode || selectedNode)?.venue && (
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#232734]/50 rounded-lg">
-                    <span className="text-[#a7aab2]">Venue:</span>
-                    <span className="text-[#e7e7e7] font-medium">{(hoverNode || selectedNode)?.venue}</span>
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-slate-900 rounded-lg">
+                    <span className="text-slate-600">Venue:</span>
+                    <span className="text-slate-900 font-medium">{(hoverNode || selectedNode)?.venue}</span>
                   </div>
                 )}
                 {(hoverNode || selectedNode)?.url && (hoverNode || selectedNode)?.node_type === 'paper' && (
@@ -535,30 +599,30 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
                     href={(hoverNode || selectedNode)?.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--primary)]/30 hover:bg-[var(--primary)]/50 border border-[var(--primary)] rounded-lg transition-all"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#d4f78a] hover:bg-[#d4f78a]/80 border-2 border-slate-900 rounded-lg transition-all"
                   >
-                    <span className="text-[#a7aab2]">DOI:</span>
-                    <span className="text-[#e7e7e7] font-medium underline">Ver paper →</span>
+                    <span className="text-slate-900">DOI:</span>
+                    <span className="text-slate-900 font-medium underline">Ver paper →</span>
                   </a>
                 )}
                 {(hoverNode || selectedNode)?.community_label && (
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--primary)]/20 border border-[var(--primary)] rounded-lg">
-                    <span className="text-[#a7aab2]">Community:</span>
-                    <span className="text-[#e7e7e7] font-medium">{(hoverNode || selectedNode)?.community_label}</span>
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#d4f78a] border-2 border-slate-900 rounded-lg">
+                    <span className="text-slate-900">Community:</span>
+                    <span className="text-slate-900 font-medium">{(hoverNode || selectedNode)?.community_label}</span>
                   </div>
                 )}
                 {(hoverNode || selectedNode)?.topic && (
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#232734]/50 rounded-lg">
-                    <span className="text-[#a7aab2]">Tema:</span>
-                    <span className="text-[#e7e7e7] font-medium">{(hoverNode || selectedNode)?.topic}</span>
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-slate-900 rounded-lg">
+                    <span className="text-slate-600">Tema:</span>
+                    <span className="text-slate-900 font-medium">{(hoverNode || selectedNode)?.topic}</span>
                   </div>
                 )}
               </div>
 
               {selectedNode && highlightNodes.size > 1 && (
-                <div className="pt-2 border-t border-[#232734]">
-                  <p className="text-xs text-[#a7aab2]">
-                    <span className="font-semibold text-[var(--primary)]">{highlightNodes.size - 1}</span> {highlightNodes.size - 1 === 1 ? 'conexión encontrada' : 'conexiones encontradas'}
+                <div className="pt-2 border-t-2 border-slate-900">
+                  <p className="text-xs text-slate-600">
+                    <span className="font-semibold text-slate-900">{highlightNodes.size - 1}</span> {highlightNodes.size - 1 === 1 ? 'conexión encontrada' : 'conexiones encontradas'}
                   </p>
                 </div>
               )}

@@ -2,93 +2,88 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { useAudio } from '@/shared/hooks/useAudio';
+import { MessageSquare, Search, Network, Home } from 'lucide-react';
+import { OwlLogo } from './OwlIcons';
 
 const navigationItems = [
-  { label: 'CHAT', path: '/chat', audio: ['Help Phrases1 .mp3', 'voice commands.mp3'] },
-  { label: 'EXPLORE', path: '/explore', audio: ['On your le.mp3', 'In the cen.mp3'] },
-  { label: 'ANALYTICS', path: '/analytics', audio: ['On the rig.mp3'] },
-  { label: 'MAP', path: '/map', audio: ['At the bot.mp3'] },
-  { label: 'TABLE', path: '/table', audio: [] },
-  { label: 'GRAPHS', path: '/graphs', audio: ['My purpose.mp3'] },
+  { label: 'Chat', path: '/chat', icon: MessageSquare },
+  { label: 'Explore', path: '/explore', icon: Search },
+  { label: 'Network', path: '/network', icon: Network },
 ];
 
 export function TopNav() {
   const router = useRouter();
   const pathname = usePathname();
-  const { play, stop } = useAudio();
 
   const isActive = (path: string) => {
+    if (path === '/') return pathname === '/';
     if (path === '/chat') return pathname === '/chat' || pathname.startsWith('/chat/');
     return pathname.startsWith(path);
   };
 
-  const handleNavigation = (path: string, audio: string[]) => {
-    // Primero detener cualquier audio existente
-    stop();
-
-    // Iniciar la navegación inmediatamente
+  const handleNavigation = (path: string) => {
     router.push(path);
-    
-    // Reproducir el audio después
-    if (audio.length > 0) {
-      play(audio);
-    }
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-transparent">
-      <div className="max-w-[1800px] mx-auto px-8 py-6">
-        <div className="flex items-center justify-between">
-          {/* Logo a la izquierda */}
-          <button
-            onClick={() => router.push('/')}
-            className="flex items-center gap-3 hover:opacity-80 transition-opacity"
-          >
-            <div className="text-2xl font-bold text-white tracking-wide font-[family-name:var(--font-space-grotesk)]">
-              MEMORALAB
-            </div>
-          </button>
+    <nav className="fixed left-0 top-0 bottom-0 z-50 w-20 bg-white border-r-2 border-slate-900 flex flex-col items-center py-6">
+      {/* Logo arriba */}
+      <motion.button
+        onClick={() => router.push('/')}
+        className="mb-8 hover:scale-110 transition-transform"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <OwlLogo className="w-12 h-12" />
+      </motion.button>
 
-          {/* Items centrados */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 hidden lg:flex items-center gap-10">
-            {navigationItems.map((item, index) => {
-              const active = isActive(item.path);
+      {/* Navegación vertical */}
+      <div className="flex-1 flex flex-col gap-2 w-full px-2">
+        {navigationItems.map((item, index) => {
+          const active = isActive(item.path);
+          const Icon = item.icon;
 
-              return (
-                <motion.button
-                  key={item.path}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handleNavigation(item.path, item.audio)}
-                  className="relative group"
-                >
-                  <span className={`text-sm font-medium tracking-wider transition-colors ${
-                    active
-                      ? 'text-white'
-                      : 'text-white/70 hover:text-white'
-                  }`}>
-                    {item.label}
-                  </span>
-                  {/* Underline cuando está activo */}
-                  {active && (
-                    <motion.div
-                      layoutId="navbar-indicator"
-                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-white"
-                      initial={false}
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                </motion.button>
-              );
-            })}
-          </div>
+          return (
+            <motion.button
+              key={item.path}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
+              whileHover={{ x: 4 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleNavigation(item.path)}
+              className={`relative group w-full h-14 rounded-xl flex items-center justify-center transition-all ${
+                active
+                  ? 'bg-[#d4f78a] text-slate-900 border-2 border-slate-900'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+              title={item.label}
+            >
+              <Icon className="w-6 h-6" />
+              
+              {/* Tooltip al hacer hover */}
+              <div className="absolute left-full ml-2 px-3 py-2 bg-white text-slate-900 text-sm font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border-2 border-slate-900 font-[family-name:var(--font-space-grotesk)]">
+                {item.label}
+              </div>
 
-          {/* Espacio a la derecha para balance */}
-          <div className="w-[120px]"></div>
+              {/* Indicador activo */}
+              {active && (
+                <motion.div
+                  layoutId="sidebar-indicator"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-slate-900 rounded-r-full"
+                  initial={false}
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+            </motion.button>
+          );
+        })}
+      </div>
+
+      {/* Footer - puede ser perfil o settings */}
+      <div className="mt-auto">
+        <div className="w-12 h-12 rounded-full bg-[#d4f78a] border-2 border-slate-900 flex items-center justify-center text-slate-900 font-bold font-[family-name:var(--font-space-grotesk)]">
+          R
         </div>
       </div>
     </nav>

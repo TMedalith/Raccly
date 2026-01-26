@@ -1,0 +1,33 @@
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cabeza principal - gris claro -->
+  <circle cx="50" cy="52" r="36" fill="#64748b"/>
+  
+  <!-- Orejas redondeadas -->
+  <circle cx="28" cy="24" r="14" fill="#64748b"/>
+  <circle cx="72" cy="24" r="14" fill="#64748b"/>
+  <circle cx="28" cy="26" r="8" fill="#334155"/>
+  <circle cx="72" cy="26" r="8" fill="#334155"/>
+  
+  <!-- Antifaz característico del mapache - NEGRO -->
+  <ellipse cx="50" cy="48" rx="32" ry="16" fill="#0f172a"/>
+  
+  <!-- Ojos GRANDES dentro del antifaz - blancos perfectos -->
+  <circle cx="37" cy="48" r="11" fill="white"/>
+  <circle cx="63" cy="48" r="11" fill="white"/>
+  
+  <!-- Pupilas -->
+  <circle cx="37" cy="48" r="6" fill="#0f172a"/>
+  <circle cx="63" cy="48" r="6" fill="#0f172a"/>
+  
+  <!-- Brillo en ojos -->
+  <circle cx="39" cy="45" r="3" fill="white"/>
+  <circle cx="65" cy="45" r="3" fill="white"/>
+  
+  <!-- Nariz grande y tierna -->
+  <ellipse cx="50" cy="66" rx="8" ry="7" fill="#0f172a"/>
+  <circle cx="48" cy="64" r="2" fill="white" opacity="0.6"/>
+  
+  <!-- Boca sonriente -->
+  <path d="M50 70 Q45 74 42 72" stroke="#0f172a" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M50 70 Q55 74 58 72" stroke="#0f172a" stroke-width="2" fill="none" stroke-linecap="round"/>
+</svg>

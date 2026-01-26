@@ -222,7 +222,7 @@ export function RelatedPapersList({ papers, isLoading = false, selectedPaperId, 
                 Research Analytics
               </button>
               <button
-                onClick={() => router.push('/graphs')}
+                onClick={() => router.push('/network')}
                 className="w-full text-left px-3 py-2 rounded-lg bg-gray-50 hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] transition-all text-xs flex items-center gap-2"
               >
                 <LinkIcon className="w-3.5 h-3.5" />
