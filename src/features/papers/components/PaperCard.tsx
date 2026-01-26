@@ -17,7 +17,6 @@ export function PaperCard({ paper, onClick }: PaperCardProps) {
     return match ? match[1] : fullId;
   };
 
-  const paperId = extractPaperId(paper.paper_id);
 
   return (
     <motion.div

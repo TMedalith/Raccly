@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import { MessageList } from './MessageList';
-import { RelatedPapersList } from './RelatedPapersList';
 import { useChat } from '../hooks/useChat';
 
 interface ChatInterfaceProps {
@@ -16,7 +15,7 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
   const [input, setInput] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { messages, isLoading, currentPapers, citedPapers, sendMessage, setActiveMessage, activeMessageId, sessionId, selectedPaperId, selectPaper } = useChat({ conversationId });
+  const { messages, isLoading, sendMessage, setActiveMessage, activeMessageId, sessionId, selectPaper } = useChat({ conversationId });
   const hasProcessedInitialQuery = useRef(false);
 
   // Auto-scroll to bottom when new messages arrive

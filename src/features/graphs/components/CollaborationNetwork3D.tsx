@@ -50,7 +50,6 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
   const [searchResults, setSearchResults] = useState<GraphNode[]>([]);
   const [showHelp, setShowHelp] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-  const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [filters, setFilters] = useState({
     showAuthored: true,
     showCoauthor: true,
@@ -61,12 +60,10 @@ export function CollaborationNetwork3D({ graphData }: CollaborationNetwork3DProp
   // Check screen size
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsLargeScreen(window.innerWidth >= 1024);
       if (window.innerWidth >= 1024) {
         setShowFilters(true);
       }
     };
-    
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);

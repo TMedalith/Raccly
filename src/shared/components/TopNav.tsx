@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { MessageSquare, Search, Network, Home } from 'lucide-react';
+import { MessageSquare, Search, Network } from 'lucide-react';
 import { OwlLogo } from './OwlIcons';
 
 const navigationItems = [
