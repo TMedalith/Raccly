@@ -6,11 +6,14 @@ from llama_index.core import Settings
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.llms.openai import OpenAI
 from inngest.fast_api import serve
-from ingest_pdfs import inngest_client, process_pdf_function
+from mangum import Mangum
+#from app.ingest_pdfs import inngest_client, process_pdf_function
 
 
 load_dotenv()
 app = FastAPI()
+handler = Mangum(app)
+
 
 Settings.embed_model = OpenAIEmbedding(
     model="text-embedding-3-large",
@@ -64,4 +67,4 @@ async def query(request: QueryRequest):
 async def health():
     return {"status": "healthy"}
 
-serve(app, inngest_client, [process_pdf_function])
+#serve(app, inngest_client, [process_pdf_function])
