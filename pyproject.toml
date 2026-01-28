@@ -13,6 +13,7 @@ dependencies = [
     "llama-index-readers-file>=0.5.4",
     "llama-index-vector-stores-qdrant>=0.9.1",
     "llama-parse>=0.6.91",
+    "mangum>=0.20.0",
     "openai>=1.107.0",
     "python-dotenv>=1.1.1",
     "qdrant-client>=1.15.1",

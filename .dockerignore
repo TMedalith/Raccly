@@ -1,0 +1,38 @@
+# Git
+.git
+.gitignore
+
+# Entornos virtuales (MUY IMPORTANTE)
+# No queremos subir tu .venv local porque Docker creará el suyo propio
+.venv
+venv
+env
+virtualenv
+
+# Caché de Python
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.pytest_cache
+.cache
+
+# Variables de entorno (SEGURIDAD)
+# Nunca subas el .env a la imagen; en Fargate las pondrás en AWS Secrets Manager
+.venv/
+qdrant_storage/
+__pycache__/
+app/__pycache__/
+*.env
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Documentación y archivos locales que no usa la API
+README.md
+tests/
+docs/
+data/  # Si tienes PDFs locales de prueba, no los subas a la imagen
