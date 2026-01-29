@@ -1,4 +1,5 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+// useChat.ts
+import { useState, useCallback, useEffect } from 'react';
 import { chatService } from '../services/chat.service';
 import { generateSessionId } from '@/shared/utils/session';
 import { loadMessages, saveMessages } from '@/shared/utils/storage';
@@ -13,6 +14,7 @@ export function useChat(options?: UseChatOptions) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string>('');
+  const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null);
 
   useEffect(() => {
     const id = options?.conversationId || generateSessionId();
@@ -26,9 +28,11 @@ export function useChat(options?: UseChatOptions) {
 
   useEffect(() => {
     if (sessionId && messages.length > 0) {
-      saveMessages(sessionId, messages);
+      if (!streamingMessageId) {
+        saveMessages(sessionId, messages);
+      }
     }
-  }, [messages, sessionId]);
+  }, [messages, sessionId, streamingMessageId]);
 
   const sendMessage = useCallback(async (content: string) => {
     if (!content.trim() || isLoading || !sessionId) return;
@@ -46,37 +50,80 @@ export function useChat(options?: UseChatOptions) {
 
     setMessages((prev) => [...prev, userMessage]);
 
+    const assistantMessageId = `assistant-${Date.now()}`;
+    setStreamingMessageId(assistantMessageId);
+
+    const assistantMessage: Message = {
+      id: assistantMessageId,
+      role: 'assistant',
+      content: '',
+      timestamp: new Date(),
+      sessionId,
+    };
+
+    setMessages((prev) => [...prev, assistantMessage]);
+
     try {
-      const response = await chatService.sendMessage(content.trim(), sessionId);
+      const handleToken = (token: string) => {
+        setMessages((prev) => 
+          prev.map((msg) =>
+            msg.id === assistantMessageId
+              ? { ...msg, content: msg.content + token }
+              : msg
+          )
+        );
+      };
+
+      const handleSources = (sources: string[]) => {
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantMessageId
+              ? { ...msg, sources: sources }
+              : msg
+          )
+        );
+      };
+
+      const response = await chatService.sendMessage(
+        content.trim(),
+        sessionId,
+        handleToken,
+        handleSources
+      );
 
       if (response.sessionId && response.sessionId !== sessionId) {
         setSessionId(response.sessionId);
       }
 
-      const assistantMessage: Message = {
-        id: `assistant-${Date.now()}`,
-        role: 'assistant',
-        content: response.message,
-        timestamp: new Date(),
-        sources: response.sources,
-        sessionId: response.sessionId,
-      };
-
-      setMessages((prev) => [...prev, assistantMessage]);
+      // Final update to ensure sources are set
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === assistantMessageId
+            ? { 
+                ...msg, 
+                sources: response.sources,
+                sessionId: response.sessionId 
+              }
+            : msg
+        )
+      );
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error sending message';
       setError(errorMessage);
 
-      const errorMsg: Message = {
-        id: `error-${Date.now()}`,
-        role: 'assistant',
-        content: 'Lo siento, hubo un error procesando tu solicitud. Por favor intenta nuevamente.',
-        timestamp: new Date(),
-      };
-
-      setMessages((prev) => [...prev, errorMsg]);
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === assistantMessageId
+            ? {
+                ...msg,
+                content: 'Lo siento, hubo un error procesando tu solicitud. Por favor intenta nuevamente.',
+              }
+            : msg
+        )
+      );
     } finally {
       setIsLoading(false);
+      setStreamingMessageId(null);
     }
   }, [isLoading, sessionId]);
 

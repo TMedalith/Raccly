@@ -101,87 +101,80 @@ export function MessageList({ messages, isLoading, onSendMessage }: MessageListP
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <AnimatePresence>
-        {messages.map((message) => (
-          <motion.div
-            key={message.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className={`flex gap-4 ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
-          >
-            {/* Avatar */}
-            <div
-              className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center shadow-sm ${
-                message.role === 'user'
-                  ? 'bg-[#d4f78a] border-2 border-slate-900'
-                  : 'bg-white border-2 border-slate-900'
-              }`}
+        {messages.map((message) => {
+          return (
+            <motion.div
+              key={message.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className={`flex gap-4 ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
             >
-              {message.role === 'user' ? (
-                <User className="w-5 h-5 text-slate-900" />
-              ) : (
-                <OwlLogo className="w-6 h-6" />
-              )}
-            </div>
-
-            {/* Message content */}
-            <div
-              className={`flex-1 rounded-2xl px-5 py-4 shadow-sm transition-all break-words ${
-                message.role === 'user'
-                  ? 'bg-[#d4f78a] text-slate-900 font-medium border-2 border-slate-900'
-                  : 'bg-white border-2 border-slate-900'
-              }`}
-            >
-              <p className={`text-sm leading-relaxed whitespace-pre-wrap break-words ${message.role === 'assistant' ? 'text-slate-900' : ''}`}>
-                {message.content}
-              </p>
-
-              {/* Sources section */}
-              {message.role === 'assistant' && message.sources && message.sources.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-slate-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <FileText className="w-4 h-4 text-slate-600" />
-                    <span className="text-xs font-semibold text-slate-700">
-                      Fuentes ({message.sources.length})
-                    </span>
-                  </div>
-                  <div className="space-y-2">
-                    {message.sources.map((source, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center gap-2 text-xs bg-slate-50 rounded-lg px-3 py-2 border border-slate-200"
-                      >
-                        <span className="flex-shrink-0 w-5 h-5 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center">
-                          {idx + 1}
-                        </span>
-                        <span className="text-slate-700 truncate">{source}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </motion.div>
-        ))}
-
-        {isLoading && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex gap-4"
-          >
-            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white border-2 border-slate-900 flex items-center justify-center">
-              <OwlLogo className="w-6 h-6" />
-            </div>
-            <div className="flex-1 rounded-2xl px-5 py-4 bg-white border-2 border-slate-900">
-              <div className="flex items-center gap-2 text-slate-600">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-sm">Buscando información...</span>
+              {/* Avatar */}
+              <div
+                className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center shadow-sm ${
+                  message.role === 'user'
+                    ? 'bg-[#d4f78a] border-2 border-slate-900'
+                    : 'bg-white border-2 border-slate-900'
+                }`}
+              >
+                {message.role === 'user' ? (
+                  <User className="w-5 h-5 text-slate-900" />
+                ) : (
+                  <OwlLogo className="w-6 h-6" />
+                )}
               </div>
-            </div>
-          </motion.div>
-        )}
+
+              {/* Message content */}
+              <div
+                className={`flex-1 rounded-2xl px-5 py-4 shadow-sm transition-all break-words ${
+                  message.role === 'user'
+                    ? 'bg-[#d4f78a] text-slate-900 font-medium border-2 border-slate-900'
+                    : 'bg-white border-2 border-slate-900'
+                }`}
+              >
+                {message.content.length === 0 ? (
+                  <div className="flex items-center gap-2 text-slate-600">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span className="text-sm">Buscando información...</span>
+                  </div>
+                ) : (
+                  <>
+                    <p className={`text-sm leading-relaxed whitespace-pre-wrap break-words ${message.role === 'assistant' ? 'text-slate-900' : ''}`}>
+                      {message.content}
+                    </p>
+
+                    {/* Sources section */}
+                    {message.role === 'assistant' && message.sources && message.sources.length > 0 && (
+                      <div className="mt-4 pt-4 border-t border-slate-200">
+                        <div className="flex items-center gap-2 mb-2">
+                          <FileText className="w-4 h-4 text-slate-600" />
+                          <span className="text-xs font-semibold text-slate-700">
+                            Fuentes ({message.sources.length})
+                          </span>
+                        </div>
+                        <div className="space-y-2">
+                          {message.sources.map((source, idx) => (
+                            <div
+                              key={idx}
+                              className="flex items-center gap-2 text-xs bg-slate-50 rounded-lg px-3 py-2 border border-slate-200"
+                            >
+                              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center">
+                                {idx + 1}
+                              </span>
+                              <span className="text-slate-700 truncate">{source}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            </motion.div>
+          );
+        })}
       </AnimatePresence>
     </div>
   );
