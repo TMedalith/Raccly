@@ -8,12 +8,25 @@ from llama_index.llms.openai import OpenAI
 from inngest.fast_api import serve
 from mangum import Mangum
 #from app.ingest_pdfs import inngest_client, process_pdf_function
+from fastapi.middleware.cors import CORSMiddleware
 
 
 load_dotenv()
 app = FastAPI()
 handler = Mangum(app)
 
+origins = [
+    "http://localhost:3000/",
+    "https://raccly.vercel.app/"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 Settings.embed_model = OpenAIEmbedding(
     model="text-embedding-3-large",
