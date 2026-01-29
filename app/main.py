@@ -1,14 +1,14 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from app.vector_db import QdrantStorage
 from llama_index.core import Settings
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.llms.openai import OpenAI
-from inngest.fast_api import serve
+from fastapi.responses import StreamingResponse
 from mangum import Mangum
-#from app.ingest_pdfs import inngest_client, process_pdf_function
 from fastapi.middleware.cors import CORSMiddleware
+import json
 
 
 load_dotenv()
@@ -16,8 +16,8 @@ app = FastAPI()
 handler = Mangum(app)
 
 origins = [
-    "http://localhost:3000/",
-    "https://raccly.vercel.app/"
+    "http://localhost:3000",
+    "https://raccly.vercel.app"
 ]
 
 app.add_middleware(
@@ -42,6 +42,39 @@ Settings.llm = OpenAI(
 class QueryRequest(BaseModel):
     question: str
     top_k: int = 5
+
+
+@app.post("/query-stream")    
+async def sse_endpoint(request: QueryRequest):
+    try:
+        storage = QdrantStorage()
+        query_engine = storage.get_query_engine(streaming=True, top_k=request.top_k)
+        response = query_engine.query(request.question)
+        
+        def event_generator():
+            # Stream tokens
+            for token in response.response_gen:
+                yield f"data: {json.dumps({'type': 'token', 'content': token})}\n\n"
+            
+            # Send sources at the end
+            sources = []
+            if hasattr(response, 'source_nodes'):
+                sources = [node.metadata.get('source', 'Unknown') for node in response.source_nodes]
+            
+            yield f"data: {json.dumps({'type': 'sources', 'content': list(set(sources))})}\n\n"
+            yield "data: [DONE]\n\n"
+
+        return StreamingResponse(
+            event_generator(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "X-Accel-Buffering": "no"
+            }
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/query")
 async def query(request: QueryRequest):
