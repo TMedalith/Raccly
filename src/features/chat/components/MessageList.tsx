@@ -1,103 +1,44 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Loader2, TrendingUp, BarChart3, Microscope, Rocket, Dna, Zap } from 'lucide-react';
-import { useEffect, useRef } from 'react';
-import { resolvePaperReferences } from '@/shared/utils/paperReference';
-import { CitedPapersSection } from './CitedPapersSection';
+import { User, Loader2, TrendingUp, BarChart3, Microscope, Rocket, Dna, Zap, FileText } from 'lucide-react';
 import { OwlLogo } from '@/shared/components/OwlIcons';
 import type { Message } from '../types';
 
 interface MessageListProps {
   messages: Message[];
   isLoading: boolean;
-  onMessageVisible?: (messageId: string | null) => void;
-  activeMessageId?: string | null;
-  onPaperClick?: (paperId: string) => void;
   onSendMessage?: (message: string) => void;
 }
 
-export function MessageList({ messages, isLoading, onMessageVisible, activeMessageId, onPaperClick, onSendMessage }: MessageListProps) {
-  const observerRef = useRef<IntersectionObserver | null>(null);
-  const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-
+export function MessageList({ messages, isLoading, onSendMessage }: MessageListProps) {
   const suggestedQuestions = [
     {
       icon: TrendingUp,
-      text: 'What are the effects of microgravity on plant growth?',
+      text: '¿Qué efectos tiene la microgravedad en el crecimiento de plantas?',
     },
     {
       icon: BarChart3,
-      text: 'How does spaceflight affect bone density in mice?',
+      text: '¿Cómo afecta el vuelo espacial a la densidad ósea en ratones?',
     },
     {
       icon: Microscope,
-      text: 'Latest findings in COVID-19 molecular mechanisms',
+      text: 'Últimos hallazgos en mecanismos moleculares de COVID-19',
     },
     {
       icon: Rocket,
-      text: 'Arabidopsis gravitropism mechanisms',
+      text: 'Mecanismos de gravitropismo en Arabidopsis',
     },
     {
       icon: Dna,
-      text: 'Skeletal muscle atrophy in space missions',
+      text: 'Atrofia muscular esquelética en misiones espaciales',
     },
     {
       icon: Zap,
-      text: 'Radiation effects on biological systems',
+      text: 'Efectos de la radiación en sistemas biológicos',
     },
   ];
 
-    useEffect(() => {
-    if (!onMessageVisible) return;
-
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-                let mostVisibleMessage: { id: string; ratio: number } | null = null;
-
-        entries.forEach((entry) => {
-          const messageId = entry.target.getAttribute('data-message-id');
-          const isAssistant = entry.target.getAttribute('data-role') === 'assistant';
-          const hasPapers = entry.target.getAttribute('data-has-papers') === 'true';
-
-          if (messageId && isAssistant && hasPapers && entry.isIntersecting) {
-            if (!mostVisibleMessage || entry.intersectionRatio > mostVisibleMessage.ratio) {
-              mostVisibleMessage = { id: messageId, ratio: entry.intersectionRatio };
-            }
-          }
-        });
-
-        if (mostVisibleMessage !== null) {
-          onMessageVisible((mostVisibleMessage as { id: string; ratio: number }).id);
-        }
-      },
-      {
-        threshold: [0.3, 0.5, 0.7, 1.0],         rootMargin: '-20% 0px -20% 0px',       }
-    );
-
-        messageRefs.current.forEach((element) => {
-      if (observerRef.current) {
-        observerRef.current.observe(element);
-      }
-    });
-
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-    };
-  }, [messages, onMessageVisible]);
-
-    const setMessageRef = (id: string, element: HTMLDivElement | null) => {
-    if (element) {
-      messageRefs.current.set(id, element);
-      if (observerRef.current) {
-        observerRef.current.observe(element);
-      }
-    } else {
-      messageRefs.current.delete(id);
-    }
-  };
   if (messages.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center px-4">
@@ -110,10 +51,10 @@ export function MessageList({ messages, isLoading, onMessageVisible, activeMessa
             <OwlLogo className="w-10 h-10" />
           </div>
           <h2 className="text-3xl font-bold text-slate-900 mb-2 font-[family-name:var(--font-space-grotesk)]">
-            What do you want to research today?
+            ¿Qué quieres investigar hoy?
           </h2>
           <p className="text-slate-600 font-[family-name:var(--font-inter)]">
-            Ask about papers, trends, or comparisons
+            Pregunta sobre papers, tendencias o comparaciones
           </p>
         </motion.div>
 
@@ -124,7 +65,7 @@ export function MessageList({ messages, isLoading, onMessageVisible, activeMessa
           className="w-full space-y-3"
         >
           <h3 className="text-sm font-semibold text-slate-700 font-[family-name:var(--font-space-grotesk)]">
-            Suggested Research Questions:
+            Preguntas sugeridas:
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {suggestedQuestions.map((suggestion, index) => {
@@ -163,21 +104,13 @@ export function MessageList({ messages, isLoading, onMessageVisible, activeMessa
         {messages.map((message) => (
           <motion.div
             key={message.id}
-            ref={(el) => {
-              if (message.role === 'assistant') {
-                setMessageRef(message.id, el);
-              }
-            }}
-            data-message-id={message.id}
-            data-role={message.role}
-            data-has-papers={message.relatedPapers && message.relatedPapers.length > 0}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
             className={`flex gap-4 ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
           >
-            {}
+            {/* Avatar */}
             <div
               className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center shadow-sm ${
                 message.role === 'user'
@@ -192,13 +125,11 @@ export function MessageList({ messages, isLoading, onMessageVisible, activeMessa
               )}
             </div>
 
-            {}
+            {/* Message content */}
             <div
               className={`flex-1 rounded-2xl px-5 py-4 shadow-sm transition-all break-words ${
                 message.role === 'user'
                   ? 'bg-[#d4f78a] text-slate-900 font-medium border-2 border-slate-900'
-                  : message.id === activeMessageId && message.relatedPapers && message.relatedPapers.length > 0
-                  ? 'bg-white border-2 border-slate-900 shadow-md'
                   : 'bg-white border-2 border-slate-900'
               }`}
             >
@@ -206,12 +137,30 @@ export function MessageList({ messages, isLoading, onMessageVisible, activeMessa
                 {message.content}
               </p>
 
-                            {message.role === 'assistant' && message.references && message.references.length > 0 && (() => {
-                const resolvedPapers = resolvePaperReferences(message.references);
-                return resolvedPapers.length > 0 ? (
-                  <CitedPapersSection papers={resolvedPapers} onPaperClick={onPaperClick} />
-                ) : null;
-              })()}
+              {/* Sources section */}
+              {message.role === 'assistant' && message.sources && message.sources.length > 0 && (
+                <div className="mt-4 pt-4 border-t border-slate-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <FileText className="w-4 h-4 text-slate-600" />
+                    <span className="text-xs font-semibold text-slate-700">
+                      Fuentes ({message.sources.length})
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {message.sources.map((source, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-2 text-xs bg-slate-50 rounded-lg px-3 py-2 border border-slate-200"
+                      >
+                        <span className="flex-shrink-0 w-5 h-5 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center">
+                          {idx + 1}
+                        </span>
+                        <span className="text-slate-700 truncate">{source}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </motion.div>
         ))}
@@ -228,7 +177,7 @@ export function MessageList({ messages, isLoading, onMessageVisible, activeMessa
             <div className="flex-1 rounded-2xl px-5 py-4 bg-white border-2 border-slate-900">
               <div className="flex items-center gap-2 text-slate-600">
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-sm">Searching information...</span>
+                <span className="text-sm">Buscando información...</span>
               </div>
             </div>
           </motion.div>

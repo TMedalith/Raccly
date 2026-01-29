@@ -7,5 +7,5 @@ export default async function ChatConversationPage({
 }) {
   const { id } = await params;
 
-  return <ChatInterface conversationId={id} showRelatedPapers={true} />;
+  return <ChatInterface conversationId={id} />;
 }

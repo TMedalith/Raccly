@@ -7,15 +7,14 @@ import { useChat } from '../hooks/useChat';
 
 interface ChatInterfaceProps {
   conversationId?: string;
-  showRelatedPapers?: boolean;
   initialQuery?: string;
 }
 
-export function ChatInterface({ conversationId, showRelatedPapers = true, initialQuery }: ChatInterfaceProps) {
+export function ChatInterface({ conversationId, initialQuery }: ChatInterfaceProps) {
   const [input, setInput] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { messages, isLoading, sendMessage, setActiveMessage, activeMessageId, sessionId, selectPaper } = useChat({ conversationId });
+  const { messages, isLoading, sendMessage, sessionId } = useChat({ conversationId });
   const hasProcessedInitialQuery = useRef(false);
 
   // Auto-scroll to bottom when new messages arrive
@@ -62,9 +61,9 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
   };
 
   return (
-    <div className="flex h-screen bg-[radial-gradient(circle_at_center,_white_0%,_#fef9c3_100%)] pt-24 ml-20 overflow-hidden">
+    <div className="flex h-screen bg-[radial-gradient(circle_at_center,_white_0%,_#fef9c3_100%)] pt-24 overflow-hidden">
       {/* Main chat area */}
-      <div className="flex-1 flex flex-col min-w-0 w-full">
+      <div className="flex-1 flex flex-col min-w-0 w-full max-w-5xl mx-auto">
         {/* Scrollable messages area */}
         <div className="flex-1 overflow-y-auto custom-scrollbar">
           {messages.length === 0 ? (
@@ -74,9 +73,6 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
                 <MessageList
                   messages={messages}
                   isLoading={isLoading}
-                  onMessageVisible={setActiveMessage}
-                  activeMessageId={activeMessageId}
-                  onPaperClick={selectPaper}
                   onSendMessage={sendMessage}
                 />
               </div>
@@ -88,9 +84,6 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
                 <MessageList
                   messages={messages}
                   isLoading={isLoading}
-                  onMessageVisible={setActiveMessage}
-                  activeMessageId={activeMessageId}
-                  onPaperClick={selectPaper}
                   onSendMessage={sendMessage}
                 />
                 {/* Invisible element for auto-scroll */}
@@ -109,7 +102,7 @@ export function ChatInterface({ conversationId, showRelatedPapers = true, initia
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyPress}
-                placeholder="Ask about scientific papers..."
+                placeholder="Pregunta sobre papers científicos..."
                 rows={1}
                 className="flex-1 resize-none bg-transparent px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none font-[family-name:var(--font-inter)] overflow-hidden"
                 style={{ height: '48px', maxHeight: '200px', minHeight: '48px' }}
