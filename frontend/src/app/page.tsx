@@ -1,747 +1,520 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  MessageSquare,
-  Sparkles,
-  FileText,
-  Zap,
-  Target,
-  Rocket,
-  BookOpen,
-  DollarSign,
-  Star
-} from 'lucide-react';
-import { OwlLogo, OwlChat, OwlScientist, OwlAstronaut, OwlMini } from '@/shared/components/OwlIcons';
+import { ArrowRight, ArrowUpRight, GraduationCap, Globe, Microscope } from 'lucide-react';
 
-export default function HomePage() {
+const QUESTIONS = [
+  'What happens to bones during spaceflight?',
+  'Do plants grow normally on the ISS?',
+  'How does space affect sleep?',
+  'Can radiation damage DNA in astronauts?',
+];
+
+const FOR_WHO = [
+  {
+    icon: GraduationCap,
+    label: 'Students',
+    title: 'Sources, not guesses.',
+    body: 'Writing about space biology or medicine? Get cited answers with links to the original studies — no library required.',
+  },
+  {
+    icon: Globe,
+    label: 'Curious minds',
+    title: 'The science, not just the headline.',
+    body: "Space is covered in pop articles but the real research is buried. Raccly gives you direct access to what the studies actually say.",
+  },
+  {
+    icon: Microscope,
+    label: 'Educators & journalists',
+    title: 'Verify before you publish.',
+    body: "Every answer comes with the original source. Read the paper yourself — no need to take our word for it.",
+  },
+];
+
+const STEPS = [
+  {
+    n: '1',
+    title: 'Ask in plain language.',
+    body: "Type your question however you want. No search operators, no keywords — just write what you want to know.",
+    visual: (
+      <div style={{ padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div style={{ fontSize: '10px', color: 'var(--text-3)', marginBottom: '2px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '0.08em' }}>Your question</div>
+        <div style={{ padding: '13px 16px', background: 'var(--bg-2)', border: '1.5px solid rgba(200,245,62,0.35)', borderRadius: '12px', boxShadow: '0 0 0 4px rgba(200,245,62,0.05)', fontSize: '13px', color: 'var(--text)', lineHeight: 1.5 }}>
+          What happens to muscles during long space missions?
+          <span style={{ display: 'inline-block', width: '2px', height: '14px', background: 'var(--accent)', marginLeft: '3px', verticalAlign: 'middle', animation: 'blink 1s infinite' }} />
+        </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+          {['Bone loss', 'Sleep', 'Radiation', 'Plants on ISS'].map(t => (
+            <span key={t} style={{ padding: '3px 10px', borderRadius: '999px', background: 'var(--bg-3)', border: '1px solid var(--border)', fontSize: '10px', color: 'var(--text-3)' }}>{t}</span>
+          ))}
+        </div>
+      </div>
+    ),
+  },
+  {
+    n: '2',
+    title: 'We find the relevant research.',
+    body: 'Raccly scans a curated database of peer-reviewed NASA space biology papers and ranks the most relevant ones to your question.',
+    visual: (
+      <div style={{ padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div style={{ fontSize: '10px', color: 'var(--text-3)', marginBottom: '2px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '0.08em' }}>Ranking studies by relevance</div>
+        {[
+          { label: 'Muscle Atrophy and Disuse in Spaceflight', match: '94%', color: 'var(--accent)', bg: 'rgba(200,245,62,0.10)', border: 'rgba(200,245,62,0.22)' },
+          { label: 'Skeletal Muscle Changes After Bed Rest', match: '81%', color: 'var(--accent)', bg: 'rgba(200,245,62,0.07)', border: 'rgba(200,245,62,0.15)' },
+          { label: 'Exercise Countermeasures on the ISS', match: '76%', color: '#f5d442', bg: 'rgba(245,212,66,0.08)', border: 'rgba(245,212,66,0.2)' },
+          { label: 'Protein Synthesis Under Microgravity', match: '68%', color: '#f5d442', bg: 'rgba(245,212,66,0.06)', border: 'rgba(245,212,66,0.15)' },
+        ].map((item, i) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '7px 10px', background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: '8px' }}>
+            <div style={{ fontSize: '10px', color: 'var(--text-2)', flex: 1, lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.label}</div>
+            <span style={{ padding: '1px 7px', borderRadius: '999px', fontSize: '9px', fontWeight: 700, color: item.color, background: item.bg, border: `1px solid ${item.border}`, flexShrink: 0, fontFamily: 'var(--font-display)' }}>{item.match}</span>
+          </div>
+        ))}
+      </div>
+    ),
+  },
+  {
+    n: '3',
+    title: 'Get an answer with sources.',
+    body: 'A structured response with numbered citations. Each one links to the exact study — so you can read the original if you want.',
+    visual: (
+      <div style={{ padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div style={{ fontSize: '10px', color: 'var(--text-3)', marginBottom: '2px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '0.08em' }}>Answer</div>
+        <div style={{ fontSize: '12px', color: 'var(--text)', lineHeight: 1.75 }}>
+          Without gravity, muscles stop working as hard and begin to shrink — a process called <strong>disuse atrophy</strong> [<span style={{ color: 'var(--accent)' }}>1</span>]. Astronauts can lose up to <strong>20% of muscle mass</strong> on missions longer than 6 months [<span style={{ color: 'var(--accent)' }}>2</span>].
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+          {['[1] Muscle Atrophy and Disuse in Spaceflight', '[2] Skeletal Muscle Changes After Bed Rest'].map((t, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 10px', background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: '7px' }}>
+              <span style={{ width: '16px', height: '16px', borderRadius: '50%', flexShrink: 0, background: 'var(--accent-dim)', color: 'var(--accent)', fontSize: '8px', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)' }}>{i + 1}</span>
+              <span style={{ fontSize: '10px', color: 'var(--text-2)', lineHeight: 1.3 }}>{t.slice(4)}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+  },
+];
+
+const TRUST = [
+  'Peer-reviewed NASA research',
+  'Cited answers — every claim has a source',
+  'Links to the original papers',
+  'Free · No account needed',
+];
+
+export default function Home() {
   const router = useRouter();
+  const [q, setQ] = useState('');
+  const [focused, setFocused] = useState(false);
+
+  const go = (query: string) => {
+    const t = query.trim();
+    if (t) router.push(`/chat?q=${encodeURIComponent(t)}`);
+  };
 
   return (
-    <div className="min-h-screen w-full" style={{
-      background: `
-        radial-gradient(
-  ellipse at center,
-   #ffffff 0%,
-  #ffffff 35%,
-  #f9ffd6 55%,
-  #f3fbc4 75%,
-  #e8f87e 100%
-);
-      `
-    }}>
-      {/* Header - Estilo Chatbot TNC */}
-      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-8 py-5">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <div className="flex items-center gap-3">
-              <OwlLogo className="w-10 h-10" />
-              <span className="text-2xl font-bold text-slate-900 font-[family-name:var(--font-space-grotesk)] tracking-tight">
-                Raccly
+    <>
+      <style>{`
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+        @keyframes grain {
+          0%,100%{transform:translate(0,0)} 20%{transform:translate(-2%,-2%)}
+          40%{transform:translate(3%,-1%)} 60%{transform:translate(-1%,2%)} 80%{transform:translate(2%,1%)}
+        }
+        .page-root::before {
+          content:''; position:fixed; inset:0;
+          background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+          opacity:0.025; pointer-events:none; z-index:999; animation:grain 8s steps(1) infinite;
+        }
+        .q-chip {
+          padding:5px 14px; border-radius:999px; cursor:pointer;
+          background:var(--bg-3); border:1px solid var(--border);
+          font-size:12px; color:var(--text-2); transition:all .15s;
+          font-family:var(--font-body); white-space:nowrap;
+        }
+        .q-chip:hover { border-color:rgba(200,245,62,0.4); color:var(--accent); background:var(--bg-3); }
+        .nav-link { font-size:13px; color:var(--text-2); text-decoration:none; transition:color .15s; }
+        .nav-link:hover { color:var(--text); }
+        .for-card {
+          background:var(--bg-2); border:1px solid var(--border);
+          border-radius:18px; padding:32px 28px;
+          transition:border-color .2s, transform .2s;
+        }
+        .for-card:hover { border-color:rgba(200,245,62,0.25); transform:translateY(-3px); }
+        .step-card {
+          background:var(--bg-2); border:1px solid var(--border);
+          border-radius:20px; overflow:hidden;
+          display:grid; grid-template-columns:1fr 1fr;
+        }
+        .mockup { animation:float 7s ease-in-out infinite; }
+        @media (max-width:920px) {
+          .hero-grid { grid-template-columns:1fr !important; }
+          .hero-right { display:none !important; }
+          .for-grid { grid-template-columns:1fr !important; }
+          .step-card { grid-template-columns:1fr !important; }
+          .step-visual { display:none !important; }
+        }
+        @media (max-width:600px) {
+          .nav-links { display:none !important; }
+          .trust-grid { grid-template-columns:1fr 1fr !important; }
+        }
+      `}</style>
+
+      <div className="page-root" style={{ background: 'var(--bg)', minHeight: '100vh', fontFamily: 'var(--font-body)', color: 'var(--text)' }}>
+
+        <nav style={{
+          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '0 48px', height: '58px',
+          background: 'rgba(12,12,15,0.85)', backdropFilter: 'blur(20px)',
+          borderBottom: '1px solid var(--border)',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '36px' }}>
+            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '17px', letterSpacing: '-0.04em' }}>
+              <span style={{ color: 'var(--accent)' }}>R</span>accly
+            </span>
+            <div className="nav-links" style={{ display: 'flex', gap: '24px' }}>
+              <a href="#how-it-works" className="nav-link">How it works</a>
+              <a href="#for-who" className="nav-link">Who is it for</a>
+            </div>
+          </div>
+          <button
+            onClick={() => router.push('/chat')}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '6px',
+              padding: '7px 16px', borderRadius: '9px',
+              background: 'var(--accent)', color: '#07070a',
+              border: 'none', cursor: 'pointer',
+              fontSize: '13px', fontWeight: 700, fontFamily: 'var(--font-body)',
+              transition: 'opacity .15s',
+            }}
+            onMouseOver={e => (e.currentTarget.style.opacity = '0.85')}
+            onMouseOut={e => (e.currentTarget.style.opacity = '1')}
+          >
+            Try it free <ArrowUpRight size={14} />
+          </button>
+        </nav>
+
+        <section style={{
+          minHeight: '100vh',
+          display: 'grid', gridTemplateColumns: '1fr 1fr',
+          alignItems: 'center',
+          padding: '100px 48px 60px',
+          gap: '64px', maxWidth: '1280px', margin: '0 auto',
+          position: 'relative',
+        }} className="hero-grid">
+
+          <div aria-hidden style={{
+            position: 'absolute', top: '-120px', right: '-60px',
+            width: '600px', height: '600px', borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(200,245,62,0.06) 0%, transparent 65%)',
+            pointerEvents: 'none',
+          }} />
+
+          <div className="fade-up">
+            <h1 style={{ fontFamily: 'var(--font-display)', lineHeight: 1.05, marginBottom: '24px', marginTop: '8px' }}>
+              <span style={{ display: 'block', fontSize: 'clamp(36px, 4.2vw, 56px)', fontWeight: 300, color: 'var(--text-2)', letterSpacing: '-0.03em' }}>
+                Space biology is fascinating.
               </span>
+              <span style={{ display: 'block', fontSize: 'clamp(40px, 5vw, 64px)', fontWeight: 800, color: 'var(--accent)', letterSpacing: '-0.045em' }}>
+                Finding answers
+              </span>
+              <span style={{ display: 'block', fontSize: 'clamp(40px, 5vw, 64px)', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.045em' }}>
+                shouldn't be hard.
+              </span>
+            </h1>
+
+            <p style={{ fontSize: '16px', color: 'var(--text-2)', lineHeight: 1.75, marginBottom: '36px', maxWidth: '420px' }}>
+              Ask anything about how spaceflight affects the body, plants, or life in general. Get a cited answer drawn from peer-reviewed NASA research.
+            </p>
+
+            <form onSubmit={e => { e.preventDefault(); go(q); }} style={{ marginBottom: '16px' }}>
+              <div style={{
+                display: 'flex', alignItems: 'center',
+                background: 'var(--bg-2)',
+                border: `1.5px solid ${focused ? 'rgba(200,245,62,0.45)' : 'rgba(255,255,255,0.1)'}`,
+                borderRadius: '14px', padding: '7px 7px 7px 20px', gap: '8px',
+                boxShadow: focused ? '0 0 0 4px rgba(200,245,62,0.06)' : 'none',
+                transition: 'border-color .2s, box-shadow .2s',
+              }}>
+                <input
+                  value={q}
+                  onChange={e => setQ(e.target.value)}
+                  onFocus={() => setFocused(true)}
+                  onBlur={() => setFocused(false)}
+                  placeholder="What happens to your heart in space?"
+                  style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', fontSize: '14px', color: 'var(--text)', fontFamily: 'var(--font-body)' }}
+                />
+                <button type="submit" style={{
+                  display: 'flex', alignItems: 'center', gap: '6px',
+                  padding: '10px 20px', borderRadius: '10px', flexShrink: 0,
+                  background: q.trim() ? 'var(--accent)' : 'var(--bg-4)',
+                  color: q.trim() ? '#07070a' : 'var(--text-3)',
+                  border: 'none', cursor: 'pointer',
+                  fontSize: '13px', fontWeight: 700, fontFamily: 'var(--font-body)',
+                  transition: 'all .15s',
+                }}>
+                  Ask <ArrowRight size={13} />
+                </button>
+              </div>
+            </form>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center' }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-3)' }}>Try →</span>
+              {QUESTIONS.map(s => (
+                <button key={s} className="q-chip" onClick={() => go(s)}>{s}</button>
+              ))}
             </div>
-
-            {/* Navigation Pills */}
-            <nav className="hidden md:flex items-center gap-2 bg-white rounded-full px-2 py-2 shadow-lg border border-slate-300">
-              <button 
-                onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-7 py-3 text-slate-700 hover:bg-slate-100 hover:text-slate-900 text-[15px] font-semibold rounded-full transition-all font-[family-name:var(--font-inter)] hover:scale-105"
-              >
-                Features
-              </button>
-              <button 
-                onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-7 py-3 text-slate-700 hover:bg-slate-100 hover:text-slate-900 text-[15px] font-semibold rounded-full transition-all font-[family-name:var(--font-inter)] hover:scale-105"
-              >
-                How It Works
-              </button>
-              <button 
-                onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-7 py-3 text-slate-700 hover:bg-slate-100 hover:text-slate-900 text-[15px] font-semibold rounded-full transition-all font-[family-name:var(--font-inter)] hover:scale-105"
-              >
-                About
-              </button>
-            </nav>
-
-            {/* Get Started Button */}
-            <button 
-              onClick={() => router.push('/chat')}
-              className="px-8 py-3 bg-[#d4f78a] hover:bg-[#c9f76f] text-slate-900 text-sm font-semibold rounded-full hover:shadow-xl hover:scale-105 transition-all font-[family-name:var(--font-inter)] border-2 border-slate-900"
-            >
-              Get Started
-            </button>
           </div>
-        </div>
-      </header>
 
-      {/* Hero Section - Estilo Chatbot TNC */}
-      <section className="relative pt-32 pb-20 px-8 overflow-visible">
-        <div className="max-w-6xl mx-auto relative">
-          {/* Texto Hero */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 mb-6 leading-tight font-[family-name:var(--font-space-grotesk)] max-w-4xl mx-auto tracking-tight">
-              Research NASA Papers
-              <br />
-              </h1>
+          <div className="hero-right fade-up delay-2" style={{ position: 'relative' }}>
+            <div aria-hidden style={{
+              position: 'absolute', inset: '-48px',
+              background: 'radial-gradient(ellipse at 55% 50%, rgba(200,245,62,0.07) 0%, transparent 65%)',
+              pointerEvents: 'none',
+            }} />
 
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="text-lg text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed font-[family-name:var(--font-inter)]"
-            >
-              Ask questions. Get instant answers with citations. Built for scientists planning Moon and Mars missions.
-            </motion.p>
-
-            {/* CTA */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-            >
-              <button
-                onClick={() => router.push('/explore')}
-                className="px-10 py-4 bg-[#d4f78a] hover:bg-[#c9f76f] text-slate-900 font-semibold rounded-full hover:shadow-2xl hover:scale-105 transition-all font-[family-name:var(--font-inter)] text-base border-2 border-slate-900"
-              >
-                See Demo
-              </button>
-            </motion.div>
-          </motion.div>
-
-          {/* Líneas punteadas con búhos decorativos - Estilo Chatbot TNC */}
-          <div className="relative">
-            {/* Mockup centrado de la app */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
-              className="relative z-10 mx-auto max-w-5xl"
-            >
-              <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border-8 border-slate-200">
-                {/* Mockup de la interfaz de chat */}
-                <div className="aspect-[16/10] bg-gradient-to-br from-slate-50 to-slate-100 p-8">
-                  {/* Aquí iría el screenshot real de tu app */}
-                  <div className="h-full bg-white rounded-xl shadow-lg overflow-hidden">
-                    {/* Header del chat */}
-                    <div className="bg-slate-900 p-4 flex items-center gap-3">
-                      <OwlLogo className="w-8 h-8" />
-                      <div className="flex-1">
-                        <div className="text-white font-semibold font-[family-name:var(--font-space-grotesk)]">Raccly AI Assistant</div>
-                        <div className="text-white/80 text-xs font-[family-name:var(--font-inter)]">608 NASA Papers • Ready</div>
-                      </div>
-                    </div>
-                    {/* Área de mensajes */}
-                    <div className="p-6 space-y-4">
-                      {/* Mensaje del usuario */}
-                      <div className="flex justify-end">
-                        <div className="bg-slate-100 rounded-2xl rounded-br-sm px-4 py-3 max-w-md border-2 border-slate-200">
-                          <p className="text-sm text-slate-800 font-[family-name:var(--font-inter)]">What are the effects of microgravity on plant growth?</p>
-                        </div>
-                      </div>
-                      {/* Respuesta del AI */}
-                      <div className="flex gap-3">
-                        <div className="flex-shrink-0">
-                          <OwlLogo className="w-8 h-8" />
-                        </div>
-                        <div className="bg-[#d4f78a]/30 rounded-2xl rounded-tl-sm px-4 py-3 max-w-xl border-2 border-[#d4f78a]">
-                          <p className="text-sm text-slate-800 mb-2 font-[family-name:var(--font-inter)]">Based on 608 NASA papers, microgravity significantly affects plant growth patterns...</p>
-                          <div className="flex gap-2 mt-2">
-                            <span className="text-xs bg-white px-2 py-1 rounded-full text-slate-600 border-2 border-slate-900 font-[family-name:var(--font-inter)]">📄 Kiss et al. 2014</span>
-                            <span className="text-xs bg-white px-2 py-1 rounded-full text-slate-600 border-2 border-slate-900 font-[family-name:var(--font-inter)]">📄 Zupanska 2017</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* How it Works Section */}
-      <section id="how-it-works" className="relative py-20 px-8">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 font-[family-name:var(--font-space-grotesk)] tracking-tight">
-              How It Works
-            </h2>
-            <p className="text-lg text-slate-600 font-[family-name:var(--font-inter)]">
-              Three simple steps to smarter research
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                step: '01',
-                title: 'Ask in Plain English',
-                description: 'No keywords needed. Just type your research question.',
-                icon: MessageSquare,
-              },
-              {
-                step: '02',
-                title: 'AI Searches 608 Papers',
-                description: 'Instant analysis across all NASA bioscience publications.',
-                icon: Sparkles,
-              },
-              {
-                step: '03',
-                title: 'Get Cited Evidence',
-                description: 'Answers backed by precise citations to source papers.',
-                icon: FileText,
-              },
-            ].map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.15, duration: 0.5 }}
-                  className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all border-2 border-slate-200"
-                >
-                  <div className="text-7xl font-bold text-[#e8f87e] mb-4 font-[family-name:var(--font-space-grotesk)] select-none">
-                    {item.step}
-                  </div>
-                  <div className="absolute top-8 left-8">
-                    <div className="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center">
-                      <Icon className="w-7 h-7 text-[#d4f78a]" />
-                    </div>
-                  </div>
-                  <div className="mt-8">
-                    <h3 className="text-xl font-bold text-slate-900 mb-3 font-[family-name:var(--font-space-grotesk)]">
-                      {item.title}
-                    </h3>
-                    <p className="text-slate-600 leading-relaxed font-[family-name:var(--font-inter)]">
-                      {item.description}
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Product Demo Section */}
-      <section className="relative py-20 px-8 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 font-[family-name:var(--font-space-grotesk)] tracking-tight">
-              See It In Action
-            </h2>
-            <p className="text-lg text-slate-600 font-[family-name:var(--font-inter)]">
-              Real question. Real AI answer. Real citations.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="bg-white rounded-3xl shadow-2xl overflow-hidden border-2 border-slate-200"
-          >
-            {/* Chat Interface Demo */}
-            <div className="p-8">
-              {/* User Question */}
-              <div className="flex gap-4 mb-6">
-                <div className="w-10 h-10 bg-slate-900 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold font-[family-name:var(--font-space-grotesk)]">
-                  R
-                </div>
-                <div className="flex-1">
-                  <div className="bg-slate-50 rounded-2xl rounded-tl-sm p-4 border-2 border-slate-200">
-                    <p className="text-slate-900 font-[family-name:var(--font-inter)]">
-                      What are the effects of microgravity on plant growth in space?
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* AI Response */}
-              <div className="flex gap-4">
-                <div className="w-10 h-10 bg-slate-900 rounded-full flex-shrink-0 flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-[#d4f78a]" />
-                </div>
-                <div className="flex-1">
-                  <div className="bg-[#d4f78a]/20 rounded-2xl rounded-tl-sm p-4 border-2 border-[#d4f78a]">
-                    <p className="text-slate-900 font-[family-name:var(--font-inter)] mb-4">
-                      Research shows that microgravity significantly affects plant growth patterns. Studies from the ISS demonstrate altered root orientation, modified cell wall structure, and changes in gene expression related to gravity sensing.
-                    </p>
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      <span className="px-3 py-1 bg-white text-slate-700 text-xs font-medium rounded-full border-2 border-slate-900">
-                        📄 Paper #204 - Kiss et al. (2014)
-                      </span>
-                      <span className="px-3 py-1 bg-white text-slate-700 text-xs font-medium rounded-full border-2 border-slate-900">
-                        📄 Paper #387 - Zupanska et al. (2017)
-                      </span>
-                      <span className="px-3 py-1 bg-white text-slate-700 text-xs font-medium rounded-full border-2 border-slate-900">
-                        +4 more citations
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-700 font-medium">
-                      <Target className="w-3.5 h-3.5" />
-                      <span>Knowledge gap identified: Long-term multigenerational studies needed</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="relative py-20 px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 font-[family-name:var(--font-space-grotesk)] tracking-tight">
-              Three Tools. One Platform.
-            </h2>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto font-[family-name:var(--font-inter)]">
-              Everything you need for space bioscience research.
-            </p>
-          </motion.div>
-
-          {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                OwlComponent: OwlChat,
-                title: 'AI Chat',
-                description: 'Ask questions in plain English. Get instant, cited answers from 608 NASA papers.',
-                link: '/chat'
-              },
-              {
-                OwlComponent: OwlScientist,
-                title: 'Explore Papers',
-                description: 'Browse and filter 608 NASA bioscience publications. Find exactly what you need.',
-                link: '/explore'
-              },
-              {
-                OwlComponent: OwlAstronaut,
-                title: 'Research Network',
-                description: 'Visualize connections, identify gaps, and discover consensus across decades of research.',
-                link: '/network'
-              },
-            ].map((feature, index) => {
-              const OwlIcon = feature.OwlComponent;
-              return (
-                <motion.button
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
-                  onClick={() => router.push(feature.link)}
-                  className="bg-white rounded-3xl p-8 hover:shadow-2xl transition-all border-2 border-slate-200 group text-left"
-                >
-                  <div className="flex justify-center mb-6">
-                    <OwlIcon className="w-20 h-20 group-hover:scale-110 transition-transform" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-3 font-[family-name:var(--font-space-grotesk)] text-center">
-                    {feature.title}
-                  </h3>
-                  <p className="text-slate-600 leading-relaxed font-[family-name:var(--font-inter)] text-center">{feature.description}</p>
-                </motion.button>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="relative py-20 px-8 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 font-[family-name:var(--font-space-grotesk)] tracking-tight">
-              What Researchers Say
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                name: 'Dr. Sarah Chen',
-                role: 'Plant Biologist, NASA Ames',
-                quote: 'Cut my lit review from weeks to hours. Citations are spot-on.',
-                avatar: 'SC',
-              },
-              {
-                name: 'Dr. Michael Rodriguez',
-                role: 'Mission Planner, ESA',
-                quote: 'Gap analysis showed us exactly where to focus research funding.',
-                avatar: 'MR',
-              },
-              {
-                name: 'Prof. Lisa Thompson',
-                role: 'Research Director, MIT',
-                quote: 'First tool that actually gets bioscience nuance. Saves me 10+ hours per week.',
-                avatar: 'LT',
-              },
-            ].map((testimonial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.15, duration: 0.5 }}
-                className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-lg hover:shadow-xl transition-all"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-slate-900 rounded-full flex items-center justify-center text-[#d4f78a] font-bold font-[family-name:var(--font-space-grotesk)]">
-                    {testimonial.avatar}
-                  </div>
-                  <div>
-                    <div className="font-semibold text-slate-900 font-[family-name:var(--font-space-grotesk)]">
-                      {testimonial.name}
-                    </div>
-                    <div className="text-xs text-slate-600 font-[family-name:var(--font-inter)]">
-                      {testimonial.role}
-                    </div>
-                  </div>
-                </div>
-                <p className="text-slate-700 leading-relaxed font-[family-name:var(--font-inter)] italic">
-                  &quot;{testimonial.quote}&quot;
-                </p>
-                <div className="flex gap-1 mt-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-[#d4f78a] text-[#d4f78a]" />
+            <div className="mockup" style={{
+              position: 'relative', zIndex: 1,
+              background: 'var(--bg-2)', border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: '18px', overflow: 'hidden',
+              boxShadow: '0 48px 120px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)',
+            }}>
+              <div style={{ padding: '11px 14px', background: 'var(--bg-3)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ display: 'flex', gap: '5px' }}>
+                  {['#ff5f57', '#febc2e', '#28c840'].map(c => (
+                    <div key={c} style={{ width: '9px', height: '9px', borderRadius: '50%', background: c, opacity: 0.8 }} />
                   ))}
                 </div>
-              </motion.div>
-            ))}
+                <div style={{ flex: 1, background: 'var(--bg-4)', borderRadius: '5px', padding: '3px 10px', fontSize: '10px', color: 'var(--text-3)', maxWidth: '150px' }}>
+                  raccly.app
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', height: '340px' }}>
+                <div style={{ width: '110px', flexShrink: 0, borderRight: '1px solid var(--border)', background: 'var(--bg-2)', padding: '10px 8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, fontFamily: 'var(--font-display)', letterSpacing: '-0.03em', padding: '2px 4px', marginBottom: '4px' }}>
+                    <span style={{ color: 'var(--accent)' }}>R</span>accly
+                  </span>
+                  <div style={{ padding: '5px 8px', background: 'var(--accent-dim)', border: '1px solid rgba(200,245,62,0.2)', borderRadius: '6px', fontSize: '9px', color: 'var(--accent)', fontWeight: 600, marginBottom: '4px' }}>
+                    New chat
+                  </div>
+                  {[
+                    { t: 'Bone density...', active: true },
+                    { t: 'ISS plants...', active: false },
+                    { t: 'Radiation...', active: false },
+                  ].map((item, i) => (
+                    <div key={i} style={{
+                      padding: '5px 8px', borderRadius: '6px', fontSize: '9px',
+                      color: item.active ? 'var(--text)' : 'var(--text-3)',
+                      background: item.active ? 'rgba(200,245,62,0.07)' : 'transparent',
+                      border: `1px solid ${item.active ? 'rgba(200,245,62,0.15)' : 'transparent'}`,
+                    }}>{item.t}</div>
+                  ))}
+                </div>
+
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+                  <div style={{ flex: 1, padding: '14px', display: 'flex', flexDirection: 'column', gap: '12px', overflow: 'hidden' }}>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                      <div style={{ maxWidth: '80%', padding: '8px 11px', background: 'var(--bg-3)', border: '1px solid var(--border)', borderRadius: '10px 10px 3px 10px', fontSize: '10px', color: 'var(--text)', lineHeight: 1.5 }}>
+                        What happens to bones during long missions?
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '7px', alignItems: 'flex-start' }}>
+                      <div style={{ flexShrink: 0, width: '18px', height: '18px', borderRadius: '5px', background: 'var(--accent-dim)', border: '1px solid rgba(200,245,62,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '7px', fontWeight: 800, color: 'var(--accent)', fontFamily: 'var(--font-display)' }}>R</div>
+                      <div style={{ flex: 1 }}>
+                        <p style={{ fontSize: '10px', lineHeight: 1.7, color: 'var(--text)', margin: '0 0 8px' }}>
+                          Astronauts can lose <strong>1–2% of bone density per month</strong> in space [<span style={{ color: 'var(--accent)' }}>1</span>]. This happens because bones don't bear weight in microgravity and stop remodeling at the usual rate [<span style={{ color: 'var(--accent)' }}>2</span>].
+                        </p>
+                        <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+                          <span style={{ fontSize: '9px', padding: '2px 8px', background: 'var(--bg-3)', border: '1px solid var(--border)', borderRadius: '999px', color: 'var(--text-3)' }}>● 2 references</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ padding: '8px', borderTop: '1px solid var(--border)' }}>
+                    <div style={{ padding: '7px 10px', background: 'var(--bg-3)', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '10px', color: 'var(--text-3)' }}>
+                      Ask a follow-up…
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ width: '140px', flexShrink: 0, borderLeft: '1px solid var(--border)', background: 'var(--bg-2)', display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-2)', fontFamily: 'var(--font-display)' }}>Sources</span>
+                    <span style={{ padding: '1px 5px', background: 'var(--accent-dim)', borderRadius: '999px', fontSize: '8px', color: 'var(--accent)', fontWeight: 700 }}>2</span>
+                  </div>
+                  <div style={{ padding: '6px', display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                    {[
+                      { t: 'Bone Loss During Spaceflight', y: '2020', score: '91%' },
+                      { t: 'Skeletal Remodeling in Microgravity', y: '2018', score: '78%' },
+                    ].map((src, i) => (
+                      <div key={i} style={{ padding: '7px 8px', background: 'var(--bg-3)', border: '1px solid var(--border)', borderRadius: '7px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '4px', marginBottom: '3px' }}>
+                          <div style={{ fontSize: '8px', fontWeight: 600, color: 'var(--text)', lineHeight: 1.3, flex: 1 }}>{src.t.slice(0, 24)}…</div>
+                          <span style={{ fontSize: '7px', padding: '1px 4px', background: 'rgba(200,245,62,0.10)', border: '1px solid rgba(200,245,62,0.2)', borderRadius: '999px', color: 'var(--accent)', fontWeight: 700, flexShrink: 0 }}>{src.score}</span>
+                        </div>
+                        <div style={{ fontSize: '7px', color: 'var(--text-3)', marginBottom: '4px' }}>{src.y} · NASA</div>
+                        <span style={{ fontSize: '7px', padding: '1px 6px', background: 'var(--accent)', borderRadius: '999px', color: '#07070a', fontWeight: 700 }}>Read</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{
+              position: 'absolute', bottom: '-16px', left: '20px', zIndex: 10,
+              display: 'flex', alignItems: 'center', gap: '8px',
+              padding: '8px 14px', background: 'var(--bg-2)', border: '1px solid var(--border-2)',
+              borderRadius: '10px', boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+            }}>
+              <span className="blink" style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)', display: 'inline-block', flexShrink: 0 }} />
+              <span style={{ fontSize: '11px', fontWeight: 600, fontFamily: 'var(--font-display)', color: 'var(--text)' }}>NASA Space Apps 2024</span>
+            </div>
+          </div>
+        </section>
+
+        <div style={{ borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', background: 'var(--bg-2)' }}>
+          <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '18px 48px' }}>
+            <div className="trust-grid" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 32px', alignItems: 'center' }}>
+              {TRUST.map((text, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                  <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: 'var(--accent)', display: 'inline-block', flexShrink: 0 }} />
+                  <span style={{ fontSize: '12px', color: 'var(--text-3)', fontWeight: 400 }}>{text}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* Use Cases Section */}
-      <section id="use-cases" className="relative py-20 px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 font-[family-name:var(--font-space-grotesk)] tracking-tight">
-              Built for Every Role
+        <section id="how-it-works" style={{ padding: '96px 48px 80px', maxWidth: '1280px', margin: '0 auto' }}>
+          <div style={{ marginBottom: '56px' }}>
+            <p style={{ fontSize: '11px', color: 'var(--text-3)', textTransform: 'uppercase' as const, letterSpacing: '0.12em', fontWeight: 600, marginBottom: '12px' }}>How it works</p>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 'clamp(28px, 3.2vw, 44px)', letterSpacing: '-0.035em', maxWidth: '460px', lineHeight: 1.1 }}>
+              From question to cited answer in seconds.
             </h2>
-          </motion.div>
+          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {[
-              {
-                role: 'Scientists',
-                icon: BookOpen,
-                needs: 'Generate hypotheses faster',
-                benefits: [
-                  'Mine objective findings from Results',
-                  'Find consensus and disagreements',
-                  'Discover unexpected connections',
-                ],
-              },
-              {
-                role: 'Managers',
-                icon: DollarSign,
-                needs: 'Fund the right research',
-                benefits: [
-                  'Spot knowledge gaps needing funding',
-                  'Track research progress',
-                  'Prioritize high-impact areas',
-                ],
-              },
-              {
-                role: 'Mission Planners',
-                icon: Rocket,
-                needs: 'Plan safer missions',
-                benefits: [
-                  'Access validated safety data',
-                  'Understand biological space responses',
-                  'Make evidence-based decisions',
-                ],
-              },
-            ].map((useCase, index) => {
-              const Icon = useCase.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.15, duration: 0.5 }}
-                  className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all border-2 border-slate-200"
-                >
-                  <div className="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center mb-5">
-                    <Icon className="w-7 h-7 text-[#d4f78a]" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {STEPS.map((step, i) => (
+              <div key={i} className="step-card">
+                <div style={{
+                  order: i % 2 === 0 ? 0 : 1,
+                  padding: '52px 48px', position: 'relative', overflow: 'hidden',
+                }}>
+                  <div aria-hidden style={{
+                    position: 'absolute', fontFamily: 'var(--font-display)', fontSize: '120px',
+                    fontWeight: 800, color: 'rgba(200,245,62,0.04)',
+                    top: '-16px', left: '-6px', lineHeight: 1, letterSpacing: '-0.06em',
+                    userSelect: 'none', pointerEvents: 'none',
+                  }}>{step.n}</div>
+                  <div style={{ position: 'relative', zIndex: 1 }}>
+                    <span style={{
+                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                      width: '32px', height: '32px', borderRadius: '999px',
+                      background: 'var(--accent)', color: '#07070a',
+                      fontSize: '14px', fontWeight: 800, fontFamily: 'var(--font-display)',
+                      marginBottom: '20px',
+                    }}>{step.n}</span>
+                    <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 'clamp(20px, 2vw, 26px)', letterSpacing: '-0.03em', marginBottom: '14px', lineHeight: 1.2 }}>{step.title}</h3>
+                    <p style={{ fontSize: '15px', color: 'var(--text-2)', lineHeight: 1.75, maxWidth: '360px' }}>{step.body}</p>
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-2 font-[family-name:var(--font-space-grotesk)]">{useCase.role}</h3>
-                  <p className="text-sm text-slate-500 mb-4 font-[family-name:var(--font-inter)] italic">{useCase.needs}</p>
-                  <ul className="space-y-2">
-                    {useCase.benefits.map((benefit, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-slate-700 font-[family-name:var(--font-inter)]">
-                        <div className="w-5 h-5 bg-[#d4f78a] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <div className="w-2 h-2 bg-slate-900 rounded-full" />
-                        </div>
-                        {benefit}
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
+                </div>
+                <div className="step-visual" style={{
+                  order: i % 2 === 0 ? 1 : 0,
+                  background: 'var(--bg-3)',
+                  borderLeft: i % 2 === 0 ? '1px solid var(--border)' : 'none',
+                  borderRight: i % 2 !== 0 ? '1px solid var(--border)' : 'none',
+                  minHeight: '240px', position: 'relative', overflow: 'hidden',
+                  display: 'flex', alignItems: 'center',
+                }}>
+                  <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%, rgba(200,245,62,0.04) 0%, transparent 70%)', pointerEvents: 'none' }} />
+                  <div style={{ width: '100%' }}>{step.visual}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="for-who" style={{ padding: '0 48px 96px', maxWidth: '1280px', margin: '0 auto' }}>
+          <div style={{ marginBottom: '44px' }}>
+            <p style={{ fontSize: '11px', color: 'var(--text-3)', textTransform: 'uppercase' as const, letterSpacing: '0.12em', fontWeight: 600, marginBottom: '12px' }}>Who is it for</p>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 'clamp(26px, 2.8vw, 40px)', letterSpacing: '-0.035em', lineHeight: 1.1 }}>
+              Made for people, not researchers.
+            </h2>
+          </div>
+
+          <div className="for-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+            {FOR_WHO.map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <div key={i} className="for-card">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '11px', background: 'var(--accent-dim)', border: '1px solid rgba(200,245,62,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <Icon size={18} style={{ color: 'var(--accent)' }} />
+                    </div>
+                    <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase' as const, letterSpacing: '0.08em' }}>{item.label}</span>
+                  </div>
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '20px', letterSpacing: '-0.025em', marginBottom: '10px', lineHeight: 1.2 }}>{item.title}</h3>
+                  <p style={{ fontSize: '14px', color: 'var(--text-2)', lineHeight: 1.75 }}>{item.body}</p>
+                </div>
               );
             })}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Stats Banner */}
-      <section id="stats" className="relative py-16 px-8 bg-slate-900">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {[
-              { value: '608', label: 'NASA Papers', sublabel: 'Analyzed', owlVariant: 'reading' as const },
-              { value: '99.9%', label: 'Uptime', sublabel: 'Reliability', owlVariant: 'sitting' as const },
-              { value: '50M+', label: 'Data Points', sublabel: 'Extracted', owlVariant: 'flying' as const },
-              { value: '4.9 ★', label: 'Rating', sublabel: 'User reviews', owlVariant: 'celebrating' as const },
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 0.4 }}
-              >
-                <div className="flex justify-center mb-2">
-                  <OwlMini variant={stat.owlVariant} className="w-10 h-10" />
-                </div>
-                <div className="text-4xl md:text-5xl font-bold mb-2 font-[family-name:var(--font-space-grotesk)] text-[#d4f78a]">{stat.value}</div>
-                <div className="text-sm font-semibold text-white font-[family-name:var(--font-space-grotesk)]">{stat.label}</div>
-                <div className="text-xs text-white/60 mt-1 font-[family-name:var(--font-inter)]">{stat.sublabel}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+        <div style={{ padding: '96px 48px', maxWidth: '1280px', margin: '0 auto' }}>
+          <div style={{
+            borderRadius: '24px', overflow: 'hidden', position: 'relative',
+            background: 'var(--bg-2)', border: '1px solid var(--border-2)',
+            padding: '80px 64px', textAlign: 'center' as const,
+          }}>
+            <div aria-hidden style={{ position: 'absolute', top: '-100px', left: '50%', transform: 'translateX(-50%)', width: '600px', height: '400px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,245,62,0.08) 0%, transparent 65%)', pointerEvents: 'none' }} />
+            <div aria-hidden style={{ position: 'absolute', bottom: '-80px', left: '20%', width: '300px', height: '300px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,245,62,0.04) 0%, transparent 65%)', pointerEvents: 'none' }} />
 
-      {/* CTA Section */}
-      <section className="relative py-24 px-8 bg-slate-900">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#d4f78a]/20 backdrop-blur-sm rounded-full mb-6 border-2 border-[#d4f78a]"
-          >
-            <Zap className="w-4 h-4 text-[#d4f78a]" />
-            <span className="text-[#d4f78a] text-sm font-medium font-[family-name:var(--font-inter)]">
-              Free for first 100 institutions
-            </span>
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-bold text-white mb-6 font-[family-name:var(--font-space-grotesk)] tracking-tight"
-          >
-            Start Researching Faster Today
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-lg text-white/80 mb-10 font-[family-name:var(--font-inter)]"
-          >
-            No credit card. No setup. Just instant access to 608 NASA papers.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="flex flex-col sm:flex-row justify-center gap-4"
-          >
-            <button
-              onClick={() => router.push('/chat')}
-              className="px-10 py-4 bg-[#d4f78a] hover:bg-[#c9f76f] text-slate-900 font-semibold rounded-full hover:shadow-2xl hover:scale-105 transition-all font-[family-name:var(--font-space-grotesk)] border-2 border-slate-900"
-            >
-              Try It Free →
-            </button>
-            <button
-              onClick={() => router.push('/explore')}
-              className="px-10 py-4 bg-transparent text-white font-semibold rounded-full border-2 border-white/40 hover:bg-white/10 backdrop-blur-sm transition-all font-[family-name:var(--font-space-grotesk)]"
-            >
-              See Demo
-            </button>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="relative bg-white py-12 px-8 border-t-2 border-slate-200 overflow-hidden">
-        {/* Búho durmiendo decorativo */}
-        <div className="absolute bottom-4 right-8 opacity-30">
-          <motion.svg
-            width="60"
-            height="60"
-            viewBox="0 0 80 80"
-            fill="none"
-            animate={{ y: [0, -3, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          >
-            {/* Rama */}
-            <line x1="10" y1="60" x2="70" y2="60" stroke="#94a3b8" strokeWidth="3" strokeLinecap="round" />
-            
-            {/* Cuerpo durmiendo */}
-            <ellipse cx="40" cy="48" rx="18" ry="20" fill="#10b981" />
-            
-            {/* Ala cubriendo */}
-            <path d="M25 45 Q20 48, 25 55 Q30 50, 28 45 Z" fill="#059669" />
-            <path d="M55 45 Q60 48, 55 55 Q50 50, 52 45 Z" fill="#059669" />
-            
-            {/* Cabeza dormida */}
-            <ellipse cx="40" cy="40" rx="14" ry="12" fill="#10b981" />
-            
-            {/* Ojos cerrados */}
-            <motion.path
-              d="M33 38 Q35 40, 37 38"
-              stroke="#334155"
-              strokeWidth="2"
-              strokeLinecap="round"
-              fill="none"
-            />
-            <motion.path
-              d="M43 38 Q45 40, 47 38"
-              stroke="#334155"
-              strokeWidth="2"
-              strokeLinecap="round"
-              fill="none"
-            />
-            
-            {/* Pico pequeño */}
-            <path d="M40 42 L39 44 L41 44 Z" fill="#fbbf24" />
-            
-            {/* Z Z Z dormido */}
-            <motion.g
-              animate={{ opacity: [0.3, 0.8, 0.3] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              <text x="58" y="30" fill="#94a3b8" fontSize="10" fontWeight="bold">Z</text>
-              <text x="62" y="22" fill="#94a3b8" fontSize="8" fontWeight="bold">Z</text>
-              <text x="65" y="16" fill="#94a3b8" fontSize="6" fontWeight="bold">Z</text>
-            </motion.g>
-            
-            {/* Patas */}
-            <ellipse cx="36" cy="62" rx="3" ry="2" fill="#f59e0b" />
-            <ellipse cx="44" cy="62" rx="3" ry="2" fill="#f59e0b" />
-          </motion.svg>
-        </div>
-
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <OwlLogo className="w-8 h-8" />
-                <span className="text-lg font-bold text-slate-900 font-[family-name:var(--font-space-grotesk)]">
-                  Raccly
-                </span>
-              </div>
-              <p className="text-sm text-slate-600 leading-relaxed font-[family-name:var(--font-inter)]">
-                NASA bioscience research
-                <br />powered by AI
+            <div style={{ position: 'relative', zIndex: 1, maxWidth: '520px', margin: '0 auto' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 'clamp(28px, 3.5vw, 48px)', letterSpacing: '-0.04em', marginBottom: '14px', lineHeight: 1.05 }}>
+                Ready when you are.
+              </h2>
+              <p style={{ fontSize: '16px', color: 'var(--text-2)', lineHeight: 1.7, marginBottom: '32px' }}>
+                No account. No setup. Ask your question and see what the research says.
               </p>
-            </div>
-
-            <div>
-              <h4 className="text-slate-900 font-semibold mb-3 text-sm font-[family-name:var(--font-inter)]">Product</h4>
-              <ul className="space-y-2">
-                <li>
-                  <button onClick={() => router.push('/chat')} className="text-slate-600 hover:text-green-600 transition-colors text-sm font-[family-name:var(--font-inter)]">
-                    AI Chat
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => router.push('/explore')} className="text-slate-600 hover:text-green-600 transition-colors text-sm font-[family-name:var(--font-inter)]">
-                    Publications
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => router.push('/network')} className="text-slate-600 hover:text-green-600 transition-colors text-sm font-[family-name:var(--font-inter)]">
-                    Research Network
-                  </button>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-slate-900 font-semibold mb-3 text-sm font-[family-name:var(--font-inter)]">Resources</h4>
-              <ul className="space-y-2 text-slate-600 text-sm font-[family-name:var(--font-inter)]">
-                <li className="hover:text-green-600 cursor-pointer transition-colors">NASA OSDR</li>
-                <li className="hover:text-green-600 cursor-pointer transition-colors">Space Life Sciences Library</li>
-                <li className="hover:text-green-600 cursor-pointer transition-colors">NASA Task Book</li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-slate-900 font-semibold mb-3 text-sm font-[family-name:var(--font-inter)]">Connect</h4>
-              <ul className="space-y-2 text-slate-600 text-sm font-[family-name:var(--font-inter)]">
-                <li>Lima, Peru</li>
-                <li>
-                  <a 
-                    href="https://www.youtube.com/@raccly" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-green-600 transition-colors"
-                  >
-                    YouTube
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="pt-6 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-slate-500 text-xs font-[family-name:var(--font-inter)]">
-              © 2025 Raccly. Powered by NASA Open Data & AI.
-            </p>
-            <div className="flex gap-4 text-xs text-slate-500 font-[family-name:var(--font-inter)]">
-              <span className="hover:text-slate-900 cursor-pointer transition-colors">Privacy</span>
-              <span className="hover:text-slate-900 cursor-pointer transition-colors">Terms</span>
-              <span className="hover:text-slate-900 cursor-pointer transition-colors">Accessibility</span>
+              <button
+                onClick={() => router.push('/chat')}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '8px',
+                  padding: '16px 32px', borderRadius: '13px',
+                  background: 'var(--accent)', color: '#07070a',
+                  border: 'none', cursor: 'pointer',
+                  fontSize: '16px', fontWeight: 800,
+                  fontFamily: 'var(--font-display)', letterSpacing: '-0.02em',
+                  transition: 'opacity .15s',
+                }}
+                onMouseOver={e => (e.currentTarget.style.opacity = '0.85')}
+                onMouseOut={e => (e.currentTarget.style.opacity = '1')}
+              >
+                Open Raccly <ArrowUpRight size={18} />
+              </button>
             </div>
           </div>
         </div>
-      </footer>
-    </div>
+
+        <footer style={{
+          borderTop: '1px solid var(--border)',
+          padding: '28px 48px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          maxWidth: '1280px', margin: '0 auto',
+        }}>
+          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '15px', letterSpacing: '-0.04em' }}>
+            <span style={{ color: 'var(--accent)' }}>R</span>accly
+          </span>
+          <span style={{ fontSize: '12px', color: 'var(--text-3)' }}>
+            NASA Space Apps Challenge 2024 · MIT License
+          </span>
+        </footer>
+
+      </div>
+    </>
   );
 }

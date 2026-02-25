@@ -1,116 +1,171 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-nunito);
-  --font-mono: var(--font-geist-mono);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-}
-
+/* ─────────────────────────────────────────────
+   RACCLY — Design System
+   To retheme the entire app, change --accent.
+   ───────────────────────────────────────────── */
 
 :root {
-  --font-nunito: 'Nunito', sans-serif;
-  --radius: 0.75rem;
+  /* ── Backgrounds ── */
+  --bg:       #0c0c0f;
+  --bg-2:     #131316;
+  --bg-3:     #1a1a1f;
+  --bg-4:     #222228;
 
+  /* ── Accent (lime green) — change here to retheme ── */
+  --accent:     #c8f53e;
+  --accent-dim: rgba(200, 245, 62, 0.10);
 
-  --navy: #1A0B3E;
-  --blue-medium: #4C6B9C;
-  --blue-light: #6BB6CE;
-  --blue-lighter: #A3D9E6;
-  --blue-lightest: #D5EFF5;
+  /* ── Text ── */
+  --text:   #eeeef2;
+  --text-2: #8888a0;
+  --text-3: #55556a;
 
+  /* ── UI ── */
+  --border:   rgba(255, 255, 255, 0.07);
+  --border-2: rgba(255, 255, 255, 0.13);
 
-  --background: #FFFFFF;
-  --foreground: #1A0B3E;
-  --card: #FFFFFF;
-  --card-foreground: #1A0B3E;
-  --popover: #FFFFFF;
-  --popover-foreground: #1A0B3E;
-  --primary: #4C6B9C;
-  --primary-foreground: #FFFFFF;
-  --secondary: #D5EFF5;
-  --secondary-foreground: #1A0B3E;
-  --muted: #D5EFF5;
-  --muted-foreground: #4C6B9C;
-  --accent: #6BB6CE;
-  --accent-foreground: #FFFFFF;
-  --destructive: #FF6B6B;
-  --border: #A3D9E6;
-  --input: #A3D9E6;
-  --ring: #4C6B9C;
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #1A0B3E;
-  --sidebar-primary: #4C6B9C;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #D5EFF5;
-  --sidebar-accent-foreground: #1A0B3E;
-  --sidebar-border: #A3D9E6;
-  --sidebar-ring: #4C6B9C;
+  /* ── Fonts ── */
+  --font-display: var(--font-syne), 'Syne', sans-serif;
+  --font-body:    var(--font-dm-sans), 'DM Sans', sans-serif;
+
+  /* ── Radius ── */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-[--background] text-[--foreground];
-    font-family: var(--font-nunito);
-  }
+/* ─── Reset & Base ─────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+html {
+  scroll-behavior: smooth;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--blue-medium);
-  border-radius: 3px;
+::selection {
+  background: var(--accent);
+  color: #0c0c0f;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: var(--navy);
+/* ─── Scrollbar ─────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bg-4); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+/* ─── Typography ────────────────────────────── */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+/* ─── Animations ────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up   { animation: fade-up 0.5s ease forwards; opacity: 0; }
+.delay-1   { animation-delay: 0.07s; }
+.delay-2   { animation-delay: 0.14s; }
+.delay-3   { animation-delay: 0.21s; }
+.delay-4   { animation-delay: 0.28s; }
+.delay-5   { animation-delay: 0.35s; }
+.delay-6   { animation-delay: 0.42s; }
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.25; }
+}
+.blink { animation: blink 1.6s ease-in-out infinite; }
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.25; transform: scale(1); }
+  50%       { opacity: 0.45; transform: scale(1.08); }
+}
+
+/* ─── Raccly Prose (markdown in chat) ──────── */
+.raccly-prose {
+  font-size: 14px;
+  line-height: 1.72;
+  color: var(--text);
+  font-family: var(--font-body);
+  word-break: break-word;
+}
+.raccly-prose p { margin: 0 0 12px; }
+.raccly-prose p:last-child { margin-bottom: 0; }
+.raccly-prose strong { color: var(--text); font-weight: 600; }
+.raccly-prose em { color: var(--text-2); font-style: italic; }
+.raccly-prose h1, .raccly-prose h2, .raccly-prose h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  margin: 20px 0 8px;
+}
+.raccly-prose h1 { font-size: 18px; }
+.raccly-prose h2 { font-size: 16px; }
+.raccly-prose h3 { font-size: 14px; font-weight: 600; }
+.raccly-prose ul, .raccly-prose ol {
+  margin: 0 0 12px;
+  padding-left: 22px;
+}
+.raccly-prose li {
+  margin-bottom: 5px;
+  color: var(--text);
+}
+.raccly-prose li::marker { color: var(--accent); }
+.raccly-prose code {
+  font-size: 12px;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 1px 6px;
+  font-family: 'Fira Code', 'Cascadia Code', monospace;
+  color: var(--accent);
+}
+.raccly-prose pre {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+.raccly-prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--text);
+}
+.raccly-prose blockquote {
+  border-left: 2px solid rgba(200,245,62,0.4);
+  padding-left: 14px;
+  margin: 12px 0;
+  color: var(--text-2);
+}
+.raccly-prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ─── Sonner dark overrides ─────────────────── */
+[data-sonner-toaster] {
+  --normal-bg: var(--bg-3) !important;
+  --normal-border: var(--border) !important;
+  --normal-text: var(--text) !important;
+
 }

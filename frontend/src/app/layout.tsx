@@ -1,25 +1,26 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Syne, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { ConditionalLayout } from "@/shared/components/ConditionalLayout";
-import { ResearchProvider } from "@/shared/contexts/ResearchContext";
 
-const inter = Inter({
-  variable: "--font-inter",
+const syne = Syne({
+  variable: "--font-syne",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Raccly - AI Research Assistant for NASA Papers",
-  description: "Ask questions, get instant answers with citations from 608 NASA bioscience papers. Built for scientists planning Moon and Mars missions.",
+  title: "Raccly — NASA Bioscience Research AI",
+  description: "Ask questions in plain English. Get instant answers with citations from 608 NASA bioscience papers.",
   icons: {
     icon: "/favicon.svg",
     apple: "/favicon.svg",
@@ -33,15 +34,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      </head>
-      <body className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}>
-        <ResearchProvider>
-          <ConditionalLayout>{children}</ConditionalLayout>
-          <Toaster position="top-right" richColors />
-        </ResearchProvider>
+      <body className={`${syne.variable} ${dmSans.variable}`}>
+        <ConditionalLayout>{children}</ConditionalLayout>
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: "var(--bg-3)",
+              border: "1px solid var(--border)",
+              color: "var(--text)",
+            },
+          }}
+        />
       </body>
     </html>
   );

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /c/Users/tatia/projects/Raccly/backend && uv run python -c \"from app.main import app; print\\('OK — routes:', [r.path for r in app.routes]\\)\")",
+      "Bash(cd /c/Users/tatia/projects/Raccly && git ls-files --deleted | xargs git rm --cached 2>&1 | tail -5 && echo \"done\")",
+      "Bash(cd /c/Users/tatia/projects/Raccly/backend && uv run python -c \"from app.main import app; print\\('OK'\\)\" && grep -rn \"snippet\" app/)"
+    ]
+  }
+}

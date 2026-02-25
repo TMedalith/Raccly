@@ -1,7 +1,6 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { TopNav } from './TopNav';
 
 export function ConditionalLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -12,9 +11,8 @@ export function ConditionalLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="relative min-h-screen">
-      <TopNav />
-      <main className="relative">
+    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)' }}>
+      <main style={{ flex: 1, position: 'relative' }}>
         {children}
       </main>
     </div>

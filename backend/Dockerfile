@@ -1,30 +1,23 @@
 FROM ghcr.io/astral-sh/uv:0.9.27 AS uv
 
+FROM python:3.12-slim
 
-FROM public.ecr.aws/lambda/python:3.13 AS builder
+WORKDIR /app
 
-ENV UV_COMPILE_BYTECODE=1
+# Copy uv binary
+COPY --from=uv /uv /bin/uv
 
-ENV UV_NO_INSTALLER_METADATA=1
+# Install dependencies (cached layer, only rebuilds if lock file changes)
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
 
-ENV UV_LINK_MODE=copy
+# Copy app source
+COPY ./app ./app
 
-#Carpeta de trabajo dentro del contenedor
-WORKDIR /app   
+ENV PYTHONUNBUFFERED=1
+ENV PATH="/app/.venv/bin:$PATH"
 
-RUN --mount=from=uv,source=/uv,target=/bin/uv \
-    --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv export --frozen --no-emit-workspace --no-dev --no-editable -o requirements.txt && \
-    uv pip install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
+EXPOSE 8000
 
-FROM public.ecr.aws/lambda/python:3.13
-
-# Copia las librerías instaladas desde "builder"
-COPY --from=builder ${LAMBDA_TASK_ROOT} ${LAMBDA_TASK_ROOT}
-
-# Copia tu código fuente
-COPY ./app ${LAMBDA_TASK_ROOT}/app
-
-CMD ["app.main.handler"]
+# PORT env var is injected by Railway/Render automatically
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
