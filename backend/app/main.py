@@ -1,17 +1,44 @@
-import app.config  # noqa: F401 — side-effect: initialise LLM Settings before routes load
+import logging
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from slowapi import _rate_limit_exceeded_handler
-from slowapi.errors import RateLimitExceeded
+from llama_index.core import Settings
+from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.llms.openai import OpenAI
 
-from app.config import limiter
-from app.routes.query import router
+from app.config import settings
+from app.routes.query import router as query_router
+from app.routes.ingest import router as ingest_router
+from app.storage.vector_db import PGStorage
+from app.generation.pipeline import RAGPipeline
 
-app = FastAPI(title="Raccly API")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+)
 
-app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    Settings.embed_model = OpenAIEmbedding(
+        model=settings.embed_model,
+        dimensions=settings.embed_dimensions,
+        api_key=settings.openai_api_key,
+    )
+    Settings.llm = OpenAI(
+        model=settings.main_llm_model,
+        temperature=settings.llm_temperature,
+        max_tokens=settings.llm_max_tokens,
+        api_key=settings.openai_api_key,
+    )
+    storage = PGStorage()
+    app.state.storage = storage
+    app.state.pipeline = RAGPipeline(storage)
+    yield
+
+
+app = FastAPI(title="Raccly API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,8 +48,9 @@ app.add_middleware(
         "http://127.0.0.1:3000",
     ],
     allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
 )
 
-app.include_router(router)
+app.include_router(query_router)
+app.include_router(ingest_router)

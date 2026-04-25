@@ -1,15 +1,6 @@
 from pydantic import BaseModel, Field
 
 
-class HistoryMessage(BaseModel):
-    role: str
-    content: str
-
-
 class QueryRequest(BaseModel):
-    question: str
-    session_id: str = Field(default="default")
-    top_k: int = 10
-    use_rerank: bool = True
-    use_hyde: bool = False
-    chat_history: list[HistoryMessage] = []
+    question: str = Field(min_length=1, max_length=2000)
+    top_k: int = Field(default=10, ge=1, le=20)
